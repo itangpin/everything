@@ -1,0 +1,19 @@
+html, body, div {
+  margin: 0;
+  padding: 0;
+  cursor: default; }
+
+html {
+  height: 100%; }
+
+body {
+  background-color: #333;
+  color: white; }
+
+#container {
+  width: 500px;
+  margin: 20px auto 20px auto;
+  font-family: roboto, 'sans-serif';
+  font-size: 16px; }
+
+/*# sourceMappingURL=site.css.map */
