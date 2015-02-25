@@ -282,7 +282,9 @@ define(function(require, exports, module){
         }
 
     };
-
+    Node.prototype.getPrevNode = function(){
+        
+    };
     /**
      * Collapse the children of the Node
      * @param {boolean} recursion
