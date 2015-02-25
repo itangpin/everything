@@ -100,7 +100,7 @@ define(function(require, exports, module){
             if(13 == e.keyCode){
                 e.preventDefault();
                 console.log('add sibling node');
-                self.addSiblingNodeAfter();
+                self.createSiblingNodeAfter();
                 return false;
             }
             // add a child node, tab key
@@ -108,7 +108,12 @@ define(function(require, exports, module){
                 e.preventDefault();
                 // todo: replace console.log with util.log
                 console.log('indent node');
-                self.indent();
+
+                if(e.shiftKey){
+                    self.unindent();
+                }else{
+                    self.indent();
+                }
                 return false;
             }
             if(46 == e.keyCode){
@@ -200,9 +205,22 @@ define(function(require, exports, module){
 
 
     /**
-     * Add a sibling Node right after this node
+     * Add a Node as a sibling Node right after this node
      */
-    Node.prototype.addSiblingNodeAfter = function(){
+    Node.prototype.addSiblingNodeAfter = function(node){
+        //var siblingNode = new Node(null,this.parent,{type:'after',el:this.row});
+        if(!node.parent){
+            return;
+        }
+        node.parent.removeChild(node.id);
+        node.parent = this.parent;
+        this.parent.addChild(node);
+        $(this.row).after(node.row);
+    };
+    /**
+     * Create an empty Node after this node
+     */
+    Node.prototype.createSiblingNodeAfter = function(){
         var siblingNode = new Node(null,this.parent,{type:'after',el:this.row});
         this.parent.addChild(siblingNode);
         siblingNode.focusRange();
@@ -219,7 +237,7 @@ define(function(require, exports, module){
         childNode.focusRange();
     };
     /**
-     * Append a child Node
+     * Append a child Node at the tailer of the Node
      * @param child
      */
     Node.prototype.appendChild = function(child){
@@ -227,8 +245,11 @@ define(function(require, exports, module){
         this.children.push(child);
         this.childrenMap[child.id] = child;
     };
+    /**
+     * Add a node to the children node map
+     */
     Node.prototype.addChild = function(child){
-      this.children.push(child);
+        this.children.push(child);
         this.childrenMap[child.id] = child;
     };
 
@@ -238,12 +259,13 @@ define(function(require, exports, module){
      */
     Node.prototype.removeChild = function(id){
         var childNode = this.childrenMap[id];
-        childNode.row.parentNode.removeChild(childNode.row);
+        //TODO 有问题
+        //childNode.row.parentNode.removeChild(childNode.row);
         this.children = _.filter(this.children,function(child){
             return child.id!=id;
         });
         this.childrenMap[id] = undefined;
-        //childNode.row.parent.removeChild(childNode.row);
+        childNode.row.parentNode.removeChild(childNode.row);
     };
 
     /**
@@ -280,10 +302,28 @@ define(function(require, exports, module){
         if(!this.parent){
             return;
         }
-
+        this.parent.addSiblingNodeAfter(this);
+        //TODO 有问题
+        // this.parent.removeChild(this.id);
     };
+
     Node.prototype.getPrevNode = function(){
-        
+        if(!this.prevNodeElement || !this.prevNode){
+            if(this.row.previousSibling){
+                this.prevNodeElement = this.row.previousSibling;
+                var prevNodeId = this.prevNodeElement.getAttribute('projectId');
+                this.prevNode = this.parent.findChildById(prevNodeId);
+                return this.getPrevNode();
+            }else{
+                // no previousSibling
+                return false;
+            }
+        }else{
+            return {
+                'el':   this.prevNodeElement,
+                'node': this.prevNode
+            }
+        }
     };
     /**
      * Collapse the children of the Node

@@ -26,7 +26,8 @@
   line-height: 30px;
   padding: 2px 0 2px 6px;
   margin-left: 15px;
-  color: #fafafa; }
+  color: #fafafa;
+  font-family: roboto, 'microsoft yahei', 'sans-serif'; }
 .everything .content {
   position: relative;
   left: 30px; }
