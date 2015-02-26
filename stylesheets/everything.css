@@ -25,37 +25,47 @@
   width: 100%;
   line-height: 30px;
   padding: 2px 0 2px 6px;
-  margin-left: 15px;
+  margin-left: 24px;
   color: #fafafa;
   font-family: roboto, 'microsoft yahei', 'sans-serif'; }
 .everything .content {
   position: relative;
   left: 30px; }
 .everything .children {
-  margin-left: 5px;
+  margin-left: 16px;
   border-left: 1px solid #555;
-  padding-left: 30px;
+  padding-left: 24px;
   overflow: hidden; }
 .everything .children.collapse {
   height: 0; }
 .everything .function-btn {
   position: absolute;
+  height: 34px;
+  width: 30px; }
+.everything .function-btn span.function-dot-1 {
+  position: absolute;
   border-radius: 50%;
-  width: 8px;
-  height: 8px;
-  top: 17px;
-  margin-top: -5px;
-  margin-right: 10px;
-  background-color: #767676;
+  width: 16px;
+  height: 16px;
+  margin: 9px;
+  background-color: transparent;
   transition: 0.2s;
   -moz-transition: 0.2s;
   -webkit-transition: 0.2s;
+  cursor: pointer;
+  z-index: 999; }
+.everything .function-btn span.function-dot-2 {
+  position: absolute;
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  margin: 13px;
+  background-color: #bbbbbb;
   cursor: pointer; }
-.everything .function-btn:hover {
-  width: 16px;
-  height: 16px;
-  margin-top: -8px;
-  margin-left: -3px;
-  background-color: #919191; }
+.everything .function-btn span:hover {
+  background-color: #5a5a5a; }
+.everything .project.collapse >
+.function-btn span.function-dot-1 {
+  background-color: #5a5a5a; }
 
 /*# sourceMappingURL=everything.css.map */

@@ -19,6 +19,10 @@
         alias:{
             "jquery":"http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js",
             "underscore":"http://cdn.bootcss.com/underscore.js/1.6.0/underscore-min.js"
+        },
+        alias:{
+            "jquery":"./spm_modules/jquery/2.1.3/jquery.min.js",
+            "underscore":"./spm_modules/underscore/1.6.0/underscore-min.js"
         }
     });
 
@@ -56,10 +60,21 @@
                 ]
             },
             {
-                content:'0.2.1计划功能',
+                content:'0.2.1功能',
                 children:[
-                    'unindent',
-                    'function dot 外观调整，区分有无子集的节点'
+                    {
+                        content:'已完成功能',
+                        children:[
+                            'unindent',
+                            'function dot更大的点击范围'
+                        ]
+                    },
+                    {
+                        content: '计划完成功能',
+                        children:[
+                            '区分展开和非展开的节点dot'
+                        ]
+                    }
                 ]
             },
             {

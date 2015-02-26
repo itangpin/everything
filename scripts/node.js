@@ -55,10 +55,16 @@ define(function(require, exports, module){
         row.setAttribute('projectId',this.id);
         this.row = row;
         // function button
+        var linkOuter = document.createElement('a');
+        linkOuter.className = 'function-btn';
         var button = document.createElement('span');
-        button.className = 'function-btn';
-        this.row.appendChild(button);
-        this.buttonElement = button;
+        button.className = "function-dot-1";
+        var button2= document.createElement('span');
+        button2.className = "function-dot-2";
+        linkOuter.appendChild(button);
+        linkOuter.appendChild(button2);
+        this.row.appendChild(linkOuter);
+        this.buttonElement = linkOuter;
         // content
         var content = document.createElement('div');
         content.className = "project-content";
@@ -181,10 +187,12 @@ define(function(require, exports, module){
      */
     Node.prototype.setChildren = function(children){
         var self = this;
-        if(_.isArray(children)) {
+        if(_.isArray(children) && children.length) {
             _.each(children, function(element,index,list) {
                 self.createChild(element);
             });
+            // change style of the function dot if has children
+            this.row.className += " hasChild";
         }
     };
 
@@ -269,6 +277,16 @@ define(function(require, exports, module){
     };
 
     /**
+     * Tell if the Node has children
+     */
+    Node.prototype.hasChild = function(){
+        if(this.children.length){
+            return true;
+        }else{
+            return false;
+        }
+    };
+    /**
      * focus on the element
      * todo: need to be rewrite
      */
@@ -330,18 +348,21 @@ define(function(require, exports, module){
      * @param {boolean} recursion
      */
     Node.prototype.collapse = function(recursion){
-        $(this.childrenElement).slideToggle(200);
-        //if($(this.childrenElement).hasClass('collapse')){
-        //    $(this.childrenElement).animate({height:this.childrenHeight}, 100, function(){
-        //            $(this).removeClass('collapse');
-        //            $(this).removeAttr('style');
-        //    });
-        //}else{
-        //    this.childrenHeight = $(this.childrenElement).height();
-        //    $(this.childrenElement).animate({height:0},100,function(){
-        //        $(this).addClass('collapse');
-        //    });
-        //}
+        // $(this.childrenElement).slideToggle(200);
+        var self = this;
+        if($(this.childrenElement).hasClass('collapse')){
+           $(this.childrenElement).animate({height:this.childrenHeight}, 200, function(){
+                   $(this).removeClass('collapse');
+                   $(self.row).removeClass('collapse');
+                   $(this).removeAttr('style');
+           });
+        }else{
+           this.childrenHeight = $(this.childrenElement).height();
+           $(this.childrenElement).animate({height:0},200,function(){
+               $(this).addClass('collapse');
+               $(self.row).addClass('collapse');
+           });
+        }
 
     };
 
