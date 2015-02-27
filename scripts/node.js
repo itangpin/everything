@@ -61,8 +61,8 @@ define(function(require, exports, module){
         button.className = "function-dot-1";
         var button2= document.createElement('span');
         button2.className = "function-dot-2";
+        button.appendChild(button2);
         linkOuter.appendChild(button);
-        linkOuter.appendChild(button2);
         this.row.appendChild(linkOuter);
         this.buttonElement = linkOuter;
         // content
@@ -348,19 +348,22 @@ define(function(require, exports, module){
      * @param {boolean} recursion
      */
     Node.prototype.collapse = function(recursion){
+        if(!this.hasChild()){
+            return;
+        }
         // $(this.childrenElement).slideToggle(200);
         var self = this;
         if($(this.childrenElement).hasClass('collapse')){
+           $(self.row).removeClass('collapse');
            $(this.childrenElement).animate({height:this.childrenHeight}, 200, function(){
                    $(this).removeClass('collapse');
-                   $(self.row).removeClass('collapse');
                    $(this).removeAttr('style');
            });
         }else{
            this.childrenHeight = $(this.childrenElement).height();
+           $(self.row).addClass('collapse');
            $(this.childrenElement).animate({height:0},200,function(){
                $(this).addClass('collapse');
-               $(self.row).addClass('collapse');
            });
         }
 

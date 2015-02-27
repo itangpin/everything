@@ -41,7 +41,7 @@ $lightblue: rgba(231, 235, 244, 0.91);
     width:100%;
     line-height: 30px;
     padding:2px 0 2px 6px;
-    margin-left: 24px;
+    margin-left: 30px;
     color:#fafafa;
     font-family: roboto, 'microsoft yahei', 'sans-serif';
   }
@@ -62,7 +62,7 @@ $lightblue: rgba(231, 235, 244, 0.91);
   .function-btn{
     position: absolute;
     height:34px;
-    width:30px;
+    width:34px;
   }
   .function-btn span.function-dot-1{
     position:absolute;
@@ -73,18 +73,18 @@ $lightblue: rgba(231, 235, 244, 0.91);
     background-color: transparent;
     @include transition(.2s);
     cursor: pointer;
-    z-index: 999;
+//    z-index: 999;
   }
   .function-btn span.function-dot-2{
     position:absolute;
     border-radius: 50%;
-    width:8px;
-    height:8px;
-    margin:13px;
+    width:6px;
+    height:6px;
+    margin:5px;
     background-color: #bbbbbb;
     cursor: pointer;
   }
-  .function-btn span:hover{
+  .function-btn span.function-dot-1:hover{
     background-color: #5a5a5a;
   }
   .project.collapse>
