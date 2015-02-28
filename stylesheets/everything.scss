@@ -38,7 +38,8 @@ $lightblue: rgba(231, 235, 244, 0.91);
   }
   .project-content{
     outline: none;
-    width:100%;
+//   css box model !!
+//    width:100%;
     line-height: 30px;
     padding:2px 0 2px 6px;
     margin-left: 30px;
