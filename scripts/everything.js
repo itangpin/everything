@@ -11,22 +11,46 @@ define(function(require,exports,module){
             // create a container
             this.createContainer();
         }
-        this.container = option.container;
+        this.frame = option.container;
 
-        this.instancingNode(data);
+        this._create(data);
     };
 
     Everything.prototype.createContainer = function(){
 
     };
 
-    Everything.prototype.instancingNode = function(data){
+    Everything.prototype._create= function(data){
+        var editor = this;
         var rootNode = new Node(data,null,{
             type:'append',
             el: this.container
         });
         rootNode.setRoot();
+
+        // create one global event listener to handle all events from all nodes
+        var onEvent = function(event){
+            editor.onEvent(event);
+        };
+        this.frame.onclick = onEvent;
+        this.frame.onkeydown = onEvent;
     };
+
+    Everything.prototype.onEvent = function(event){
+        if(event.type == 'keydown'){
+            onKeydown();
+        }
+        var onkeydown = function(){
+            // TODO
+            // moving the focus to the next element
+            // search for content
+            // undo redo
+        };
+
+        var node = Node.getNodeFromTarget(event.target);
+    };
+
+
 
     module.exports = Everything;
 });

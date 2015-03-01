@@ -1,3 +1,6 @@
+define(function(require, exports, module){
+
+});
 Array.prototype.removeFromTo = function(from, to) {
     this.splice(from,
         !to ||

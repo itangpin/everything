@@ -53,6 +53,8 @@ define(function(require, exports, module){
         var row = document.createElement('div');
         row.className = "project";
         row.setAttribute('projectId',this.id);
+        // used when finding node from event target(target.node)
+        row.node = this;
         this.row = row;
         // function button
         var linkOuter = document.createElement('a');
@@ -92,10 +94,6 @@ define(function(require, exports, module){
         // TODO: delegate all the events together
         var self = this;
         // function button
-        $(".function-btn").on('click', function(){
-
-        });
-
         $(this.buttonElement).on('click', function(){
             self.collapse(true);
         });
