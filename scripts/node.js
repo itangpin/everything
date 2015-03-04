@@ -5,11 +5,25 @@
 define(function(require, exports, module){
     var util = require('./util.js');
 
-    var Node = function(data,parent,position,option){
+    var Node = function(data,parent,position,option,app){
         this.data = data;
         this.parent = parent;
+        // app is the instance of the application
+        // which hold the status of the apllication
+        this.app = app;
         this.id = util.uuid();
         this._create(position);
+    };
+
+    Node.getNodeFromTarget = function(target){
+        while (target) {
+            if (target.node) {
+                return target.node;
+            }
+            target = target.parentNode;
+        }
+
+        return undefined;
     };
 
     Node.prototype.children = [];
@@ -19,7 +33,7 @@ define(function(require, exports, module){
     Node.prototype._create = function(position){
         var self = this;
         this._createDom();
-        this._bindEvent();
+        //this._bindEvent();
 
         // add the created Node to the DOM
         if(position){
@@ -87,50 +101,57 @@ define(function(require, exports, module){
     };
 
     /**
-     * Bind keyboard event, mouse event, etc. to the application
-     * @private
+     * Handle events
+     * @param {event object} event event object from browser
      */
-    Node.prototype._bindEvent = function(){
-        // TODO: delegate all the events together
-        var self = this;
-        // function button
-        $(this.buttonElement).on('click', function(){
-            self.collapse(true);
-        });
-        // create new line
-        $(this.contentElement).on('keydown', function(e){
-            console.log(e.keyCode);
-            // add a new sibling node
-            if(13 == e.keyCode){
-                e.preventDefault();
-                console.log('add sibling node');
-                self.createSiblingNodeAfter();
+    Node.prototype.onEvent = function(event){
+        var type = event.type;
+        var target = event.target || event.srcElement;
+
+        // Keyboard events
+        if(type == 'keydown'){
+            var keyNum = event.keyCode;
+            // Enter
+            if(keyNum==3){
+                event.preventDefault();
+                // create new line
+                this.createSiblingNodeAfter();
                 return false;
             }
-            // add a child node, tab key
+            // Tab
             if(9 == e.keyCode){
                 e.preventDefault();
-                // todo: replace console.log with util.log
-                console.log('indent node');
-
+                // Shift + Tab
                 if(e.shiftKey){
-                    self.unindent();
+                    this.unindent();
                 }else{
-                    self.indent();
+                    this.indent();
                 }
                 return false;
             }
+            // Delete
             if(46 == e.keyCode){
                 e.preventDefault();
                 self.parent.removeChild(self.id);
                 return false;
             }
+            // Backspace on an 'empty' node
             if(8 == e.keyCode){
                 if(self.getContent() == ""){
                     self.parent.removeChild(self.id);
                 }
             }
-        });
+        }
+
+        // Mouse click events
+        if(type == 'click'){
+            if(target == this.buttonElement
+                || target == this.buttonElement.childNodes[0]
+                || target == this.buttonElement.childNodes[1]){
+                this.collapse();
+            }
+        }
+
     };
 
     /**
@@ -227,7 +248,7 @@ define(function(require, exports, module){
      * Create an empty Node after this node
      */
     Node.prototype.createSiblingNodeAfter = function(){
-        var siblingNode = new Node(null,this.parent,{type:'after',el:this.row});
+        var siblingNode = new Node(null,this.parent,{type:'after',el:this.row},this.app);
         this.parent.addChild(siblingNode);
         siblingNode.focusRange();
     };
@@ -237,7 +258,7 @@ define(function(require, exports, module){
      * @param {object} data
      */
     Node.prototype.createChild = function(data){
-        var childNode = new Node(data,this,{type:'append',el:this.childrenElement});
+        var childNode = new Node(data,this,{type:'append',el:this.childrenElement},this.app);
         this.children.push(childNode);
         this.childrenMap[childNode.id] =  childNode;
         childNode.focusRange();

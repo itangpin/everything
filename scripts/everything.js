@@ -21,19 +21,21 @@ define(function(require,exports,module){
     };
 
     Everything.prototype._create= function(data){
-        var editor = this;
+        var app = this;
         var rootNode = new Node(data,null,{
             type:'append',
-            el: this.container
-        });
+            el: this.frame
+        },null,app);
         rootNode.setRoot();
 
         // create one global event listener to handle all events from all nodes
         var onEvent = function(event){
-            editor.onEvent(event);
+            app.onEvent(event);
         };
-        this.frame.onclick = onEvent;
-        this.frame.onkeydown = onEvent;
+        var events = ['click', 'keydown'];
+        $.each(events, function(index, value){
+            app.frame.addEventListener(value, onEvent);
+        });
     };
 
     Everything.prototype.onEvent = function(event){
@@ -48,6 +50,9 @@ define(function(require,exports,module){
         };
 
         var node = Node.getNodeFromTarget(event.target);
+        if(node){
+            node.onEvent(event);
+        }
     };
 
 
