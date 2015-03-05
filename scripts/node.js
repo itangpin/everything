@@ -231,19 +231,67 @@ define(function(require, exports, module){
     };
 
 
+
+
+/* ============================================================
+ *                   Actions to move nodes
+ * ============================================================*/
+
+    /**
+     * Get sibling node before/after this node,
+     * get parent node,
+     * get child nodes
+     * @param position
+     */
+    Node.prototype.getRelativeNode = function(position){
+        switch (position){
+            case 'before':
+                var prevNodeElement = this.row.previousSibling;
+                if(prevNodeElement){
+                    var prevNodeId = prevNodeElement.getAttribute('projectId');
+                    return this.parent.findChildById(prevNodeId);
+                }else{
+                    return null;
+                }
+                break;
+        }
+    };
     /**
      * Add a Node as a sibling Node right after this node
+     * @param {Node} node node to moved
      */
-    Node.prototype.addSiblingNodeAfter = function(node){
-        //var siblingNode = new Node(null,this.parent,{type:'after',el:this.row});
-        if(!node.parent){
+    Node.prototype.addSiblingNodeBefore = function(node){
+        if(this.isRootNode){
+            // rootNode is a placeholder
             return;
+        }
+        if(node.isRootNode){
+            node.isRootNode = false;
+        }
+        if(!beforeWhich){
+
         }
         node.parent.removeChild(node.id);
         node.parent = this.parent;
         this.parent.addChild(node);
-        $(this.row).after(node.row);
+        // TODO
+        // add updateDom method to Node
+        $(this.row).before(node.row);
     };
+    /**
+     * Add a Node as a sibling Node right before this node
+     * @param node
+     */
+    Node.prototype.addSiblingNodeAfter = function(node){
+        var nodeAfterThis = this.getRelativeNode('before');
+        if(nodeAfterThis != null){
+            nodeAfterThis.addSiblingNodeBefore(node);
+        }else{
+            // this is the last child of its parent node
+            this.parent.appendChild(node);
+        }
+    };
+
     /**
      * Create an empty Node after this node
      */
@@ -299,14 +347,18 @@ define(function(require, exports, module){
      * Tell if the Node has children
      */
     Node.prototype.hasChild = function(){
-        if(this.children.length){
-            return true;
-        }else{
-            return false;
-        }
+        return this.children.length;
+    };
+
+    /* ============================================================
+     *         Actions triggered by event handler 'onAction'
+     * ============================================================*/
+
+    Node.prototype._onInsertBefore = function(data){
+        var Node = new Node();
     };
     /**
-     * focus on the element
+     *  focus on the element
      * todo: need to be rewrite
      */
     Node.prototype.focusRange = function(){

@@ -5,6 +5,7 @@
 define(function(require,exports,module){
 
     var Node = require('./node.js');
+    var UndoMgr = require('./undoMgr.js');
 
     var Everything = function(data,option){
         if(!option.container){
@@ -38,6 +39,9 @@ define(function(require,exports,module){
         });
     };
 
+    /**
+     * Handle events on the application element
+     */
     Everything.prototype.onEvent = function(event){
         if(event.type == 'keydown'){
             onKeydown();
@@ -55,6 +59,14 @@ define(function(require,exports,module){
         }
     };
 
+    /**
+     * Store history when a node is moved, removed, duplicated, etc.
+     * @param {String} action
+     * @param {Object} option
+     */
+    Everything.prototype.onAction = function(action,option){
+        
+    };
 
 
     module.exports = Everything;
