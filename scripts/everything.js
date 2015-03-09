@@ -23,10 +23,11 @@ define(function(require,exports,module){
 
     Everything.prototype._create= function(data){
         var app = this;
-        var rootNode = new Node(data,null,{
+        var rootNode = new Node(data,app);
+        rootNode.adjustDom({
             type:'append',
             el: this.frame
-        },null,app);
+        });
         rootNode.setRoot();
 
         // create one global event listener to handle all events from all nodes
@@ -44,7 +45,7 @@ define(function(require,exports,module){
      */
     Everything.prototype.onEvent = function(event){
         if(event.type == 'keydown'){
-            onKeydown();
+            //onKeydown();
         }
         var onkeydown = function(){
             // TODO

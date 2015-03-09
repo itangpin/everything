@@ -5,14 +5,14 @@
 define(function(require, exports, module){
     var util = require('./util.js');
 
-    var Node = function(data,parent,position,option,app){
+    var Node = function(data,app){
         this.data = data;
         this.parent = parent;
         // app is the instance of the application
         // which hold the status of the apllication
         this.app = app;
         this.id = util.uuid();
-        this._create(position);
+        this._createDom();
     };
 
     Node.getNodeFromTarget = function(target){
@@ -30,34 +30,19 @@ define(function(require, exports, module){
     Node.prototype.childrenMap  ={};
     Node.prototype.isRootNode = false;
 
-    Node.prototype._create = function(position){
-        var self = this;
-        this._createDom();
-        //this._bindEvent();
-
-        // add the created Node to the DOM
-        if(position){
-            switch (position.type){
-                case 'after':
-                    insertAfter(position.el);
-                    break;
-                case 'append':
-                    appendInside(position.el);
-                    break;
-                default:
-                    break;
-            }
-        }else{
-            this.parent.appendChild(this.row);
-        }
-
-        function insertAfter(el){
-            $(el).after(self.row);
-        }
-        function appendInside(el){
-            $(el).append(self.row);
+    /**
+     * Reset index of each child
+     */
+    Node.prototype._updateDomIndexes = function(){
+        var children = this.children;
+        if(children.length){
+            children.forEach(function(child, index){
+                child.index = index;
+                child.row.setAttribute('childIndex',index);
+            });
         }
     };
+
     /**
      * Create the dom of the Node
      * @private
@@ -96,7 +81,37 @@ define(function(require, exports, module){
         if(this.data){
             this.setValue(this.data);
         }else{
-            this.setValue('write here...');
+            this.setValue('');
+        }
+    };
+
+    /**
+     * Add the created Node to the DOM
+     * @param position
+     */
+    Node.prototype.adjustDom = function(position){
+        var self = this;
+
+        if(position){
+            switch (position.type){
+                case 'after':
+                    insertAfter(position.el);
+                    break;
+                case 'append':
+                    appendInside(position.el);
+                    break;
+                default:
+                    break;
+            }
+        }else{
+            this.parent.appendChild(this.row);z
+        }
+
+        function insertAfter(el){
+            $(el).after(self.row);
+        }
+        function appendInside(el){
+            $(el).append(self.row);
         }
     };
 
@@ -112,17 +127,21 @@ define(function(require, exports, module){
         if(type == 'keydown'){
             var keyNum = event.keyCode;
             // Enter
-            if(keyNum==3){
+            if(keyNum==13){
                 event.preventDefault();
-                // create new line
-                this.createSiblingNodeAfter();
+                if(event.shiftKey){
+                    this._onInsertBefore({});
+                }else{
+                    // create new line
+                    this.createSiblingNodeAfter();
+                }
                 return false;
             }
             // Tab
-            if(9 == e.keyCode){
-                e.preventDefault();
+            if(9 == event.keyCode){
+                event.preventDefault();
                 // Shift + Tab
-                if(e.shiftKey){
+                if(event.shiftKey){
                     this.unindent();
                 }else{
                     this.indent();
@@ -130,13 +149,13 @@ define(function(require, exports, module){
                 return false;
             }
             // Delete
-            if(46 == e.keyCode){
+            if(46 == event.keyCode){
                 e.preventDefault();
                 self.parent.removeChild(self.id);
                 return false;
             }
             // Backspace on an 'empty' node
-            if(8 == e.keyCode){
+            if(8 == event.keyCode){
                 if(self.getContent() == ""){
                     self.parent.removeChild(self.id);
                 }
@@ -147,7 +166,7 @@ define(function(require, exports, module){
         if(type == 'click'){
             if(target == this.buttonElement
                 || target == this.buttonElement.childNodes[0]
-                || target == this.buttonElement.childNodes[1]){
+                || target == this.buttonElement.childNodes[0].childNodes[0]){
                 this.collapse();
             }
         }
@@ -208,7 +227,7 @@ define(function(require, exports, module){
         var self = this;
         if(_.isArray(children) && children.length) {
             _.each(children, function(element,index,list) {
-                self.createChild(element);
+                self._createChild(element);
             });
             // change style of the function dot if has children
             this.row.className += " hasChild";
@@ -254,6 +273,18 @@ define(function(require, exports, module){
                     return null;
                 }
                 break;
+            case 'after':
+                if(this.parent){
+                    var afterNode = this.parent.children[this.index];
+                    if(afterNode){
+                        return afterNode;
+                    }else{
+                        return null;
+                    }
+                }else{
+                    return null;
+                }
+                break;
         }
     };
     /**
@@ -262,18 +293,19 @@ define(function(require, exports, module){
      */
     Node.prototype.addSiblingNodeBefore = function(node){
         if(this.isRootNode){
-            // rootNode is a placeholder
+            // you can't add a sibling node for rootNode
+            // that's why we call it a ROOT node
             return;
         }
         if(node.isRootNode){
+            // it's not a rootNode anymore after you move it
             node.isRootNode = false;
         }
-        if(!beforeWhich){
-
+        if(node.parent){
+            node.parent.removeChild(node.id);
         }
-        node.parent.removeChild(node.id);
-        node.parent = this.parent;
-        this.parent.addChild(node);
+        node.setParent(this.parent);
+        this.parent._addChild(node);
         // TODO
         // add updateDom method to Node
         $(this.row).before(node.row);
@@ -283,7 +315,7 @@ define(function(require, exports, module){
      * @param node
      */
     Node.prototype.addSiblingNodeAfter = function(node){
-        var nodeAfterThis = this.getRelativeNode('before');
+        var nodeAfterThis = this.getRelativeNode('after');
         if(nodeAfterThis != null){
             nodeAfterThis.addSiblingNodeBefore(node);
         }else{
@@ -296,19 +328,29 @@ define(function(require, exports, module){
      * Create an empty Node after this node
      */
     Node.prototype.createSiblingNodeAfter = function(){
-        var siblingNode = new Node(null,this.parent,{type:'after',el:this.row},this.app);
-        this.parent.addChild(siblingNode);
+        var siblingNode = new Node(null,this.app);
+        siblingNode.setParent(this.parent);
+        siblingNode.adjustDom({type:'after',el:this.row});
+        this.parent._addChild(siblingNode);
         siblingNode.focusRange();
     };
 
+/* ============================================================
+ *                   Actions of child nodes
+ * ============================================================*/
+
     /**
      * Create a child Node
+     * called when initiating this node's child nodes
+     * @private
      * @param {object} data
      */
-    Node.prototype.createChild = function(data){
-        var childNode = new Node(data,this,{type:'append',el:this.childrenElement},this.app);
-        this.children.push(childNode);
-        this.childrenMap[childNode.id] =  childNode;
+    Node.prototype._createChild = function(data){
+        var childNode = new Node(data,this.app);
+        childNode.setParent(this);
+        childNode.adjustDom({type:'append',el:this.childrenElement});
+        childNode.index = this.children.length;
+        this._addChild(childNode);
         childNode.focusRange();
     };
     /**
@@ -317,13 +359,13 @@ define(function(require, exports, module){
      */
     Node.prototype.appendChild = function(child){
         this.childrenElement.appendChild(child.row);
-        this.children.push(child);
-        this.childrenMap[child.id] = child;
+        this._addChild(child);
     };
     /**
      * Add a node to the children node map
+     * @private
      */
-    Node.prototype.addChild = function(child){
+    Node.prototype._addChild = function(child){
         this.children.push(child);
         this.childrenMap[child.id] = child;
     };
@@ -350,13 +392,19 @@ define(function(require, exports, module){
         return this.children.length;
     };
 
+
     /* ============================================================
      *         Actions triggered by event handler 'onAction'
      * ============================================================*/
 
     Node.prototype._onInsertBefore = function(data){
-        var Node = new Node();
+        var newNode = new Node(data,this.app);
+        newNode.setParent(null);
+        this.addSiblingNodeBefore(newNode);
+        newNode.focusRange();
     };
+
+
     /**
      *  focus on the element
      * todo: need to be rewrite
@@ -365,8 +413,13 @@ define(function(require, exports, module){
         var el = this.contentElement;
         var range = document.createRange();
         var sel = window.getSelection();
-        range.setStart(el,0);
-        range.setEnd(el,1);
+        if(this.contentElement.innerHTML.length){
+            range.setStart(el,0);
+            range.setEnd(el,1);
+        }else{
+            range.setStart(el,0);
+            range.setEnd(el,0);
+        }
         sel.removeAllRanges();
         sel.addRange(range);
         el.focus();
@@ -414,11 +467,17 @@ define(function(require, exports, module){
             }
         }
     };
+
+
+
     /**
      * Collapse the children of the Node
      * @param {boolean} recursion
      */
+    Node.prototype.collapseAnimating = false;
     Node.prototype.collapse = function(recursion){
+        if(this.collapseAnimating){return;}
+        this.collapseAnimating = true;
         if(!this.hasChild()){
             return;
         }
@@ -429,16 +488,21 @@ define(function(require, exports, module){
            $(this.childrenElement).animate({height:this.childrenHeight}, 200, function(){
                    $(this).removeClass('collapse');
                    $(this).removeAttr('style');
+                   self.collapseAnimating = false;
            });
         }else{
            this.childrenHeight = $(this.childrenElement).height();
            $(self.row).addClass('collapse');
            $(this.childrenElement).animate({height:0},200,function(){
                $(this).addClass('collapse');
+               self.collapseAnimating = false;
            });
         }
 
     };
+
+
+    Node.prototype.expand = function(){};
 
     Node.prototype._destroy = function(){
         //this.row.parentNode.removeChild(this.row);
