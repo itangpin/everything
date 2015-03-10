@@ -5,7 +5,7 @@
 define(function(require,exports,module){
 
     var Node = require('./node.js');
-    var UndoMgr = require('./undoMgr.js');
+    var History = require('./history.js');
 
     var Everything = function(data,option){
         if(!option.container){
@@ -13,7 +13,7 @@ define(function(require,exports,module){
             this.createContainer();
         }
         this.frame = option.container;
-
+        this.history = new History();
         this._create(data);
     };
 
@@ -44,6 +44,7 @@ define(function(require,exports,module){
      * Handle events on the application element
      */
     Everything.prototype.onEvent = function(event){
+        event.preventDefault();
         if(event.type == 'keydown'){
             //onKeydown();
         }
@@ -62,11 +63,15 @@ define(function(require,exports,module){
 
     /**
      * Store history when a node is moved, removed, duplicated, etc.
-     * @param {String} action
+     * @param {String} action action name
      * @param {Object} option
      */
     Everything.prototype.onAction = function(action,option){
-        
+        // add action to history
+        if(this.history){
+            this.history.add(action,option);
+        }
+        // trigger Extension callbacks
     };
 
 

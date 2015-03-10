@@ -5,8 +5,14 @@
 define(function(require, exports, module){
     var util = require('./util.js');
 
-    var Node = function(data,app){
+    var Node = function(data,app,option){
         this.data = data;
+        var package = data.package;
+        if(package && package.length>0 && $.isArray(package){
+            this.package = data.package;
+            this.initPackage(this.package);
+        }
+
         this.parent = parent;
         // app is the instance of the application
         // which hold the status of the apllication
@@ -150,15 +156,20 @@ define(function(require, exports, module){
             }
             // Delete
             if(46 == event.keyCode){
-                e.preventDefault();
-                self.parent.removeChild(self.id);
+                event.preventDefault();
+                this.parent.removeChild(self);
                 return false;
             }
             // Backspace on an 'empty' node
             if(8 == event.keyCode){
-                if(self.getContent() == ""){
-                    self.parent.removeChild(self.id);
+                if(this.getContent() == ""){
+                    this.parent.removeChild(this);
                 }
+            }
+            // ctrl + o
+            // activate editor
+            if(79 == event.keyCode && event.ctrlKey){
+                this._onEditorInit();
             }
         }
 
@@ -172,6 +183,9 @@ define(function(require, exports, module){
         }
 
     };
+
+    
+
 
     /**
      * Set content and children of the node,
@@ -302,7 +316,7 @@ define(function(require, exports, module){
             node.isRootNode = false;
         }
         if(node.parent){
-            node.parent.removeChild(node.id);
+            node.parent.removeChild(node);
         }
         node.setParent(this.parent);
         this.parent._addChild(node);
@@ -324,6 +338,12 @@ define(function(require, exports, module){
         }
     };
 
+    Node.prototype.addChildNodeAtHead = function(node){
+
+    };
+    Node.prototype.addChildNodeAtTail= function(){
+
+    };
     /**
      * Create an empty Node after this node
      */
@@ -332,7 +352,7 @@ define(function(require, exports, module){
         siblingNode.setParent(this.parent);
         siblingNode.adjustDom({type:'after',el:this.row});
         this.parent._addChild(siblingNode);
-        siblingNode.focusRange();
+        siblingNode.focus();
     };
 
 /* ============================================================
@@ -351,15 +371,16 @@ define(function(require, exports, module){
         childNode.adjustDom({type:'append',el:this.childrenElement});
         childNode.index = this.children.length;
         this._addChild(childNode);
-        childNode.focusRange();
+        childNode.focus();
     };
     /**
-     * Append a child Node at the tailer of the Node
+     * Append a child Node at the tail of the Node
      * @param child
      */
     Node.prototype.appendChild = function(child){
         this.childrenElement.appendChild(child.row);
         this._addChild(child);
+        child.index = this.children.length;
     };
     /**
      * Add a node to the children node map
@@ -374,15 +395,16 @@ define(function(require, exports, module){
      * Remove specific child
      * @param id id of the child Node
      */
-    Node.prototype.removeChild = function(id){
-        var childNode = this.childrenMap[id];
+    Node.prototype.removeChild = function(node){
+        var childNode = this.childrenMap[node.id];
         //TODO 有问题
         //childNode.row.parentNode.removeChild(childNode.row);
         this.children = _.filter(this.children,function(child){
-            return child.id!=id;
+            return child.id != node.id;
         });
-        this.childrenMap[id] = undefined;
+        this.childrenMap[node.id] = undefined;
         childNode.row.parentNode.removeChild(childNode.row);
+        this._updateDomIndexes();
     };
 
     /**
@@ -397,11 +419,53 @@ define(function(require, exports, module){
      *         Actions triggered by event handler 'onAction'
      * ============================================================*/
 
+    /**
+     * Insert a new Node before this node
+     * @param {Object} data data to initiating a node
+     */
     Node.prototype._onInsertBefore = function(data){
         var newNode = new Node(data,this.app);
         newNode.setParent(null);
         this.addSiblingNodeBefore(newNode);
-        newNode.focusRange();
+        newNode.focus();
+        // add the action to the History(redoMgr)
+    };
+
+    /**
+     * Insert a new Node after this node
+     * @param {Object} data data to initiating a node
+     */
+    Node.prototype._onInsertAfter = function(data){
+        var newNode = new Node(data, this.app);
+        newNode.setParent(null);
+        this.addSiblingNodeAfter(newNode);
+        newNode.focus();
+        // add the action to the History
+        this.app.onAction('insertAfter',{
+            'node':newNode,
+            'afterNode':this,
+            'parent':this.parent
+        });
+    }
+    /**
+     * Indent the Node,
+     * turn the  node into a child node of the sibling node before it.
+     */
+    Node.prototype._onIndent = function(){
+        // if this node is not the first node
+        var prevNode = this.getRelativeNode('before');
+        if(prevNode){
+            prevNode.appendChild(this);
+            this.setParent(prevNode);
+        }
+    };
+    /**
+     *
+     */
+    Node.prototype._onUnshift = function(data){
+        var newNode = new Node(data, this.app);
+        newNode.setParent(this);
+
     };
 
 
@@ -409,7 +473,7 @@ define(function(require, exports, module){
      *  focus on the element
      * todo: need to be rewrite
      */
-    Node.prototype.focusRange = function(){
+    Node.prototype.focus = function(){
         var el = this.contentElement;
         var range = document.createRange();
         var sel = window.getSelection();
