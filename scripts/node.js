@@ -7,16 +7,14 @@ define(function(require, exports, module){
 
     var Node = function(data,app,option){
         this.data = data;
-        var package = data.package;
-        if(package && package.length>0 && $.isArray(package){
-            this.package = data.package;
-            this.initPackage(this.package);
-        }
-
-        this.parent = parent;
         // app is the instance of the application
         // which hold the status of the apllication
         this.app = app;
+        var package = data.package;
+        if(package && package.length>0 && $.isArray(package)){
+            this.packageNameList = data.package;
+            this.initPackages(this.packageNameList);
+        }
         this.id = util.uuid();
         this._createDom();
     };
@@ -83,6 +81,10 @@ define(function(require, exports, module){
         children.className = 'children';
         this.childrenElement = children;
         this.row.appendChild(children);
+
+        // tell packages they are ready to  handle DOM
+        this._onDomReady();
+
         // todo: remove 'write here'
         if(this.data){
             this.setValue(this.data);
@@ -133,7 +135,7 @@ define(function(require, exports, module){
         if(type == 'keydown'){
             var keyNum = event.keyCode;
             // Enter
-            if(keyNum==13){
+            if(keyNum==13 && event.ctrlKey){
                 event.preventDefault();
                 if(event.shiftKey){
                     this._onInsertBefore({});
@@ -184,8 +186,14 @@ define(function(require, exports, module){
 
     };
 
-    
 
+    Node.prototype.initPackages = function(packageNameList){
+        var thisNode = this;
+        this.packages = this.app.getPackages(packageNameList);
+        $.each(this.packages, function(index, value){
+            $.extend(thisNode, value);
+        });
+    };
 
     /**
      * Set content and children of the node,
@@ -348,7 +356,7 @@ define(function(require, exports, module){
      * Create an empty Node after this node
      */
     Node.prototype.createSiblingNodeAfter = function(){
-        var siblingNode = new Node(null,this.app);
+        var siblingNode = new Node({},this.app);
         siblingNode.setParent(this.parent);
         siblingNode.adjustDom({type:'after',el:this.row});
         this.parent._addChild(siblingNode);
@@ -416,7 +424,7 @@ define(function(require, exports, module){
 
 
     /* ============================================================
-     *         Actions triggered by event handler 'onAction'
+     *                   Event Handlers
      * ============================================================*/
 
     /**
@@ -468,10 +476,18 @@ define(function(require, exports, module){
 
     };
 
+    /**
+     * Events handler to be over written by Packages
+     * TODO
+     * replace it with Event Manager
+     * @private
+     */
+    Node.prototype._onDomReady = function(){};
+
 
     /**
-     *  focus on the element
-     * todo: need to be rewrite
+     * Focus on the element
+     * TODO: need to be rewrite
      */
     Node.prototype.focus = function(){
         var el = this.contentElement;

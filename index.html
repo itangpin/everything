@@ -6,9 +6,17 @@
     <link rel="stylesheet" href="./stylesheets/everything.css"/>
     <link rel="stylesheet" href="./stylesheets/site.css"/>
     <script src="./spm_modules/seajs/2.3.0/dist/sea.js"></script>
+    <!-- Codemirror -->
+    <script src="./spm_modules/codemirror/codemirror.js"></script>
+    <script src="./spm_modules/codemirror/markdown.js"></script>
+    <link rel="stylesheet" href="./spm_modules/codemirror/codemirror.css"/>
 </head>
 <body>
-    <a target="_blank" href="https://github.com/itangpin/everything"><img style="position: absolute; top: 0; right: 0; border: 0;" src="./pic/fork_me_on_github.png" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png"></a>
+<a target="_blank" href="https://github.com/itangpin/everything"><img
+        style="position: absolute; top: 0; right: 0; border: 0;" src="./pic/fork_me_on_github.png"
+        alt="Fork me on GitHub"
+        data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png"></a>
+
 <div id="container">
     <div class="everything">
     </div>
@@ -16,35 +24,46 @@
 
 <script>
     seajs.config({
-        alias:{
-            "jquery":"http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js",
-            "underscore":"http://cdn.bootcss.com/underscore.js/1.6.0/underscore-min.js"
+        alias: {
+            "jquery": "http://cdn.bootcss.com/jquery/2.1.3/jquery.min.js",
+            "underscore": "http://cdn.bootcss.com/underscore.js/1.6.0/underscore-min.js"
         },
-        alias:{
-            "jquery":"./spm_modules/jquery/2.1.3/jquery.min.js",
-            "underscore":"./spm_modules/underscore/1.6.0/underscore-min.js"
+        alias: {
+            "jquery": "./spm_modules/jquery/2.1.3/jquery.min.js",
+            "underscore": "./spm_modules/underscore/1.6.0/underscore-min.js",
+            "codemirror": "./spm_modules/codemirror/codemirror.js",
+            "codemirror-mode-md": "./spm_modules/codemirror/markdown.js"
         }
     });
 
-    seajs.use(["./scripts/everything","jquery","underscore"],function(Everything,$,_){
+    seajs.use([
+        "./scripts/everything",
+        "jquery",
+        "underscore",
+    ], function (Everything,
+                 $,
+                 _) {
 
         var value = [
             '@author Tang Pin',
             'Version 0.3.0',
             {
-                content:"功能用法",
-                children:
-                    [
-                        '创建新的一行(Enter键)',
-                        '向右缩进(Tab键)',
-                        {
-                            content:'删除一行',
-                            children:[
-                                'delete键',
-                                '在空行上按退格键'
-                            ]
-                        }
-                    ]
+                content: "功能用法",
+                children: [
+                    '创建新的一行(Enter键)',
+                    '向右缩进(Tab键)',
+                    {
+                        content: '删除一行',
+                        children: [
+                            'delete键',
+                            '在空行上按退格键'
+                        ]
+                    },
+                    {
+                        content:"文本编辑器"
+//                        package:['editor']
+                    }
+                ]
             },
             {
                 content: "新特性，编辑器，包管理",
@@ -55,7 +74,7 @@
         // var value = ['1','2'];
         var container = document.querySelector(".everything");
 
-        var everything = new Everything(value,{
+        var everything = new Everything(value, {
             container: container
         });
     });

@@ -6,6 +6,9 @@ define(function(require,exports,module){
 
     var Node = require('./node.js');
     var History = require('./history.js');
+    var Package = require('./package.js');
+    // packages
+    var Editor = require('./packages/editor.js');
 
     var Everything = function(data,option){
         if(!option.container){
@@ -14,6 +17,8 @@ define(function(require,exports,module){
         }
         this.frame = option.container;
         this.history = new History();
+        this.packageMgr = new Package();
+        this.initPackages();
         this._create(data);
     };
 
@@ -41,10 +46,24 @@ define(function(require,exports,module){
     };
 
     /**
+     * Register packages to the package manager
+     */
+    Everything.prototype.initPackages = function(){
+        this.packageMgr.add('editor',Editor);
+    };
+    Everything.prototype.getPackages = function(packageList){
+        var packages = [];
+        var app = this;
+        $.each(packageList, function(index, value){
+            packages.push(app.packageMgr.get(value));
+        });
+        return packages;
+    };
+    /**
      * Handle events on the application element
      */
     Everything.prototype.onEvent = function(event){
-        event.preventDefault();
+        //event.preventDefault();
         if(event.type == 'keydown'){
             //onKeydown();
         }

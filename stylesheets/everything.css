@@ -1,2 +1,71 @@
-.everything{overflow:hidden}.everything .content,.everything .func-btn{display:inline-block;float:left}.everything .project{position:relative;width:auto;line-height:30px;outline:none}.everything .project.onlychildren>.children{border-left:0}.everything .project.onlychildren>.project-content{display:none}.everything .project.onlychildren>.function-btn{display:none}.everything .et-row.hi{background-color:rgba(231,235,244,0.91);outline:none}.everything .project-content:hover,.everything .project-content:focus{background-color:#222}.everything .project-content{outline:none;line-height:30px;padding:2px 0 2px 6px;margin-left:30px;color:#fafafa;font-family:roboto, 'microsoft yahei', 'sans-serif'}.everything .content{position:relative;left:30px}.everything .children{margin-left:16px;border-left:1px solid #555;padding-left:24px;overflow:hidden}.everything .children.collapse{height:0}.everything .function-btn{position:absolute;height:34px;width:34px}.everything .function-btn span.function-dot-1{position:absolute;border-radius:50%;width:16px;height:16px;margin:9px;background-color:transparent;transition:0.2s;-moz-transition:0.2s;-webkit-transition:0.2s;cursor:pointer}.everything .function-btn span.function-dot-2{position:absolute;border-radius:50%;width:6px;height:6px;margin:5px;background-color:#bbbbbb;cursor:pointer}.everything .function-btn span.function-dot-1:hover{background-color:#5a5a5a}.everything .project.collapse>.function-btn span.function-dot-1{background-color:#5a5a5a}
+.everything {
+  overflow: hidden; }
+
+.everything .content, .everything .func-btn {
+  display: inline-block;
+  float: left; }
+.everything .project {
+  position: relative;
+  width: auto;
+  line-height: 30px;
+  outline: none; }
+.everything .project.onlychildren > .children {
+  border-left: 0; }
+.everything .project.onlychildren > .project-content {
+  display: none; }
+.everything .project.onlychildren > .function-btn {
+  display: none; }
+.everything .et-row.hi {
+  background-color: rgba(231, 235, 244, 0.91);
+  outline: none; }
+.everything .project-content:hover, .everything .project-content:focus {
+  background-color: #222; }
+.everything .project-content {
+  outline: none;
+  line-height: 30px;
+  padding: 2px 0 2px 6px;
+  margin-left: 30px;
+  color: #fafafa;
+  font-family: roboto, 'microsoft yahei', 'sans-serif'; }
+.everything .content {
+  position: relative;
+  left: 30px; }
+.everything .children {
+  margin-left: 16px;
+  border-left: 1px solid #555;
+  padding-left: 24px;
+  overflow: hidden; }
+.everything .children.collapse {
+  height: 0; }
+.everything .function-btn {
+  position: absolute;
+  height: 34px;
+  width: 34px; }
+.everything .function-btn span.function-dot-1 {
+  position: absolute;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  margin: 9px;
+  background-color: transparent;
+  transition: 0.2s;
+  -moz-transition: 0.2s;
+  -webkit-transition: 0.2s;
+  cursor: pointer; }
+.everything .function-btn span.function-dot-2 {
+  position: absolute;
+  border-radius: 50%;
+  width: 6px;
+  height: 6px;
+  margin: 5px;
+  background-color: #bbbbbb;
+  cursor: pointer; }
+.everything .function-btn span.function-dot-1:hover {
+  background-color: #5a5a5a; }
+.everything .project.collapse >
+.function-btn span.function-dot-1 {
+  background-color: #5a5a5a; }
+.everything .project.package.editor > .project-content {
+  padding: 0; }
+
 /*# sourceMappingURL=everything.css.map */
