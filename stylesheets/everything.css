@@ -18,8 +18,6 @@
 .everything .et-row.hi {
   background-color: rgba(231, 235, 244, 0.91);
   outline: none; }
-.everything .project-content:hover, .everything .project-content:focus {
-  background-color: #222; }
 .everything .project-content {
   outline: none;
   line-height: 30px;

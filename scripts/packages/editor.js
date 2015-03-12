@@ -44,7 +44,7 @@ define(function(require,exports,module){
         this.titleElement = title;
         this.contentElement.appendChild(title);
         // add codemirror
-        var createCodeMirror = function(el){
+        var createCodeMirror = function(el,contentValue){
             var codeMirrorOptions = {
                 theme: 'zenburn',
                 tabSize: 4,
@@ -57,11 +57,12 @@ define(function(require,exports,module){
                     underscoresBreakWords: false,
                     taskLists: true,
                     fencedCodeBlocks: true
-                }
+                },
+                value:contentValue
             };
             return new CodeMirror(el, codeMirrorOptions);
         };
-        this.cm = createCodeMirror(this.contentElement);
+        this.cm = createCodeMirror(this.contentElement,this.data.detail);
         this.focus(this.titleElement);
     };
     editor.node.unLaunchEditor = function(){
