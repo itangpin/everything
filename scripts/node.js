@@ -379,7 +379,7 @@ define(function(require, exports, module){
         siblingNode.setParent(this.parent);
         siblingNode.adjustDom({type:'after',el:this.row});
         this.parent._addChild(siblingNode);
-        siblingNode.focus();
+        siblingNode.focus(siblingNode.contentElement);
     };
 
 /* ============================================================
@@ -398,7 +398,7 @@ define(function(require, exports, module){
         childNode.adjustDom({type:'append',el:this.childrenElement});
         childNode.index = this.children.length;
         this._addChild(childNode);
-        childNode.focus();
+        childNode.focus(childNode.contentElement);
     };
     /**
      * Append a child Node at the tail of the Node
@@ -454,7 +454,7 @@ define(function(require, exports, module){
         var newNode = new Node(data,this.app);
         newNode.setParent(null);
         this.addSiblingNodeBefore(newNode);
-        newNode.focus();
+        newNode.focus(newNode);
         // add the action to the History(redoMgr)
     };
 
@@ -466,7 +466,7 @@ define(function(require, exports, module){
         var newNode = new Node(data, this.app);
         newNode.setParent(null);
         this.addSiblingNodeAfter(newNode);
-        newNode.focus();
+        newNode.focus(newNode);
         // add the action to the History
         this.app.onAction('insertAfter',{
             'node':newNode,
@@ -508,12 +508,12 @@ define(function(require, exports, module){
      * Focus on the element
      * TODO: need to be rewrite
      */
-    Node.prototype.focus = function(){
-        var el = this.contentElement;
+    Node.prototype.focus = function(el){
+        //var el = this.contentElement;
         var range = document.createRange();
         var sel = window.getSelection();
-        if(this.contentElement.innerHTML.length){
-            range.setStart(el,0);
+        if(el.innerHTML.length){
+            range.setStart(el,1);
             range.setEnd(el,1);
         }else{
             range.setStart(el,0);

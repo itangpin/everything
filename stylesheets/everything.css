@@ -66,6 +66,11 @@
 .function-btn span.function-dot-1 {
   background-color: #5a5a5a; }
 .everything .project.package.editor > .project-content {
-  padding: 0; }
+  padding: 8px;
+  background-color: #3f3f3f; }
+.everything .project.package.editor .title {
+  padding: 4px;
+  border-bottom: 1px dotted #646464;
+  margin-bottom: 14px; }
 
 /*# sourceMappingURL=everything.css.map */

@@ -22,8 +22,10 @@ define(function(require,exports,module){
                 // toggle editor
                 if(!this.editorHasLaunched){
                     this.launchEditor();
+                    this.editorHasLaunched = true;
                 }else{
                     this.unLaunchEditor();
+                    this.editorHasLaunched = false;
                 }
                 return false;
             }
@@ -32,9 +34,16 @@ define(function(require,exports,module){
     editor.node.editorHasLaunched = false;
     editor.node.launchEditor = function(){
         this.row.className += ' package editor';
-        var textarea = document.createElement('textarea');
-        this.contentElement.appendChild(textarea);
-        this.codemirrorEl = textarea;
+        // take content offline
+        this.contentElement.innerHTML = "";
+        // add a title input
+        var title = document.createElement('div');
+        title.setAttribute('contentEditable', true);
+        title.className = "title";
+        title.innerText = this.data.content;
+        this.titleElement = title;
+        this.contentElement.appendChild(title);
+        // add codemirror
         var createCodeMirror = function(el){
             var codeMirrorOptions = {
                 theme: 'zenburn',
@@ -50,12 +59,15 @@ define(function(require,exports,module){
                     fencedCodeBlocks: true
                 }
             };
-            this.codemirror = new CodeMirror.fromTextArea(el, codeMirrorOptions);
+            return new CodeMirror(el, codeMirrorOptions);
         };
-        createCodeMirror(this.codemirrorEl);
+        this.cm = createCodeMirror(this.contentElement);
+        this.focus(this.titleElement);
     };
     editor.node.unLaunchEditor = function(){
-
+        $(this.row).removeClass("editor");
+        this.contentElement.removeChild(this.contentElement.childNodes[1]);
+        this.codemirror = undefined;
     };
 
     module.exports = editor;
