@@ -168,11 +168,7 @@ define(function(require, exports, module){
                     this.parent.removeChild(this);
                 }
             }
-            // ctrl + o
-            // activate editor
-            if(79 == event.keyCode && event.ctrlKey){
-                this._onEditorInit();
-            }
+
         }
 
         // Mouse click events
@@ -184,6 +180,25 @@ define(function(require, exports, module){
             }
         }
 
+        // send events to packages' handler
+        this.packageEventsHandle(event);
+    };
+
+/* ============================================================
+ *                   Package Management
+ * ============================================================*/
+
+    Node.prototype.packageEvents = [];
+    /**
+     * Let handlers from packages handle events
+     */
+    Node.prototype.packageEventsHandle = function(events){
+        var thisNode = this;
+        if(this.packageEvents.length){
+            $.each(this.packageEvents, function(index,value){
+                value.call(thisNode,events);
+            });
+        }
     };
 
 
@@ -191,7 +206,8 @@ define(function(require, exports, module){
         var thisNode = this;
         this.packages = this.app.getPackages(packageNameList);
         $.each(this.packages, function(index, value){
-            $.extend(thisNode, value);
+            $.extend(thisNode, value.node);
+            thisNode.packageEvents.push(value.onEvent);
         });
     };
 
@@ -213,8 +229,11 @@ define(function(require, exports, module){
             this.setContent(value);
             return;
         }
-        if(value.content!=undefined && _.isArray(value.children)){
+        if(value.content!=undefined){
             this.setContent(value.content || "");
+        }
+
+        if(_.isArray(value.children)){
             if(value.children){
                 this.setChildren(value.children);
             }
@@ -454,7 +473,7 @@ define(function(require, exports, module){
             'afterNode':this,
             'parent':this.parent
         });
-    }
+    };
     /**
      * Indent the Node,
      * turn the  node into a child node of the sibling node before it.
