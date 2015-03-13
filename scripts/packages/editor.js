@@ -15,21 +15,34 @@ define(function(require,exports,module){
     editor.onEvent = function(event){
         var type = event.type,
             target = event.target;
+        var toggleEditor = function(node){
+            if(!node.editorHasLaunched){
+                node.launchEditor();
+                node.editorHasLaunched = true;
+            }else{
+                node.unLaunchEditor();
+                node.editorHasLaunched = false;
+            }
+        };
         if(type == 'keydown'){
             // keydown events
             if(79 == event.keyCode && event.altKey){
+                // Alt + O
                 event.preventDefault();
                 // toggle editor
-                if(!this.editorHasLaunched){
-                    this.launchEditor();
-                    this.editorHasLaunched = true;
-                }else{
-                    this.unLaunchEditor();
-                    this.editorHasLaunched = false;
-                }
+                toggleEditor(this);
                 return false;
             }
         }
+        // click event
+        if(type == 'click' && event.altKey){
+            if(target == this.buttonElement
+                || target == this.buttonElement.childNodes[0]
+                || target == this.buttonElement.childNodes[0].childNodes[0]){
+                toggleEditor();
+            }
+        }
+
     };
     editor.node.editorHasLaunched = false;
     editor.node.launchEditor = function(){

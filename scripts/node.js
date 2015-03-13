@@ -15,6 +15,9 @@ define(function(require, exports, module){
             this.packageNameList = data.package;
             this.initPackages(this.packageNameList);
         }
+        this.childs = [];
+        this.childrenMap = {};
+        this.isRootNode = false;
         this.id = util.uuid();
         this._createDom();
     };
@@ -30,17 +33,13 @@ define(function(require, exports, module){
         return undefined;
     };
 
-    Node.prototype.children = [];
-    Node.prototype.childrenMap  ={};
-    Node.prototype.isRootNode = false;
-
     /**
      * Reset index of each child
      */
     Node.prototype._updateDomIndexes = function(){
-        var children = this.children;
-        if(children.length){
-            children.forEach(function(child, index){
+        var childs = this.childs;
+        if(childs.length){
+            childs.forEach(function(child, index){
                 child.index = index;
                 child.row.setAttribute('childIndex',index);
             });
@@ -188,20 +187,22 @@ define(function(require, exports, module){
  *                   Package Management
  * ============================================================*/
 
-    Node.prototype.packageEvents = [];
     /**
      * Let handlers from packages handle events
+     * @param events
      */
     Node.prototype.packageEventsHandle = function(events){
         var thisNode = this;
-        if(this.packageEvents.length){
+        if(this.packageEvents && .packageEvents.length){
             $.each(this.packageEvents, function(index,value){
                 value.call(thisNode,events);
             });
         }
     };
-
-
+    /**
+     * Extend the node instance with package instance
+     * @param packageNameList
+     */
     Node.prototype.initPackages = function(packageNameList){
         var thisNode = this;
         this.packages = this.app.getPackages(packageNameList);
@@ -210,6 +211,27 @@ define(function(require, exports, module){
             thisNode.packageEvents.push(value.onEvent);
         });
     };
+
+    /* ============================================================
+     *                   Data  Export Import
+     * ============================================================*/
+
+    /**
+     * Get value, value is a JSON structure
+     */
+    Node.prototype.getValue = function(){
+        var value = {
+            content: this.content
+        };
+        if(this.hasChild()){
+            value.children = [];
+            this.childs.forEach(function(v){
+                value.children.push(v.getValue());
+            });
+        }
+        return value;
+    };
+
 
     /**
      * Set content and children of the node,
@@ -221,11 +243,13 @@ define(function(require, exports, module){
                 content: "",
                 children: value
             };
+            this.valueType = 'array';
             this.data = value;
             this.setValue(value);
             return;
         }
         if(_.isString(value)){
+            this.valueType = 'string';
             this.setContent(value);
             return;
         }
@@ -316,7 +340,7 @@ define(function(require, exports, module){
                 break;
             case 'after':
                 if(this.parent){
-                    var afterNode = this.parent.children[this.index];
+                    var afterNode = this.parent.childs[this.index];
                     if(afterNode){
                         return afterNode;
                     }else{
@@ -396,7 +420,7 @@ define(function(require, exports, module){
         var childNode = new Node(data,this.app);
         childNode.setParent(this);
         childNode.adjustDom({type:'append',el:this.childrenElement});
-        childNode.index = this.children.length;
+        childNode.index = this.childs.length;
         this._addChild(childNode);
         childNode.focus(childNode.contentElement);
     };
@@ -407,15 +431,15 @@ define(function(require, exports, module){
     Node.prototype.appendChild = function(child){
         this.childrenElement.appendChild(child.row);
         this._addChild(child);
-        child.index = this.children.length;
+        child.index = this.childs.length;
     };
     /**
      * Add a node to the children node map
      * @private
      */
-    Node.prototype._addChild = function(child){
-        this.children.push(child);
-        this.childrenMap[child.id] = child;
+    Node.prototype._addChild = function(childNode){
+        this.childs.push(childNode);
+        this.childrenMap[childNode.id] = childNode;
     };
 
     /**
@@ -426,7 +450,7 @@ define(function(require, exports, module){
         var childNode = this.childrenMap[node.id];
         //TODO 有问题
         //childNode.row.parentNode.removeChild(childNode.row);
-        this.children = _.filter(this.children,function(child){
+        this.childs = _.filter(this.childs,function(child){
             return child.id != node.id;
         });
         this.childrenMap[node.id] = undefined;
@@ -438,7 +462,7 @@ define(function(require, exports, module){
      * Tell if the Node has children
      */
     Node.prototype.hasChild = function(){
-        return this.children.length;
+        return this.childs.length;
     };
 
 
@@ -611,6 +635,6 @@ define(function(require, exports, module){
     };
 
 
-    module.exports = Node;
 
+    module.exports = Node;
 });

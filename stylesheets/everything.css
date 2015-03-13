@@ -65,6 +65,7 @@
   background-color: #5a5a5a; }
 .everything .project.package.editor > .project-content {
   padding: 8px;
+  padding-top: 0;
   background-color: #3f3f3f; }
 .everything .project.package.editor .title {
   padding: 4px;
