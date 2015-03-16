@@ -91,6 +91,12 @@ $lightblue: rgba(231, 235, 244, 0.91);
       background-color: #5a5a5a;
     }
 
+  .rootnode-title{
+    margin-left: 53px;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
   // packaged node style
   .project.package.editor>.project-content{
     padding:8px;
@@ -130,6 +136,12 @@ $lightblue: rgba(231, 235, 244, 0.91);
   .project.package.editor .title {
     border-bottom: 1px dotted #aaa;
   }
+  .function-btn span.function-dot-2{
+    background-color: #666;
+  }
+  .function-btn span.function-dot-1:hover{
+    background-color: #bbb;
+  }
 }
 .everything.blue {
   .project-content {
@@ -144,6 +156,7 @@ $lightblue: rgba(231, 235, 244, 0.91);
   .project.package.editor .title {
     border-bottom: 1px dotted #86b5e0;
   }
+
 }
 // toolbar
 .toolbar{

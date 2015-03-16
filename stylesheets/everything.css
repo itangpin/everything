@@ -63,6 +63,10 @@
 .everything .project.collapse >
 .function-btn span.function-dot-1 {
   background-color: #5a5a5a; }
+.everything .rootnode-title {
+  margin-left: 53px;
+  font-size: 24px;
+  margin-bottom: 20px; }
 .everything .project.package.editor > .project-content {
   padding: 8px;
   padding-top: 0;
@@ -87,6 +91,10 @@
   background-color: inherit; }
 .everything.light .project.package.editor .title {
   border-bottom: 1px dotted #aaa; }
+.everything.light .function-btn span.function-dot-2 {
+  background-color: #666; }
+.everything.light .function-btn span.function-dot-1:hover {
+  background-color: #bbb; }
 
 .everything.blue .project-content {
   color: #333; }

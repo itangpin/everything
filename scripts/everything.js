@@ -46,6 +46,7 @@ define(function(require,exports,module){
             el: this.frame
         });
         rootNode.setRoot();
+        this.rootNode = rootNode;
 
         // create one global event listener to handle all events from all nodes
         var onEvent = function(event){
@@ -77,6 +78,19 @@ define(function(require,exports,module){
             app.buttons[value] = btn;
             app.toobarElement.appendChild(btn);
         });
+    };
+    Everything.prototype._createTitle = function(titleText){
+        if(titleText){
+            this.titleText = titleText;
+            var title = document.createElement('div');
+            title.innerHTML = titleText;
+            title.className += "rootnode-title";
+            if($(this.frame).children()){
+                $(this.frame).children().first().before(title);
+            }else{
+                this.frame.appendChild(title);
+            }
+        }
     };
 
     /**
@@ -127,13 +141,31 @@ define(function(require,exports,module){
      */
     Everything.prototype.onAction = function(action,option){
         if(action == 'zoomin'){
-
+            var node = option.node;
+            if(!node){return;}
+            this.zoomIn(node);
         }
         // add action to history
         if(this.history){
             this.history.add(action,option);
         }
         // trigger Extension callbacks
+    };
+    Everything.prototype.zoomIn = function(node){
+        var newRootNode = node;
+        if(!newRootNode){
+            return;
+        }
+        //this.rootNode.row.innerHTML = "";
+        this.frame.removeChild(this.rootNode.row);
+        delete this.rootNode;
+        newRootNode.setRoot();
+        newRootNode.adjustDom({
+            type:'append',
+            el: this.frame
+        });
+        this.rootNode = newRootNode;
+        this._createTitle(this.rootNode.getContent());
     };
 
     Everything.prototype.toggleTheme = function(){
