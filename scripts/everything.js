@@ -47,6 +47,7 @@ define(function(require,exports,module){
         });
         rootNode.setRoot();
         this.rootNode = rootNode;
+        this.veryRootNode = rootNode;
 
         // create one global event listener to handle all events from all nodes
         var onEvent = function(event){
@@ -90,6 +91,39 @@ define(function(require,exports,module){
             }else{
                 this.frame.appendChild(title);
             }
+        }
+    };
+    Everything.prototype._createBread = function(){
+        var app = this;
+        function createEmptyBread(){
+            var bread = document.createElement('div');
+            bread.className = "bread";
+            return bread;
+        }
+        if(this.bread){
+            var path = this.rootNode.getPath();
+            path.forEach(function(v,i){
+                var content;
+                if(v.getContent() != ""){
+                    content = v.getContent();
+                }else if(v == app.veryRootNode){
+                    content = 'Home';
+                }else{
+                    content = 'noname';
+                }
+                var link = document.createElement('div');
+                link.innerHTML = "<a href='#"+ v.id+"'>"+content+"</a>>";
+                link.classList.add('bread-link');
+                app.bread.appendChild(link);
+            });
+        }else{
+            this.bread = createEmptyBread();
+            if($(this.frame).children()){
+                $(this.frame).children().first().before(this.bread);
+            }else{
+                this.frame.appendChild(this.bread);
+            }
+            this._createBread();
         }
     };
 
@@ -158,7 +192,7 @@ define(function(require,exports,module){
         }
         //this.rootNode.row.innerHTML = "";
         this.frame.removeChild(this.rootNode.row);
-        delete this.rootNode;
+        //delete this.rootNode;
         newRootNode.setRoot();
         newRootNode.adjustDom({
             type:'append',
@@ -166,6 +200,7 @@ define(function(require,exports,module){
         });
         this.rootNode = newRootNode;
         this._createTitle(this.rootNode.getContent());
+        this._createBread();
     };
 
     Everything.prototype.toggleTheme = function(){

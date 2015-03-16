@@ -20,6 +20,7 @@ define(function(require, exports, module){
         this.isRootNode = false;
         this.id = util.uuid();
         this._createDom();
+        this.getPath();
     };
 
     Node.getNodeFromTarget = function(target){
@@ -44,6 +45,18 @@ define(function(require, exports, module){
                 child.row.setAttribute('childIndex',index);
             });
         }
+    };
+
+    Node.prototype.getPath = function(){
+        this.path = [];
+        var node = this;
+        while(node){
+            if(node.parent){
+                this.path.unshift(node.parent);
+            }
+            node = node.parent;
+        }
+        return this.path;
     };
 
     /**

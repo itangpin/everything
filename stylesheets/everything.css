@@ -64,14 +64,31 @@
 .function-btn span.function-dot-1 {
   background-color: #5a5a5a; }
 .everything .rootnode-title {
-  margin-left: 53px;
-  font-size: 24px;
-  margin-bottom: 20px; }
-.everything .project.package.editor > .project-content {
-  padding: 8px;
-  padding-top: 0;
+  margin-left: 50px;
+  font-size: 28px;
+  margin-bottom: 20px;
+  font-weight: bold; }
+.everything .bread {
+  margin-left: 50px;
+  color: #979797;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #cacaca; }
+.everything .bread-link > a {
+  color: gray;
+  text-decoration: none;
+  padding-right: 8px; }
+.everything .bread-link {
+  display: inline-block;
+  margin-right: 8px; }
+.everything .bread-link > a:hover {
+  text-decoration: underline; }
+
+.project.package.editor > .project-content {
+  padding: 0 8px 8px;
   background-color: #3f3f3f; }
-.everything .project.package.editor .title {
+
+.project.package.editor .title {
   padding: 4px;
   border-bottom: 1px dotted #646464;
   margin-bottom: 14px; }
