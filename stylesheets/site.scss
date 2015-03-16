@@ -6,13 +6,22 @@ html,body,div{
 html{
   height:100%;
 }
-body{
+body.dark{
   background-color: #333;
   color:white;
 }
+// theme
+body.light{
+  background-color: #fff;
+  color:#333;
+}
+body.blue{
+  background-color: #f0f0f0;
+  color:#333;
+}
 #container{
   width:500px;
-  margin: 20px auto 20px auto;
+  margin: 50px auto 20px auto;
   font-family: roboto, 'microsoft yahei', 'sans-serif';
   font-size: 16px;
 }

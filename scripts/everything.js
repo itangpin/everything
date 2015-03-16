@@ -16,6 +16,16 @@ define(function(require,exports,module){
             this.createContainer();
         }
         this.frame = option.container;
+
+        // theme
+        this.themes = ['dark','light'];
+        if(option.theme){
+            this.theme = option.theme;
+        }else{
+            this.theme = 'dark';
+        }
+        $(this.frame).addClass(this.theme);
+        $(document.body).addClass(this.theme);
         this.history = new History();
         this.packageMgr = new Package();
         this.initPackages();
@@ -28,6 +38,8 @@ define(function(require,exports,module){
 
     Everything.prototype._create= function(data){
         var app = this;
+        // create the tool bar
+        this._createToolBar();
         var rootNode = new Node(data,app);
         rootNode.adjustDom({
             type:'append',
@@ -42,6 +54,28 @@ define(function(require,exports,module){
         var events = ['click', 'keydown'];
         $.each(events, function(index, value){
             app.frame.addEventListener(value, onEvent);
+            app.toobarElement.addEventListener(value, onEvent);
+        });
+    };
+
+    /**
+     * Create the tool bar for global operations
+     * @private
+     */
+    Everything.prototype._createToolBar = function(){
+        var app = this;
+        var toolbar = document.createElement('div');
+        toolbar.className = 'toolbar';
+        this.toobarElement = toolbar;
+        document.body.appendChild(toolbar);
+        var buttons = ['theme'];
+        this.buttons = {};
+        buttons.forEach(function(value,index){
+            var btn = document.createElement('button');
+            btn.className = value;
+            btn.innerText = value;
+            app.buttons[value] = btn;
+            app.toobarElement.appendChild(btn);
         });
     };
 
@@ -65,14 +99,20 @@ define(function(require,exports,module){
     Everything.prototype.onEvent = function(event){
         //event.preventDefault();
         if(event.type == 'keydown'){
-            //onKeydown();
+            onKeydown();
         }
-        var onkeydown = function(){
+        function onKeydown(){
             // TODO
             // moving the focus to the next element
             // search for content
             // undo redo
-        };
+        }
+        if(event.type == 'click'){
+            if(event.target == this.buttons['theme']){
+                console.log('theme');
+                this.toggleTheme();
+            }
+        }
 
         var node = Node.getNodeFromTarget(event.target);
         if(node){
@@ -86,6 +126,9 @@ define(function(require,exports,module){
      * @param {Object} option
      */
     Everything.prototype.onAction = function(action,option){
+        if(action == 'zoomin'){
+
+        }
         // add action to history
         if(this.history){
             this.history.add(action,option);
@@ -93,6 +136,15 @@ define(function(require,exports,module){
         // trigger Extension callbacks
     };
 
+    Everything.prototype.toggleTheme = function(){
+        var index = this.themes.indexOf(this.theme);
+        console.log(index);
+        var index = (index+2)>this.themes.length?0:index+1;
+        var oldTheme = this.theme;
+        this.theme = this.themes[index];
+        $(this.frame).removeClass(oldTheme).addClass(this.theme);
+        $(document.body).removeClass(oldTheme).addClass(this.theme);
+    };
 
     module.exports = Everything;
 });

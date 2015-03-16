@@ -53,7 +53,7 @@ define(function(require,exports,module){
         var title = document.createElement('div');
         title.setAttribute('contentEditable', true);
         title.className = "title";
-        title.innerText = this.data.content;
+        title.innerText = this.value.content;
         this.titleElement = title;
         this.contentElement.appendChild(title);
         // add codemirror
@@ -75,7 +75,7 @@ define(function(require,exports,module){
             };
             return new CodeMirror(el, codeMirrorOptions);
         };
-        this.cm = createCodeMirror(this.contentElement,this.data.detail);
+        this.cm = createCodeMirror(this.contentElement,this.value.detail);
         this.focus(this.titleElement);
     };
     editor.node.unLaunchEditor = function(){

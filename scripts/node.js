@@ -5,14 +5,14 @@
 define(function(require, exports, module){
     var util = require('./util.js');
 
-    var Node = function(data,app,option){
-        this.data = data;
+    var Node = function(value,app,option){
+        this.value = value;
         // app is the instance of the application
         // which hold the status of the apllication
         this.app = app;
-        var package = data.package;
+        var package = value.package;
         if(package && package.length>0 && $.isArray(package)){
-            this.packageNameList = data.package;
+            this.packageNameList = value.package;
             this.initPackages(this.packageNameList);
         }
         this.childs = [];
@@ -85,8 +85,8 @@ define(function(require, exports, module){
         this._onDomReady();
 
         // todo: remove 'write here'
-        if(this.data){
-            this.setValue(this.data);
+        if(this.value){
+            this.setValue(this.value);
         }else{
             this.setValue('');
         }
@@ -133,15 +133,16 @@ define(function(require, exports, module){
         // Keyboard events
         if(type == 'keydown'){
             var keyNum = event.keyCode;
-            // Enter
+            // Ctrl + Enter
             if(keyNum==13 && event.ctrlKey){
                 event.preventDefault();
-                if(event.shiftKey){
-                    this._onInsertBefore({});
-                }else{
-                    // create new line
-                    this.createSiblingNodeAfter();
-                }
+                this.createSiblingNodeAfter();
+                return false;
+            }
+            // Shift + Enter
+            if(keyNum==13 && event.shiftKey){
+                event.preventDefault();
+                this._onInsertBefore({});
                 return false;
             }
             // Tab
@@ -175,7 +176,12 @@ define(function(require, exports, module){
             if(target == this.buttonElement
                 || target == this.buttonElement.childNodes[0]
                 || target == this.buttonElement.childNodes[0].childNodes[0]){
-                this.collapse();
+                if(event.altKey){
+                    this._onZoomIn();
+                }else{
+                    this.collapse();
+                }
+
             }
         }
 
@@ -183,9 +189,9 @@ define(function(require, exports, module){
         this.packageEventsHandle(event);
     };
 
-/* ============================================================
- *                   Package Management
- * ============================================================*/
+    /* ============================================================
+     *                   Package Management
+     * ============================================================*/
 
     /**
      * Let handlers from packages handle events
@@ -193,7 +199,7 @@ define(function(require, exports, module){
      */
     Node.prototype.packageEventsHandle = function(events){
         var thisNode = this;
-        if(this.packageEvents && .packageEvents.length){
+        if(this.packageEvents && this.packageEvents.length){
             $.each(this.packageEvents, function(index,value){
                 value.call(thisNode,events);
             });
@@ -205,6 +211,7 @@ define(function(require, exports, module){
      */
     Node.prototype.initPackages = function(packageNameList){
         var thisNode = this;
+        this.packageEvents = this.packageEvents || [];
         this.packages = this.app.getPackages(packageNameList);
         $.each(this.packages, function(index, value){
             $.extend(thisNode, value.node);
@@ -213,7 +220,7 @@ define(function(require, exports, module){
     };
 
     /* ============================================================
-     *                   Data  Export Import
+     *                   Data  Export && Import
      * ============================================================*/
 
     /**
@@ -221,7 +228,7 @@ define(function(require, exports, module){
      */
     Node.prototype.getValue = function(){
         var value = {
-            content: this.content
+            content: this.content,
         };
         if(this.hasChild()){
             value.children = [];
@@ -238,14 +245,16 @@ define(function(require, exports, module){
      * @param {String|Array|Object} value content of the Node
      */
     Node.prototype.setValue = function(value){
-        if(_.isArray(value)){
+        if($.isArray(value)){
+            // root node's value is an array
             value = {
                 content: "",
                 children: value
             };
+            // value type is used for get value
             this.valueType = 'array';
-            this.data = value;
-            this.setValue(value);
+            this.value = value;
+            this.setValue(this.value);
             return;
         }
         if(_.isString(value)){
@@ -253,11 +262,11 @@ define(function(require, exports, module){
             this.setContent(value);
             return;
         }
+
         if(value.content!=undefined){
             this.setContent(value.content || "");
         }
-
-        if(_.isArray(value.children)){
+        if($.isArray(value.children)){
             if(value.children){
                 this.setChildren(value.children);
             }
@@ -270,6 +279,8 @@ define(function(require, exports, module){
      * @param value
      */
     Node.prototype.setContent= function(value){
+        // TODO
+        // replace http link text with a real link
         if(_.isString(value)){
             this.content = value;
             this.contentElement.innerHTML = this.content;
@@ -286,19 +297,22 @@ define(function(require, exports, module){
 
     /**
      * Set the children Nodes
-     * @param {Array} children
+     * @param {Array} children value array to create children
      */
     Node.prototype.setChildren = function(children){
         var self = this;
-        if(_.isArray(children) && children.length) {
-            _.each(children, function(element,index,list) {
-                self._createChild(element);
+        if($.isArray(children) && children.length) {
+            children.forEach(function(value,index){
+                self._createChild(value);
             });
             // change style of the function dot if has children
             this.row.className += " hasChild";
         }
     };
 
+    /**
+     * Get the content of the row
+     */
     Node.prototype.getContent = function(){
         this.content = this.contentElement.innerHTML;
         return this.content;
@@ -414,10 +428,10 @@ define(function(require, exports, module){
      * Create a child Node
      * called when initiating this node's child nodes
      * @private
-     * @param {object} data
+     * @param {object} value
      */
-    Node.prototype._createChild = function(data){
-        var childNode = new Node(data,this.app);
+    Node.prototype._createChild = function(value){
+        var childNode = new Node(value,this.app);
         childNode.setParent(this);
         childNode.adjustDom({type:'append',el:this.childrenElement});
         childNode.index = this.childs.length;
@@ -472,22 +486,22 @@ define(function(require, exports, module){
 
     /**
      * Insert a new Node before this node
-     * @param {Object} data data to initiating a node
+     * @param {Object} value value to initiating a node
      */
-    Node.prototype._onInsertBefore = function(data){
-        var newNode = new Node(data,this.app);
+    Node.prototype._onInsertBefore = function(value){
+        var newNode = new Node(value,this.app);
         newNode.setParent(null);
         this.addSiblingNodeBefore(newNode);
-        newNode.focus(newNode);
+        newNode.focus(newNode.contentElement);
         // add the action to the History(redoMgr)
     };
 
     /**
      * Insert a new Node after this node
-     * @param {Object} data data to initiating a node
+     * @param {Object} value value to initiating a node
      */
-    Node.prototype._onInsertAfter = function(data){
-        var newNode = new Node(data, this.app);
+    Node.prototype._onInsertAfter = function(value){
+        var newNode = new Node(value, this.app);
         newNode.setParent(null);
         this.addSiblingNodeAfter(newNode);
         newNode.focus(newNode);
@@ -513,10 +527,15 @@ define(function(require, exports, module){
     /**
      *
      */
-    Node.prototype._onUnshift = function(data){
-        var newNode = new Node(data, this.app);
+    Node.prototype._onUnshift = function(value){
+        var newNode = new Node(value, this.app);
         newNode.setParent(this);
 
+    };
+    Node.prototype._onZoomIn = function(){
+        this.app.onAction('zoomin',{
+            node:this
+        });
     };
 
     /**
@@ -560,6 +579,7 @@ define(function(require, exports, module){
             var prevNode = this.parent.findChildById(prevNodeId);
             prevNode.appendChild(this);
             this.parent = prevNode;
+            this.focus(this.contentElement);
         }
     };
 

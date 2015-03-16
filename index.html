@@ -16,7 +16,7 @@
 </head>
 <body>
 <a target="_blank" href="https://github.com/itangpin/everything"><img
-        style="position: absolute; top: 0; right: 0; border: 0;" src="./pic/fork_me_on_github.png"
+        style="position: absolute; top: 40px; right: 0; border: 0;" src="./pic/fork_me_on_github.png"
         alt="Fork me on GitHub"
         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png"></a>
 
@@ -49,7 +49,7 @@
 
         var value = [
             '@author Tang Pin',
-            'Version 0.3.0',
+            'Version 0.3.1',
             {
                 content: "功能用法",
                 children: [
@@ -69,6 +69,13 @@
                 ]
             },
             {
+                content:"新增功能",
+                children:
+                [
+                    "主题切换"
+                ]
+            },
+            {
                 content: "新特性：编辑器，包管理。在这行上按Alt+O",
                 detail: "#标题\n\n*italic*\n\n**加粗**普通",
                 package: ['editor']
@@ -80,16 +87,145 @@
                         "小心驶得万年船",
                         "千里之行始于足下",
                         "未雨绸缪",
-                        "置之死地而后生"
                 ]
             }
         ];
 
-        // var value = ['1','2'];
+        var value = [
+            {
+                content:"前端",
+                children:[
+                    {
+                        content:"Javascript 基础语法",
+                        children:[
+                                "函数是一等公民",
+                                "闭包",
+                                "调试",
+                                "ES6"
+                        ]
+                    },
+                    {
+                        content:"面向对象",
+                        children:[]
+                    },
+                    {
+                        content:"CSS3",
+                        children:[]
+                    },
+                    {
+                        content:"DOM",
+                        children:[
+                                "DOM操作",
+                                "DOM事件处理"
+                        ]
+                    },
+                    {
+                        content:"BOM"
+                    },
+                    {
+                        content:"框架",
+                        children:[
+                                "Angular",
+                                "react",
+                                "jQuery",
+                                "underscore"
+                        ]
+                    },
+                    {
+                        content:"语法糖",
+                        children:[
+                                "Type Script",
+                                "Coffee Script"
+                        ]
+                    },
+                    {
+                        content:"复杂应用",
+                        children:[
+                                "事件系统",
+                            {
+                                content:"组件化",
+                                children:[
+                                        "Angular",
+                                    {
+                                        content:"Polymer",
+                                        children:[
+                                                "Shadow Dom",
+                                                "HTML import"
+                                        ]
+                                    }
+
+                                ]
+                            },
+                            {
+                                content:"模块化",
+                                children:[
+                                        "CMD",
+                                        "AMD",
+                                        "Seajs",
+                                        "RequireJs",
+                                        "Components"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                content:"后端",
+                children:[
+                    {
+                        content:"RESTful API"
+                    },
+                    {
+                        content:"中间件框架",
+                        children:[
+                                "Koa",
+                                "Slim",
+                                "Sinatra",
+                                "Tornado"
+                        ]
+                    },
+                    {
+                        content:"Nodejs",
+                        children:[
+                                "V8",
+                                "io.js",
+                                "单线程机制，事件轮询",
+                                "阿里"
+                        ]
+                    },
+                    {
+                        content:"PHP"
+                    },
+                    {
+                        content:"Linux",
+                        children:[
+                                "部署一个博客",
+                                "《快乐命令行》"
+                        ]
+                    }
+                ]
+            },
+            {
+                content:"人",
+                children:[
+                        "学习能力",
+                        "英文资料阅读能力",
+                        "技术博客",
+                        "Github仓库",
+                    {
+                        content:"热情",
+                        detail:"#如何成为一个大神?\n\n>靠刻苦学习和努力实践，也许能成为高手，甚至精通。但若要成为大神，一定要有一个最不可或缺的因素——热爱。别人做要靠意志力，你做却是享受，谁进步更快？所以说能不能成为大神，一开始就注定了。这就叫做爱的力量。",
+                        package:['editor']
+                    }
+                ]
+            }
+        ];
         var container = document.querySelector(".everything");
 
         var everything = new Everything(value, {
-            container: container
+            container: container,
+            theme: 'light'
         });
     });
 </script>

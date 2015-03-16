@@ -33,9 +33,7 @@ $lightblue: rgba(231, 235, 244, 0.91);
     background-color: $lightblue;
     outline: none;
   }
-//  .project-content:hover,.project-content:focus{
-//    background-color: #222;
-//  }
+
   .project-content{
     outline: none;
 //   css box model !!
@@ -104,6 +102,69 @@ $lightblue: rgba(231, 235, 244, 0.91);
     border-bottom: 1px dotted #646464;
     margin-bottom: 14px;
   }
+
+
 }
-
-
+// theme dark,light
+.everything.dark {
+  .project-content {
+    color: #fafafa;
+  }
+  .project.package.editor > .project-content {
+    background-color: #3f3f3f;
+  }
+  .project.package.editor .title {
+    border-bottom: 1px dotted #646464;
+  }
+}
+.everything.light {
+  .project-content {
+    color: #333;
+  }
+  .children{
+    border-left: 1px solid #E0E0E0;
+  }
+  .project.package.editor > .project-content {
+    background-color: inherit;
+  }
+  .project.package.editor .title {
+    border-bottom: 1px dotted #aaa;
+  }
+}
+.everything.blue {
+  .project-content {
+    color: #333;
+  }
+  .children{
+    border-left: 1px solid #86b5e0;
+  }
+  .project.package.editor > .project-content {
+    background-color: inherit;
+  }
+  .project.package.editor .title {
+    border-bottom: 1px dotted #86b5e0;
+  }
+}
+// toolbar
+.toolbar{
+  position: fixed;
+  top:0;
+  width:100%;
+  height:40px;
+  background-color: rgba(0.9,0.9,0.9,0.5);
+}
+.toolbar{
+  button.theme{
+    position: relative;
+    left: 100px;
+    height: 80%;
+    width: 70px;
+    margin-top: 4px;
+    border: 0;
+    outline: none;
+    background-color: transparent;
+    color: white;
+    font-size: 18px;
+    border-radius: 2px;
+  }
+}
