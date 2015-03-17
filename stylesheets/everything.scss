@@ -141,6 +141,13 @@ $lightblue: rgba(231, 235, 244, 0.91);
   .project.package.editor .title {
     border-bottom: 1px dotted #646464;
   }
+  // bread
+  .bread{
+    border-bottom: 1px solid #535353;
+  }
+  .bread-link a{
+    color:#bababa;
+  }
 }
 .everything.light {
   .project-content {
@@ -150,7 +157,7 @@ $lightblue: rgba(231, 235, 244, 0.91);
     border-left: 1px solid #E0E0E0;
   }
   .project.package.editor > .project-content {
-    background-color: inherit;
+    background-color: #f0f0f0;
   }
   .project.package.editor .title {
     border-bottom: 1px dotted #aaa;

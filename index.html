@@ -11,7 +11,7 @@
     <script src="./spm_modules/codemirror/markdown.js"></script>
     <link rel="stylesheet" href="./spm_modules/codemirror/codemirror.css"/>
     <link rel="stylesheet" href="./spm_modules/codemirror/theme/monokai.css"/>
-    <link rel="stylesheet" href="./spm_modules/codemirror/theme/zenburn.css"/>
+    <link rel="stylesheet" href="./stylesheets/codemirror_themes/xq-light.css"/>
 
 </head>
 <body>
@@ -49,7 +49,7 @@
 
         var value = [
             '@author Tang Pin',
-            'Version 0.3.1',
+            'Version 0.4.1',
             {
                 content: "功能用法",
                 children: [
@@ -72,26 +72,18 @@
                 content:"新增功能",
                 children:
                 [
-                    "主题切换"
+                    "主题切换",
+                    "切换根节点"
                 ]
             },
             {
                 content: "新特性：编辑器，包管理。在这行上按Alt+O",
                 detail: "#标题\n\n*italic*\n\n**加粗**普通",
                 package: ['editor']
-            },
-            {
-                content: "唐家家训",
-                children: [
-                        "爱拼才会赢",
-                        "小心驶得万年船",
-                        "千里之行始于足下",
-                        "未雨绸缪",
-                ]
             }
         ];
 
-        var value = [
+        var value1 = [
             {
                 content:"前端",
                 children:[
@@ -215,7 +207,7 @@
                         "Github仓库",
                     {
                         content:"热情",
-                        detail:"#如何成为一个大神?\n\n>靠刻苦学习和努力实践，也许能成为高手，甚至精通。但若要成为大神，一定要有一个最不可或缺的因素——热爱。别人做要靠意志力，你做却是享受，谁进步更快？所以说能不能成为大神，一开始就注定了。这就叫做爱的力量。",
+                        detail:"#如何成为一个大神?\n\n靠刻苦学习和努力实践，也许能成为高手，甚至精通。但若要成为大神，一定要有一个最不可或缺的因素——热爱。别人做要靠意志力，你做却是享受，谁进步更快？所以说能不能成为大神，一开始就注定了。这就叫做爱的力量。",
                         package:['editor']
                     }
                 ]

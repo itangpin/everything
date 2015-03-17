@@ -100,13 +100,17 @@
   background-color: #3f3f3f; }
 .everything.dark .project.package.editor .title {
   border-bottom: 1px dotted #646464; }
+.everything.dark .bread {
+  border-bottom: 1px solid #535353; }
+.everything.dark .bread-link a {
+  color: #bababa; }
 
 .everything.light .project-content {
   color: #333; }
 .everything.light .children {
   border-left: 1px solid #E0E0E0; }
 .everything.light .project.package.editor > .project-content {
-  background-color: inherit; }
+  background-color: #f0f0f0; }
 .everything.light .project.package.editor .title {
   border-bottom: 1px dotted #aaa; }
 .everything.light .function-btn span.function-dot-2 {

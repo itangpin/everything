@@ -59,7 +59,7 @@ define(function(require,exports,module){
         // add codemirror
         var createCodeMirror = function(el,contentValue){
             var codeMirrorOptions = {
-                theme: 'zenburn',
+                theme: 'xq-light',
                 tabSize: 4,
                 lineNumbers: false,
                 lineWrapping: true,
