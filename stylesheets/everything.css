@@ -107,6 +107,8 @@
 
 .everything.light .project-content {
   color: #333; }
+.everything.light .project-content.highlight {
+  background-color: lightsteelblue; }
 .everything.light .children {
   border-left: 1px solid #E0E0E0; }
 .everything.light .project.package.editor > .project-content {

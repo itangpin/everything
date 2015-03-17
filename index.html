@@ -5,14 +5,13 @@
     <title>everything</title>
     <link rel="stylesheet" href="./stylesheets/everything.css"/>
     <link rel="stylesheet" href="./stylesheets/site.css"/>
-    <script src="./spm_modules/seajs/2.3.0/dist/sea.js"></script>
+    <script src="./bower_components/seajs/dist/sea.js"></script>
     <!-- Codemirror -->
-    <script src="./spm_modules/codemirror/codemirror.js"></script>
-    <script src="./spm_modules/codemirror/markdown.js"></script>
-    <link rel="stylesheet" href="./spm_modules/codemirror/codemirror.css"/>
-    <link rel="stylesheet" href="./spm_modules/codemirror/theme/monokai.css"/>
+    <script src="./bower_components/codemirror/lib/codemirror.js"></script>
+    <script src="./bower_components/codemirror/mode/markdown/markdown.js"></script>
+    <link rel="stylesheet" href="./bower_components/codemirror/lib/codemirror.css"/>
+    <link rel="stylesheet" href="./stylesheets/codemirror_themes/monokai.css"/>
     <link rel="stylesheet" href="./stylesheets/codemirror_themes/xq-light.css"/>
-
 </head>
 <body>
 <a target="_blank" href="https://github.com/itangpin/everything"><img
@@ -41,11 +40,10 @@
 
     seajs.use([
         "./scripts/everything",
-        "jquery",
-        "underscore"
+        "jquery"
     ], function (Everything,
-                 $,
-                 _) {
+                 $
+                 ) {
 
         var value = [
             '@author Tang Pin',

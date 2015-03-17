@@ -21,6 +21,7 @@ define(function(require, exports, module){
         this.id = util.uuid();
         this._createDom();
         this.getPath();
+        this.highlighted = false;
     };
 
     Node.getNodeFromTarget = function(target){
@@ -176,7 +177,7 @@ define(function(require, exports, module){
             // Delete
             if(46 == event.keyCode){
                 event.preventDefault();
-                this.parent.removeChild(self);
+                this.parent.removeChild(this);
                 return false;
             }
             // Backspace on an 'empty' node
@@ -185,7 +186,16 @@ define(function(require, exports, module){
                     this.parent.removeChild(this);
                 }
             }
-
+            // move events
+            if(this.app.mode == "move"){
+                if(event.keyCode == 74 || (event.keyCode == 78 && event.ctrlKey)){
+                    this.move(event);
+                }
+            }
+            // set mode, ESC
+            if(event.keyCode == 27){
+                this.app.setMode('move');
+            }
         }
 
         // Mouse click events
@@ -274,7 +284,7 @@ define(function(require, exports, module){
             this.setValue(this.value);
             return;
         }
-        if(_.isString(value)){
+        if($.type(value) == "string"){
             this.valueType = 'string';
             this.setContent(value);
             return;
@@ -298,7 +308,7 @@ define(function(require, exports, module){
     Node.prototype.setContent= function(value){
         // TODO
         // replace http link text with a real link
-        if(_.isString(value)){
+        if($.type(value)=="string"){
             this.content = value;
             this.contentElement.innerHTML = this.content;
         }
@@ -475,17 +485,15 @@ define(function(require, exports, module){
 
     /**
      * Remove specific child
-     * @param id id of the child Node
+     * @param {Node}node of the child Node
      */
     Node.prototype.removeChild = function(node){
         var childNode = this.childrenMap[node.id];
-        //TODO 有问题
-        //childNode.row.parentNode.removeChild(childNode.row);
-        this.childs = _.filter(this.childs,function(child){
+        this.childs = this.childs.filter(function(child){
             return child.id != node.id;
         });
-        this.childrenMap[node.id] = undefined;
         childNode.row.parentNode.removeChild(childNode.row);
+        this.childrenMap[node.id] = undefined;
         this._updateDomIndexes();
     };
 
@@ -671,6 +679,31 @@ define(function(require, exports, module){
         return this.childrenMap[id];
     };
 
+    /**
+     * Highlight node with background color when
+     * app is at 'move' mode
+     * @type {Function}
+     */
+    Node.prototype.highlight = function(){
+        this.highlighted = true;
+        this.contentElement.classList.add('highlight');
+    };
+    Node.prototype.noHighlight = function(){
+        this.highlighted = false;
+        this.contentElement.classList.remove('highlight');
+    };
+
+    Node.prototype.move = function(event){
+        event.preventDefault();
+        // move to next node
+        var nextNode = this.getRelativeNode('after');
+        if(nextNode){
+            this.noHighlight();
+            nextNode.highlight();
+            this.app.setCurentNode(nextNode);
+        }
+        return false;
+    };
 
 
     module.exports = Node;

@@ -253,5 +253,12 @@ define(function(require,exports,module){
         $(document.body).removeClass(oldTheme).addClass(this.theme);
     };
 
+    Everything.prototype.setMode = function(mode){
+        this.mode = mode;
+    };
+    Everything.prototype.setCurentNode = function(ndoe){
+        this.curentNode = node;
+    };
+
     module.exports = Everything;
 });

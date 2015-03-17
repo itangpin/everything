@@ -153,6 +153,9 @@ $lightblue: rgba(231, 235, 244, 0.91);
   .project-content {
     color: #333;
   }
+  .project-content.highlight{
+    background-color: lightsteelblue;
+  }
   .children{
     border-left: 1px solid #E0E0E0;
   }
