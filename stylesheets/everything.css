@@ -73,7 +73,8 @@
   color: #979797;
   margin-bottom: 10px;
   padding-bottom: 5px;
-  border-bottom: 1px solid #cacaca; }
+  border-bottom: 1px solid #cacaca;
+  font-family: serif; }
 .everything .bread-link > a {
   color: gray;
   text-decoration: none;

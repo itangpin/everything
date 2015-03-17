@@ -105,6 +105,10 @@ define(function(require, exports, module){
         }
     };
 
+    Node.prototype.refreshDom = function(){
+        this._createDom();
+    };
+
     /**
      * Add the created Node to the DOM
      * @param position
@@ -189,7 +193,7 @@ define(function(require, exports, module){
             if(target == this.buttonElement
                 || target == this.buttonElement.childNodes[0]
                 || target == this.buttonElement.childNodes[0].childNodes[0]){
-                if(event.altKey){
+                if(!event.altKey){
                     this._onZoomIn();
                 }else{
                     this.collapse();

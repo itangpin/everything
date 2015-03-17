@@ -1,7 +1,7 @@
 .DS_Store
 _README.md
-idea
+.idea
 Rlease_log.md
 stylesheets/.sass-cache/
-/nbproject/private/
-/nbproject/
+spm_modules/
+bower_components/

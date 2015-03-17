@@ -80,12 +80,24 @@ define(function(require,exports,module){
             app.toobarElement.appendChild(btn);
         });
     };
-    Everything.prototype._createTitle = function(titleText){
-        if(titleText){
+    Everything.prototype._createTitle = function(node){
+        var titleText = node.getContent();
+        if(node == this.veryRootNode){
+            this.frame.removeChild(this.titleElement);
+            this.titleElement = undefined;
+            return;
+        }
+        if(this.titleElement){
             this.titleText = titleText;
+            this.titleElement.innerText = titleText;
+        }else{
+            // create title dom
             var title = document.createElement('div');
             title.innerHTML = titleText;
+            title.setAttribute('contentEditable',true);
             title.className += "rootnode-title";
+            this.titleElement = title;
+            // insert to dom
             if($(this.frame).children()){
                 $(this.frame).children().first().before(title);
             }else{
@@ -95,6 +107,11 @@ define(function(require,exports,module){
     };
     Everything.prototype._createBread = function(){
         var app = this;
+        if(this.rootNode == this.veryRootNode){
+            this.frame.removeChild(this.bread);
+            this.bread = undefined;
+            return;
+        }
         function createEmptyBread(){
             var bread = document.createElement('div');
             bread.className = "bread";
@@ -102,6 +119,7 @@ define(function(require,exports,module){
         }
         if(this.bread){
             var path = this.rootNode.getPath();
+            this.bread.innerHTML = "";
             path.forEach(function(v,i){
                 var content;
                 if(v.getContent() != ""){
@@ -115,6 +133,22 @@ define(function(require,exports,module){
                 link.innerHTML = "<a href='#"+ v.id+"'>"+content+"</a>>";
                 link.classList.add('bread-link');
                 app.bread.appendChild(link);
+            });
+            $(this.bread).find('a').on('click', function(e){
+                var id = $(this).attr('href');
+                id = id.slice(1);
+                console.log(id);
+                var node = app.rootNode.parent;
+                var targetNode;
+                while(node){
+                    if(node.id == id){
+                        targetNode = node;
+                        break;
+                    }else{
+                        node = node.parent;
+                    }
+                }
+                app.zoomIn(targetNode);
             });
         }else{
             this.bread = createEmptyBread();
@@ -156,9 +190,14 @@ define(function(require,exports,module){
             // undo redo
         }
         if(event.type == 'click'){
+            // toggle theme
             if(event.target == this.buttons['theme']){
                 console.log('theme');
                 this.toggleTheme();
+            }
+            // bread
+            if(event.target == this.bread){
+
             }
         }
 
@@ -193,13 +232,14 @@ define(function(require,exports,module){
         //this.rootNode.row.innerHTML = "";
         this.frame.removeChild(this.rootNode.row);
         //delete this.rootNode;
+        newRootNode.refreshDom();
         newRootNode.setRoot();
         newRootNode.adjustDom({
             type:'append',
             el: this.frame
         });
         this.rootNode = newRootNode;
-        this._createTitle(this.rootNode.getContent());
+        this._createTitle(this.rootNode);
         this._createBread();
     };
 
