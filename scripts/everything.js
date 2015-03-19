@@ -2,7 +2,7 @@
  * @author 唐品 (Tang Pin)
  * created at 2015-2-13
  */
-define(function(require,exports,module){
+define(function (require, exports, module) {
 
     var Node = require('./node.js');
     var History = require('./history.js');
@@ -10,18 +10,19 @@ define(function(require,exports,module){
     // packages
     var Editor = require('./packages/editor.js');
 
-    var Everything = function(data,option){
-        if(!option.container){
+    var Everything = function (data, option) {
+        this.index = 0;
+        if (!option.container) {
             // create a container
             this.createContainer();
         }
         this.frame = option.container;
 
         // theme
-        this.themes = ['dark','light'];
-        if(option.theme){
+        this.themes = ['dark', 'light'];
+        if (option.theme) {
             this.theme = option.theme;
-        }else{
+        } else {
             this.theme = 'dark';
         }
         $(this.frame).addClass(this.theme);
@@ -30,19 +31,20 @@ define(function(require,exports,module){
         this.packageMgr = new Package();
         this.initPackages();
         this._create(data);
+        this.mode = 'insert';
     };
 
-    Everything.prototype.createContainer = function(){
+    Everything.prototype.createContainer = function () {
 
     };
 
-    Everything.prototype._create= function(data){
+    Everything.prototype._create = function (data) {
         var app = this;
         // create the tool bar
         this._createToolBar();
-        var rootNode = new Node(data,app);
+        var rootNode = new Node(data, app);
         rootNode.adjustDom({
-            type:'append',
+            type: 'append',
             el: this.frame
         });
         rootNode.setRoot();
@@ -50,13 +52,17 @@ define(function(require,exports,module){
         this.veryRootNode = rootNode;
 
         // create one global event listener to handle all events from all nodes
-        var onEvent = function(event){
+        var onEvent = function (event) {
             app.onEvent(event);
         };
         var events = ['click', 'keydown'];
-        $.each(events, function(index, value){
-            app.frame.addEventListener(value, onEvent);
-            app.toobarElement.addEventListener(value, onEvent);
+        $.each(events, function (index, value) {
+            if(value == 'focus'){
+                app.frame.addEventListener(value,onEvent,true);
+            }else{
+                app.frame.addEventListener(value, onEvent);
+                app.toobarElement.addEventListener(value, onEvent);
+            }
         });
     };
 
@@ -64,7 +70,7 @@ define(function(require,exports,module){
      * Create the tool bar for global operations
      * @private
      */
-    Everything.prototype._createToolBar = function(){
+    Everything.prototype._createToolBar = function () {
         var app = this;
         var toolbar = document.createElement('div');
         toolbar.className = 'toolbar';
@@ -72,7 +78,7 @@ define(function(require,exports,module){
         document.body.appendChild(toolbar);
         var buttons = ['theme'];
         this.buttons = {};
-        buttons.forEach(function(value,index){
+        buttons.forEach(function (value, index) {
             var btn = document.createElement('button');
             btn.className = value;
             btn.innerText = value;
@@ -80,81 +86,82 @@ define(function(require,exports,module){
             app.toobarElement.appendChild(btn);
         });
     };
-    Everything.prototype._createTitle = function(node){
+    Everything.prototype._createTitle = function (node) {
         var titleText = node.getContent();
-        if(node == this.veryRootNode){
+        if (node == this.veryRootNode) {
             this.frame.removeChild(this.titleElement);
             this.titleElement = undefined;
             return;
         }
-        if(this.titleElement){
+        if (this.titleElement) {
             this.titleText = titleText;
             this.titleElement.innerText = titleText;
-        }else{
+        } else {
             // create title dom
             var title = document.createElement('div');
             title.innerHTML = titleText;
-            title.setAttribute('contentEditable',true);
+            title.setAttribute('contentEditable', true);
             title.className += "rootnode-title";
             this.titleElement = title;
             // insert to dom
-            if($(this.frame).children()){
+            if ($(this.frame).children()) {
                 $(this.frame).children().first().before(title);
-            }else{
+            } else {
                 this.frame.appendChild(title);
             }
         }
     };
-    Everything.prototype._createBread = function(){
+    Everything.prototype._createBread = function () {
         var app = this;
-        if(this.rootNode == this.veryRootNode){
+        if (this.rootNode == this.veryRootNode) {
             this.frame.removeChild(this.bread);
             this.bread = undefined;
             return;
         }
-        function createEmptyBread(){
+        function createEmptyBread() {
             var bread = document.createElement('div');
             bread.className = "bread";
             return bread;
         }
-        if(this.bread){
+
+        if (this.bread) {
             var path = this.rootNode.getPath();
             this.bread.innerHTML = "";
-            path.forEach(function(v,i){
+            path.forEach(function (v, i) {
                 var content;
-                if(v.getContent() != ""){
+                if (v.getContent() != "") {
                     content = v.getContent();
-                }else if(v == app.veryRootNode){
+                } else if (v == app.veryRootNode) {
                     content = 'Home';
-                }else{
+                } else {
                     content = 'noname';
                 }
                 var link = document.createElement('div');
-                link.innerHTML = "<a href='#"+ v.id+"'>"+content+"</a>>";
+                link.innerHTML = "<a href='#" + v.id + "'>" + content + "</a>>";
                 link.classList.add('bread-link');
                 app.bread.appendChild(link);
             });
-            $(this.bread).find('a').on('click', function(e){
+            $(this.bread).find('a').on('click', function (e) {
                 var id = $(this).attr('href');
                 id = id.slice(1);
                 console.log(id);
                 var node = app.rootNode.parent;
                 var targetNode;
-                while(node){
-                    if(node.id == id){
+                while (node) {
+                    if (node.id == id) {
                         targetNode = node;
                         break;
-                    }else{
+                    } else {
                         node = node.parent;
                     }
                 }
                 app.zoomIn(targetNode);
             });
-        }else{
+        } else {
             this.bread = createEmptyBread();
-            if($(this.frame).children()){
+            if ($(this.frame).children()) {
                 $(this.frame).children().first().before(this.bread);
-            }else{
+            } else {
                 this.frame.appendChild(this.bread);
             }
             this._createBread();
@@ -164,13 +171,13 @@ define(function(require,exports,module){
     /**
      * Register packages to the package manager
      */
-    Everything.prototype.initPackages = function(){
-        this.packageMgr.add('editor',Editor);
+    Everything.prototype.initPackages = function () {
+        this.packageMgr.add('editor', Editor);
     };
-    Everything.prototype.getPackages = function(packageList){
+    Everything.prototype.getPackages = function (packageList) {
         var packages = [];
         var app = this;
-        $.each(packageList, function(index, value){
+        $.each(packageList, function (index, value) {
             packages.push(app.packageMgr.get(value));
         });
         return packages;
@@ -178,31 +185,36 @@ define(function(require,exports,module){
     /**
      * Handle events on the application element
      */
-    Everything.prototype.onEvent = function(event){
-        //event.preventDefault();
-        if(event.type == 'keydown'){
-            onKeydown();
+    Everything.prototype.onEvent = function (event) {
+        if(this.mode == 'move'){
+            if (event.type == 'keydown') {
+                this.move(event);
+                console.log('keydown');
+            }
+        }else if(this.mode == 'insert'){
+
         }
-        function onKeydown(){
-            // TODO
-            // moving the focus to the next element
-            // search for content
-            // undo redo
+        if(event.keyCode == 27){
+            this.setMode('move');
         }
-        if(event.type == 'click'){
+        //if(event.type == 'focus'){
+        //    this.setCurentNode(Node.getNodeFromTarget(event.target));
+        //}
+
+        if (event.type == 'click') {
             // toggle theme
-            if(event.target == this.buttons['theme']){
+            if (event.target == this.buttons['theme']) {
                 console.log('theme');
                 this.toggleTheme();
             }
             // bread
-            if(event.target == this.bread){
+            if (event.target == this.bread) {
 
             }
         }
 
         var node = Node.getNodeFromTarget(event.target);
-        if(node){
+        if (node) {
             node.onEvent(event);
         }
     };
@@ -212,21 +224,23 @@ define(function(require,exports,module){
      * @param {String} action action name
      * @param {Object} option
      */
-    Everything.prototype.onAction = function(action,option){
-        if(action == 'zoomin'){
+    Everything.prototype.onAction = function (action, option) {
+        if (action == 'zoomin') {
             var node = option.node;
-            if(!node){return;}
+            if (!node) {
+                return;
+            }
             this.zoomIn(node);
         }
         // add action to history
-        if(this.history){
-            this.history.add(action,option);
+        if (this.history) {
+            this.history.add(action, option);
         }
         // trigger Extension callbacks
     };
-    Everything.prototype.zoomIn = function(node){
+    Everything.prototype.zoomIn = function (node) {
         var newRootNode = node;
-        if(!newRootNode){
+        if (!newRootNode) {
             return;
         }
         //this.rootNode.row.innerHTML = "";
@@ -235,7 +249,7 @@ define(function(require,exports,module){
         newRootNode.refreshDom();
         newRootNode.setRoot();
         newRootNode.adjustDom({
-            type:'append',
+            type: 'append',
             el: this.frame
         });
         this.rootNode = newRootNode;
@@ -243,22 +257,82 @@ define(function(require,exports,module){
         this._createBread();
     };
 
-    Everything.prototype.toggleTheme = function(){
+    Everything.prototype.toggleTheme = function () {
         var index = this.themes.indexOf(this.theme);
         console.log(index);
-        var index = (index+2)>this.themes.length?0:index+1;
+        var index = (index + 2) > this.themes.length ? 0 : index + 1;
         var oldTheme = this.theme;
         this.theme = this.themes[index];
         $(this.frame).removeClass(oldTheme).addClass(this.theme);
         $(document.body).removeClass(oldTheme).addClass(this.theme);
     };
 
-    Everything.prototype.setMode = function(mode){
+
+    /**
+     * Set mode. 'move' mode, move the focus from one node to another
+     * @param mode
+     */
+    Everything.prototype.setMode = function (mode) {
+        var prevMode = this.mode;
         this.mode = mode;
+        if(prevMode=='insert' || this.mode=='move'){
+            this.curentNode.highlight();
+            // blur
+            //this.curentNode.blur();
+        }
     };
-    Everything.prototype.setCurentNode = function(ndoe){
+    Everything.prototype.setCurentNode = function (node) {
         this.curentNode = node;
     };
+    /**
+     * Move focus from one node to another
+     * Move to next node: j || ctrl+n ||  space
+     * Move to previous node: k || ctrl+p  || shift+space
+     * @param event
+     */
+    Everything.prototype.move = function (event) {
+        event.preventDefault();
+        if(event.keyCode==74){
+            this.moveNext();
+        }
+        if(event.keyCode==75){
+            this.movePrev();
+        }
+        return false;
+    };
+    Everything.prototype.moveNext = function(){
+        this.index++;
+        if(this.index == 2){
+            console.log(this.curentNode);
+        }
+        var curentNode = this.curentNode;
+        if(curentNode){
+            var newCurentNode;
+            if(curentNode.hasChild()){
+                newCurentNode = curentNode.childs[0];
+            }else{
+                newCurentNode = curentNode.getRelativeNode('after');
+            }
+            curentNode.noHighlight();
+            newCurentNode.highlight();
+            //this.setCurentNode(newCurentNode);
+            this.curentNode = newCurentNode;
+            console.log('c'+curentNode.getContent()+';;;n'+newCurentNode.getContent());
+        }else{
+            this.moveToFirst();
+        }
+    };
+    Everything.prototype.movePrev = function(){};
+    Everything.prototype.moveToFirst = function(){
+        if(this.rootNode && this.rootNode.hasChild()){
+            var firstChild = this.rootNode.childs[0];
+            this.setCurentNode(firstChild);
+            firstChild.highlight();
+        }
+    };
+    Everything.prototype.moveToLast = function(){};
+
+
 
     module.exports = Everything;
 });

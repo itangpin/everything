@@ -188,13 +188,6 @@ define(function(require, exports, module){
             }
             // move events
             if(this.app.mode == "move"){
-                if(event.keyCode == 74 || (event.keyCode == 78 && event.ctrlKey)){
-                    this.move(event);
-                }
-            }
-            // set mode, ESC
-            if(event.keyCode == 27){
-                this.app.setMode('move');
             }
         }
 
@@ -210,7 +203,12 @@ define(function(require, exports, module){
                 }
 
             }
+            if(target == this.contentElement){
+                this.app.setCurentNode(this);
+            }
         }
+
+
 
         // send events to packages' handler
         this.packageEventsHandle(event);
@@ -381,7 +379,7 @@ define(function(require, exports, module){
                 break;
             case 'after':
                 if(this.parent){
-                    var afterNode = this.parent.childs[this.index];
+                    var afterNode = this.parent.childs[this.index+1];
                     if(afterNode){
                         return afterNode;
                     }else{
@@ -590,6 +588,9 @@ define(function(require, exports, module){
         sel.removeAllRanges();
         sel.addRange(range);
         el.focus();
+    };
+    Node.prototype.blur = function(){
+        this.contentElement.blur();
     };
 
     /**
