@@ -3,8 +3,12 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>everything</title>
+    <!-- Everything Stylesheet -->
     <link rel="stylesheet" href="./stylesheets/everything.css"/>
     <link rel="stylesheet" href="./stylesheets/site.css"/>
+    <!-- Everything Theme -->
+    <link rel="stylesheet" href="./stylesheets/everything_theme/light.css"/>
+    <link rel="stylesheet" href="./stylesheets/everything_theme/dark.css"/>
     <script src="./bower_components/seajs/dist/sea.js"></script>
     <!-- Codemirror -->
     <script src="./bower_components/codemirror/lib/codemirror.js"></script>
@@ -31,8 +35,7 @@
             "underscore": "http://cdn.bootcss.com/underscore.js/1.6.0/underscore-min.js"
         },
         alias: {
-            "jquery": "./spm_modules/jquery/2.1.3/jquery.min.js",
-            "underscore": "./spm_modules/underscore/1.6.0/underscore-min.js",
+            "jquery": "./bower_components/jquery/dist/jquery.min.js",
             "codemirror": "./spm_modules/codemirror/codemirror.js",
             "codemirror-mode-md": "./spm_modules/codemirror/markdown.js"
         }
@@ -215,7 +218,7 @@
 
         var everything = new Everything(value, {
             container: container,
-            theme: 'light'
+//            theme: 'light'
         });
     });
 </script>

@@ -1,0 +1,42 @@
+//dark theme for everything
+
+.everything.dark{
+
+    .project-content{
+        color: #fafafa;
+    }
+    .project-content.highlight{
+        background-color: #464646;
+    }
+    .project .children{
+        border-left: 1px solid #505050;
+    }
+    .project.onlychildren>.children{
+        border-left: 0;
+    }
+
+    // function dot
+    .function-btn span.function-dot-2{
+        background-color: #bbbbbb;
+    }
+    .function-btn span.function-dot-1:hover{
+        background-color: #5a5a5a;
+    }
+
+    // editor
+    .project.package.editor .title {
+        border-bottom: 1px dotted #646464;
+    }
+    .project.package.editor > .project-content {
+        background-color: #3f3f3f;
+    }
+
+    // bread crumb
+    .bread{
+        border-bottom: 1px solid #535353;
+    }
+    .bread-link a{
+        color:#bababa;
+    }
+
+}

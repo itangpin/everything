@@ -1,212 +1,157 @@
-
-
 $lightblue: rgba(231, 235, 244, 0.91);
 @mixin transition($sec) {
-  transition: $sec;
-  -moz-transition: $sec;
-  -webkit-transition: $sec;
+    transition: $sec;
+    -moz-transition: $sec;
+    -webkit-transition: $sec;
 }
-.everything{
-  overflow: hidden;
-}
-.everything{
-  .content, .func-btn{
-    display: inline-block;
-    float: left;
-  }
-  .project{
-    position: relative;
-    width:auto;
-    line-height: 30px;
-    outline:none;
-  }
-  .project.onlychildren>.children{
-      border-left: 0;
-    }
-  .project.onlychildren>.project-content{
-    display: none;
-  }
-  .project.onlychildren>.function-btn{
-    display: none;
-  }
-  .et-row.hi{
-    background-color: $lightblue;
-    outline: none;
-  }
 
-  .project-content{
-    outline: none;
-//   css box model !!
-//    width:100%;
-    line-height: 30px;
-    padding:2px 0 2px 6px;
-    margin-left: 30px;
-    color:#fafafa;
-    font-family: roboto, 'microsoft yahei', 'sans-serif';
-  }
-  .content{
-    position: relative;
-    left:30px;
-  }
-  .children{
-    margin-left:16px;
-    border-left: 1px solid #555;
-    padding-left: 24px;
+.everything {
     overflow: hidden;
-  }
-  .children.collapse{
-    height: 0;
-  }
-//  function btn
-  .function-btn{
-    position: absolute;
-    height:34px;
-    width:34px;
-  }
-  .function-btn span.function-dot-1{
-    position:absolute;
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    margin: 9px;
-    background-color: transparent;
-    @include transition(.2s);
-    cursor: pointer;
-//    z-index: 999;
-  }
-  .function-btn span.function-dot-2{
-    position:absolute;
-    border-radius: 50%;
-    width:6px;
-    height:6px;
-    margin:5px;
-    background-color: #bbbbbb;
-    cursor: pointer;
-  }
-  .function-btn span.function-dot-1:hover{
-    background-color: #5a5a5a;
-  }
-  .project.collapse>
-    .function-btn span.function-dot-1{
-      background-color: #5a5a5a;
-    }
-
-  .rootnode-title{
-    margin-left: 50px;
-    font-size: 28px;
-    margin-bottom: 20px;
-    font-weight: bold;
-  }
-  .bread{
-    margin-left: 50px;
-    color: #979797;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #cacaca;
-    font-family: serif;
-  }
-  .bread-link>a{
-    color:gray;
-    text-decoration: none;
-    padding-right: 8px;
-  }
-  .bread-link{
-    display: inline-block;
-    margin-right: 8px;
-  }
-  .bread-link>a:hover{
-    text-decoration: underline;
-  }
 }
 
-  // packaged node style
-  .project.package.editor>.project-content{
+.everything {
+    .content, .func-btn {
+        display: inline-block;
+        float: left;
+    }
+    .project {
+        position: relative;
+        width: auto;
+        line-height: 30px;
+        outline: none;
+    }
+    .project.onlychildren > .children {
+        border-left: 0;
+    }
+    .project.onlychildren > .project-content {
+        display: none;
+    }
+    .project.onlychildren > .function-btn {
+        display: none;
+    }
+    .et-row.hi {
+        background-color: $lightblue;
+        outline: none;
+    }
+
+    .project-content {
+        outline: none;
+        //   css box model !!
+        //    width:100%;
+        line-height: 30px;
+        padding: 2px 0 2px 6px;
+        margin-left: 30px;
+        color: #fafafa;
+        font-family: roboto, 'microsoft yahei', 'sans-serif';
+    }
+    .content {
+        position: relative;
+        left: 30px;
+    }
+    .children {
+        margin-left: 16px;
+        border-left: 1px solid #555;
+        padding-left: 24px;
+        overflow: hidden;
+    }
+    .children.collapse {
+        height: 0;
+    }
+    //  function btn
+    .function-btn {
+        position: absolute;
+        height: 34px;
+        width: 34px;
+    }
+    .function-btn span.function-dot-1 {
+        position: absolute;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        margin: 9px;
+        background-color: transparent;
+        @include transition(.2s);
+        cursor: pointer;
+        //    z-index: 999;
+    }
+    .function-btn span.function-dot-2 {
+        position: absolute;
+        border-radius: 50%;
+        width: 6px;
+        height: 6px;
+        margin: 5px;
+        background-color: #bbbbbb;
+        cursor: pointer;
+    }
+    .function-btn span.function-dot-1:hover {
+        background-color: #5a5a5a;
+    }
+    .project.collapse >
+    .function-btn span.function-dot-1 {
+        background-color: #5a5a5a;
+    }
+
+    .rootnode-title {
+        margin-left: 50px;
+        font-size: 28px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+    .bread {
+        margin-left: 50px;
+        color: #979797;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #535353;
+        font-family: serif;
+    }
+    .bread-link > a {
+        color: #bababa;
+        text-decoration: none;
+        padding-right: 8px;
+    }
+    .bread-link {
+        display: inline-block;
+        margin-right: 8px;
+    }
+    .bread-link > a:hover {
+        text-decoration: underline;
+    }
+}
+
+// packaged node style
+.project.package.editor > .project-content {
     padding: 0 8px 8px;
     background-color: #3f3f3f;
-  }
+}
 
-  .project.package.editor .title{
-    padding:4px;
+.project.package.editor .title {
+    padding: 4px;
     border-bottom: 1px dotted #646464;
     margin-bottom: 14px;
 }
-// theme dark,light
-.everything.dark {
-  .project-content {
-    color: #fafafa;
-  }
-  .project.package.editor > .project-content {
-    background-color: #3f3f3f;
-  }
-  .project.package.editor .title {
-    border-bottom: 1px dotted #646464;
-  }
-  // bread
-  .bread{
-    border-bottom: 1px solid #535353;
-  }
-  .bread-link a{
-    color:#bababa;
-  }
-}
-.everything.light {
-  .project-content {
-    color: #333;
-  }
-  .project-content.highlight{
-    background-color: lightsteelblue;
-  }
-  .children{
-    border-left: 1px solid #E0E0E0;
-  }
-  .project.package.editor > .project-content {
-    background-color: #f0f0f0;
-  }
-  .project.package.editor .title {
-    border-bottom: 1px dotted #aaa;
-  }
-  .function-btn span.function-dot-2{
-    background-color: #666;
-  }
-  .function-btn span.function-dot-1:hover{
-    background-color: #bbb;
-  }
-}
-.everything.blue {
-  .project-content {
-    color: #333;
-  }
-  .children{
-    border-left: 1px solid #86b5e0;
-  }
-  .project.package.editor > .project-content {
-    background-color: inherit;
-  }
-  .project.package.editor .title {
-    border-bottom: 1px dotted #86b5e0;
-  }
 
-}
 // toolbar
-.toolbar{
-  position: fixed;
-  top:0;
-  width:100%;
-  height:40px;
-  background-color: rgba(0.9,0.9,0.9,0.5);
+.toolbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 40px;
+    background-color: rgba(0.9, 0.9, 0.9, 0.5);
 }
-.toolbar{
-  button.theme{
-    position: relative;
-    left: 100px;
-    height: 80%;
-    width: 70px;
-    margin-top: 4px;
-    border: 0;
-    outline: none;
-    background-color: transparent;
-    color: white;
-    font-size: 18px;
-    border-radius: 2px;
-  }
+
+.toolbar {
+    button.theme {
+        position: relative;
+        left: 100px;
+        height: 80%;
+        width: 70px;
+        margin-top: 4px;
+        border: 0;
+        outline: none;
+        background-color: transparent;
+        color: white;
+        font-size: 18px;
+        border-radius: 2px;
+    }
 }
