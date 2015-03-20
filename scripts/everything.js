@@ -184,8 +184,14 @@ define(function (require, exports, module) {
 
         this.frame.appendChild(addBtnWrapper);
 
+        // add child
         $(addChildBtn).on('click', function(){
             app.rootNode._createChild({});
+            app.frame.removeChild(addBtnWrapper);
+        });
+        // launch editor
+        $(launchEditorBtn).on('click', function(){
+            app.switchRootNodeWithPackage(['editor']);
             app.frame.removeChild(addBtnWrapper);
         });
     };
@@ -203,6 +209,17 @@ define(function (require, exports, module) {
             packages.push(app.packageMgr.get(value));
         });
         return packages;
+    };
+    Everything.prototype.switchRootNodeWithPackage = function(packages){
+        // concat the two array
+        var nodeValue = this.rootNode.getValue();
+        nodeValue.package = packages;
+        var node = new Node(nodeValue,this);
+        node.setParent(this.rootNode.parent);
+        this.zoomIn(node,true);
+        if(packages.indexOf('editor') != -1){
+            node.launchEditor();
+        }
     };
     /**
      * Handle events on the application element
@@ -260,13 +277,14 @@ define(function (require, exports, module) {
         }
         // trigger Extension callbacks
     };
-    Everything.prototype.zoomIn = function (node) {
+    Everything.prototype.zoomIn = function (node, hasContent) {
         var newRootNode = node;
         if (!newRootNode) {
             return;
         }
         //this.rootNode.row.innerHTML = "";
         this.frame.removeChild(this.rootNode.row);
+        //this.frame.removeChild(this.);
         //delete this.rootNode;
         newRootNode.refreshDom();
         newRootNode.setRoot();
@@ -277,7 +295,8 @@ define(function (require, exports, module) {
         this.rootNode = newRootNode;
         this._createTitle(this.rootNode);
         this._createBread();
-        if(!this.rootNode.hasChild()){
+        if(hasContent === false ||
+            (hasContent == undefined && !this.rootNode.hasChild())){
             this._createAddButton();
         }
     };

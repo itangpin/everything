@@ -75,7 +75,7 @@ define(function(require,exports,module){
             };
             return new CodeMirror(el, codeMirrorOptions);
         };
-        this.cm = createCodeMirror(this.contentElement,this.value.detail);
+        this.cm = createCodeMirror(this.contentElement,this.value.detail || "");
         this.focus(this.titleElement);
     };
     editor.node.unLaunchEditor = function(){
