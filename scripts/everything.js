@@ -23,7 +23,7 @@ define(function (require, exports, module) {
         if (option.theme) {
             this.theme = option.theme;
         } else {
-            this.theme = 'dark';
+            this.theme = 'light';
         }
         $(this.frame).addClass(this.theme);
         $(document.body).addClass(this.theme);
@@ -168,6 +168,28 @@ define(function (require, exports, module) {
         }
     };
 
+    Everything.prototype._createAddButton = function(){
+        var app = this;
+        var addChildBtn = document.createElement('a');
+        addChildBtn.innerHTML = "Add a child";
+        addChildBtn.setAttribute('href','#');
+        var launchEditorBtn = document.createElement('a');
+        launchEditorBtn.setAttribute('href','#');
+        launchEditorBtn.innerHTML = 'Edit';
+
+        var addBtnWrapper = document.createElement('div');
+        addBtnWrapper.classList.add('add-wrapper');
+        addBtnWrapper.appendChild(addChildBtn);
+        addBtnWrapper.appendChild(launchEditorBtn);
+
+        this.frame.appendChild(addBtnWrapper);
+
+        $(addChildBtn).on('click', function(){
+            app.rootNode._createChild({});
+            app.frame.removeChild(addBtnWrapper);
+        });
+    };
+
     /**
      * Register packages to the package manager
      */
@@ -255,6 +277,9 @@ define(function (require, exports, module) {
         this.rootNode = newRootNode;
         this._createTitle(this.rootNode);
         this._createBread();
+        if(!this.rootNode.hasChild()){
+            this._createAddButton();
+        }
     };
 
     Everything.prototype.toggleTheme = function () {
@@ -282,7 +307,14 @@ define(function (require, exports, module) {
         }
     };
     Everything.prototype.setCurentNode = function (node) {
+        var oldCurentNode = this.curentNode;
         this.curentNode = node;
+        if(this.mode == 'move'){
+            oldCurentNode.noHighlight();
+            node.highlight();
+        }
+
+        //this.curentNode.highlight();
     };
     /**
      * Move focus from one node to another

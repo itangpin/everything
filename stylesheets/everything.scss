@@ -96,6 +96,7 @@ $lightblue: rgba(231, 235, 244, 0.91);
         font-size: 28px;
         margin-bottom: 20px;
         font-weight: bold;
+        outline: none;
     }
     .bread {
         margin-left: 50px;
@@ -117,9 +118,21 @@ $lightblue: rgba(231, 235, 244, 0.91);
     .bread-link > a:hover {
         text-decoration: underline;
     }
+
+
+    .add-wrapper{
+        margin-left: 52px;
+    }
+    .add-wrapper a{
+        margin-right: 10px;
+        color: gray;
+    }
+    .add-wrapper a:visited {
+        margin-right: 10px;
+    }
 }
 
-// packaged node style
+// ========= packaged node style ============
 .project.package.editor > .project-content {
     padding: 0 8px 8px;
     background-color: #3f3f3f;
@@ -131,7 +144,7 @@ $lightblue: rgba(231, 235, 244, 0.91);
     margin-bottom: 14px;
 }
 
-// toolbar
+// =============== toolbar ==================
 .toolbar {
     position: fixed;
     top: 0;
