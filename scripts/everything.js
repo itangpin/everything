@@ -7,6 +7,7 @@ define(function (require, exports, module) {
     var Node = require('./node.js');
     var History = require('./history.js');
     var Package = require('./package.js');
+    var EventMgr = require('./event.js');
     // packages
     var Editor = require('./packages/editor.js');
 
@@ -29,9 +30,39 @@ define(function (require, exports, module) {
         $(document.body).addClass(this.theme);
         this.history = new History();
         this.packageMgr = new Package();
+        this.init();
+        // move to this.init
         this.initPackages();
         this._create(data);
         this.mode = 'insert';
+    };
+
+    Everything.prototype.init = function(){
+        this.eventMgr = new EventMgr();
+    };
+
+    /**
+     * Get Node value
+     * @param type
+     * @returns {*}
+     * @private
+     */
+    Everything.prototype._getValue = function(type){
+        if(type == 'current'){
+            return this.rootNode.getValue();
+        }
+
+        if(type == 'root'){
+            return this.veryRootNode.getValue();
+        }
+    };
+
+    Everything.prototype.getRootValue = function(){
+        return this._getValue('root');
+    };
+
+    Everything.prototype.getCurentValue = function(){
+        return this._getValue('current');
     };
 
     Everything.prototype.createContainer = function () {
@@ -81,7 +112,7 @@ define(function (require, exports, module) {
         buttons.forEach(function (value, index) {
             var btn = document.createElement('button');
             btn.className = value;
-            btn.innerText = value;
+            btn.innerHTML = value;
             app.buttons[value] = btn;
             app.toobarElement.appendChild(btn);
         });
@@ -226,7 +257,7 @@ define(function (require, exports, module) {
      */
     Everything.prototype.onEvent = function (event) {
         if(this.mode == 'move'){
-            if (event.type == 'keydown') {
+            if (event.type == 'keydown' || event.type=='focus') {
                 this.move(event);
                 console.log('keydown');
             }
@@ -301,6 +332,9 @@ define(function (require, exports, module) {
         }
     };
 
+    /**
+     * Switch color theme of the app
+     */
     Everything.prototype.toggleTheme = function () {
         var index = this.themes.indexOf(this.theme);
         console.log(index);
@@ -309,6 +343,8 @@ define(function (require, exports, module) {
         this.theme = this.themes[index];
         $(this.frame).removeClass(oldTheme).addClass(this.theme);
         $(document.body).removeClass(oldTheme).addClass(this.theme);
+        // trigger theme change event
+        this.eventMgr.fire('themeChange', [this.theme]);
     };
 
 
@@ -322,7 +358,8 @@ define(function (require, exports, module) {
         if(prevMode=='insert' || this.mode=='move'){
             this.curentNode.highlight();
             // blur
-            //this.curentNode.blur();
+            $(this.curentNode).blur();
+            this.curentNode.row.setAttribute('contentEditable', 'false');
         }
     };
     Everything.prototype.setCurentNode = function (node) {
