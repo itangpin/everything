@@ -172,6 +172,7 @@ define(function (require, exports, module) {
                 link.classList.add('bread-link');
                 app.bread.appendChild(link);
             });
+            // add event listener
             $(this.bread).find('a').on('click', function (e) {
                 var id = $(this).attr('href');
                 id = id.slice(1);
@@ -420,7 +421,7 @@ define(function (require, exports, module) {
     };
     Everything.prototype.moveToLast = function(){};
 
-
+    //
 
     module.exports = Everything;
 });

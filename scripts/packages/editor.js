@@ -62,6 +62,18 @@ define(function(require,exports,module){
 
     };
     editor.node.editorHasLaunched = false;
+    var getTheme = function(appTheme){
+        var theme;
+        switch (appTheme){
+            case 'dark':
+                theme = 'monokai';
+                break;
+            case 'light':
+                theme = 'xq-light';
+                break;
+        }
+        return theme;
+    };
     editor.node.launchEditor = function(theme){
         this.row.className += ' package editor';
         // take content offline
@@ -93,7 +105,10 @@ define(function(require,exports,module){
             };
             return new CodeMirror(el, codeMirrorOptions);
         };
-        this.cm = createCodeMirror(this.contentElement,this.value.detail || "",theme);
+
+        this.cm = createCodeMirror(this.contentElement,
+            this.value.detail || "",
+            getTheme(this.app.theme));
         this.hasLauchEditor = true;
         this.focus(this.titleElement);
 
