@@ -39,6 +39,7 @@ define(function (require, exports, module) {
 
     Everything.prototype.init = function(){
         this.eventMgr = new EventMgr();
+        this.crumb = new Crumb(this);
     };
 
     /**
@@ -421,7 +422,144 @@ define(function (require, exports, module) {
     };
     Everything.prototype.moveToLast = function(){};
 
-    //
+    // Bread crumb manager
+    var Crumb = function(app){
+        if(!app){return;}
+        this.app = app;
+        this.app.eventMgr.addListener('rootNodeChange', this.onRootNodeChange);
+    };
+    /**
+     * Get dom for the crumb wrapper
+     * @param path
+     * @returns {Array} array contains all the dom of the crumb
+     */
+    Crumb.prototype.getDom = function(path){
+        var app = this.app;
+        var self = this;
+        var domArray = [];
+        path.forEach(function(v,i){
+            var content = v.getContent();
+            if(v.veryRootNode){
+                content = 'Home';
+            } else if (v.getContent() == ""){
+                content = 'noname';
+            }
+            var link = crel('div', {class: 'crumb-link'},
+                crel('a',{href: '#'+ v.id}, content)
+            );
+            // add event listener
+            $(app.bread).find('a').on('click', function(){
+                self.onEvent($(this));
+
+            });
+            domArray.push(link);
+        });
+        return domArray;
+    };
+
+    /**
+     * Append links to the crumb
+     * or create crumb if not exist
+     * and the append the links
+     */
+    Crumb.prototype.render = function(){
+        var app = this.app;
+        if(app.crumb){
+            var path = this.app.rootNode.getPath();
+            var domArr = this.getDom(path);
+            domArr.forEach(function(v,i){
+                app.bread.appendChild(v);
+            });
+        }else{
+            // create a crumb wrapper and render again
+            app.crumb = crel('div',{class:'crumb'});
+            if ($(app.frame).children()) {
+                $(app.frame).children().first().before(app.bread);
+            } else {
+                app.frame.appendChild(this.bread);
+            }
+            this.render();
+        }
+    };
+    Crumb.prototype.onEvent = function($this){
+        var app = this.app;
+        var id = $this.attr('href').slice(1);
+        var targetNode;
+        var node = app.rootNode.parent;
+        while (node) {
+            if (node.id == id) {
+                targetNode = node;
+                break;
+            } else {
+                node = node.parent;
+            }
+        }
+        app.eventMgr.fire('rootNodeChange',targetNode);
+        //app.zoomIn(targetNode);
+    };
+    Crumb.prototype.onRootNodeChange = function(newNode, oldNode){
+        if(newNode == ths.app.veryRootNode){
+            this.hide();
+        }
+        this.render();
+    };
+    Crumb.prototype.temp = function(){
+        var app = this.app;
+        if (this.rootNode == this.veryRootNode) {
+            this.frame.removeChild(this.bread);
+            this.bread = undefined;
+            return;
+        }
+        function createEmptyBread() {
+            var bread = document.createElement('div');
+            bread.className = "bread";
+            return bread;
+        }
+
+        if (this.bread) {
+            var path = this.rootNode.getPath();
+            this.bread.innerHTML = "";
+            path.forEach(function (v, i) {
+                var content;
+                if (v.getContent() != "") {
+                    content = v.getContent();
+                } else if (v == app.veryRootNode) {
+                    content = 'Home';
+                } else {
+                    content = 'noname';
+                }
+                var link = document.createElement('div');
+                link.innerHTML = "<a href='#" + v.id + "'>" + content + "</a>>";
+                link.classList.add('bread-link');
+                app.bread.appendChild(link);
+            });
+            // add event listener
+            $(this.bread).find('a').on('click', function (e) {
+                var id = $(this).attr('href');
+                id = id.slice(1);
+                console.log(id);
+                var node = app.rootNode.parent;
+                var targetNode;
+                while (node) {
+                    if (node.id == id) {
+                        targetNode = node;
+                        break;
+                    } else {
+                        node = node.parent;
+                    }
+                }
+                app.zoomIn(targetNode);
+            });
+        } else {
+            this.bread = createEmptyBread();
+            if ($(this.frame).children()) {
+                $(this.frame).children().first().before(this.bread);
+            } else {
+                this.frame.appendChild(this.bread);
+            }
+            this._createBread();
+        }
+    };
 
     module.exports = Everything;
 });

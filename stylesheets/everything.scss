@@ -105,7 +105,7 @@ $lightblue: rgba(231, 235, 244, 0.91);
         font-weight: bold;
         outline: none;
     }
-    .bread {
+    .bread, .crumb{
         margin-left: 50px;
         color: #979797;
         margin-bottom: 10px;
@@ -113,18 +113,20 @@ $lightblue: rgba(231, 235, 244, 0.91);
         border-bottom: 1px solid #535353;
         font-family: serif;
     }
-    .bread-link > a {
+    .bread-link > a , .crumb-link > a{
         color: #bababa;
         text-decoration: none;
         padding-right: 8px;
     }
-    .bread-link {
+    .bread-link, crumb-link {
         display: inline-block;
         margin-right: 8px;
     }
-    .bread-link > a:hover {
+    .bread-link > a:hover ,.crumb-link > a:hover{
         text-decoration: underline;
     }
+
+
 
 
     .add-wrapper{

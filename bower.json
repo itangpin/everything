@@ -24,6 +24,7 @@
   "dependencies": {
     "jquery": "~2.1.3",
     "seajs": "~2.3.0",
-    "codemirror": "~5.0.0"
+    "codemirror": "~5.0.0",
+    "crel.min": "https://raw.githubusercontent.com/KoryNunn/crel/master/crel.min.js"
   }
 }
