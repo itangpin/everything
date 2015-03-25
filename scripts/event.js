@@ -34,15 +34,20 @@ define(function(require,exports,module){
 
             return this;
         },
-        fire : function(name, args) {
+        fire : function(name, args, context) {
             var listeners = this._listeners[name];
-            args = args || [];
+            // if args is not an array, make it an array
+            if(args.length){
+                args = args || [];
+            }else{
+                args = [args];
+            }
             if(listeners !== undefined) {
                 var data = {}, evt;
                 for(var i = 0, len = listeners.length; i < len; i++) {
                     evt = new EventManager.EventArg(name, data);
 
-                    listeners[i].apply(window, args.concat(evt));
+                    listeners[i].apply(context || window, args.concat(evt));
 
                     data = evt.data;
                     if(evt.removed) {

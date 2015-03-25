@@ -40,6 +40,8 @@ define(function (require, exports, module) {
     Everything.prototype.init = function(){
         this.eventMgr = new EventMgr();
         this.crumb = new Crumb(this);
+        // register event listener
+        this.eventMgr.addListener('rootNodeChange', this.onRootNodeChange);
     };
 
     /**
@@ -141,63 +143,6 @@ define(function (require, exports, module) {
             } else {
                 this.frame.appendChild(title);
             }
-        }
-    };
-    Everything.prototype._createBread = function () {
-        var app = this;
-        if (this.rootNode == this.veryRootNode) {
-            this.frame.removeChild(this.bread);
-            this.bread = undefined;
-            return;
-        }
-        function createEmptyBread() {
-            var bread = document.createElement('div');
-            bread.className = "bread";
-            return bread;
-        }
-
-        if (this.bread) {
-            var path = this.rootNode.getPath();
-            this.bread.innerHTML = "";
-            path.forEach(function (v, i) {
-                var content;
-                if (v.getContent() != "") {
-                    content = v.getContent();
-                } else if (v == app.veryRootNode) {
-                    content = 'Home';
-                } else {
-                    content = 'noname';
-                }
-                var link = document.createElement('div');
-                link.innerHTML = "<a href='#" + v.id + "'>" + content + "</a>>";
-                link.classList.add('bread-link');
-                app.bread.appendChild(link);
-            });
-            // add event listener
-            $(this.bread).find('a').on('click', function (e) {
-                var id = $(this).attr('href');
-                id = id.slice(1);
-                console.log(id);
-                var node = app.rootNode.parent;
-                var targetNode;
-                while (node) {
-                    if (node.id == id) {
-                        targetNode = node;
-                        break;
-                    } else {
-                        node = node.parent;
-                    }
-                }
-                app.zoomIn(targetNode);
-            });
-        } else {
-            this.bread = createEmptyBread();
-            if ($(this.frame).children()) {
-                $(this.frame).children().first().before(this.bread);
-            } else {
-                this.frame.appendChild(this.bread);
-            }
-            this._createBread();
         }
     };
 
@@ -310,6 +255,14 @@ define(function (require, exports, module) {
         }
         // trigger Extension callbacks
     };
+
+    Everything.prototype.onRootNodeChange = function (newRootnode) {
+        if(newRootnode == this.veryRootNode){
+            this.crumb.hide();
+        }else{
+            this.crumb.render();
+        }
+    };
     Everything.prototype.zoomIn = function (node, hasContent) {
         var newRootNode = node;
         if (!newRootNode) {
@@ -327,11 +280,13 @@ define(function (require, exports, module) {
         });
         this.rootNode = newRootNode;
         this._createTitle(this.rootNode);
-        this._createBread();
+        //this._createBread();
         if(hasContent === false ||
             (hasContent == undefined && !this.rootNode.hasChild())){
             this._createAddButton();
         }
+
+        this.eventMgr.fire('rootNodeChange', this.rootNode, this);
     };
 
     /**
@@ -422,11 +377,13 @@ define(function (require, exports, module) {
     };
     Everything.prototype.moveToLast = function(){};
 
+
+
     // Bread crumb manager
     var Crumb = function(app){
         if(!app){return;}
         this.app = app;
-        this.app.eventMgr.addListener('rootNodeChange', this.onRootNodeChange);
+        //this.app.eventMgr.addListener('rootNodeChange', this.onRootNodeChange);
     };
     /**
      * Get dom for the crumb wrapper
@@ -439,19 +396,16 @@ define(function (require, exports, module) {
         var domArray = [];
         path.forEach(function(v,i){
             var content = v.getContent();
-            if(v.veryRootNode){
+            if(v == app.veryRootNode){
                 content = 'Home';
             } else if (v.getContent() == ""){
                 content = 'noname';
             }
             var link = crel('div', {class: 'crumb-link'},
-                crel('a',{href: '#'+ v.id}, content)
+                crel('a',{href: '#'+ v.id}, content),
+                '>'
             );
-            // add event listener
-            $(app.bread).find('a').on('click', function(){
-                self.onEvent($(this));
 
-            });
             domArray.push(link);
         });
         return domArray;
@@ -464,21 +418,34 @@ define(function (require, exports, module) {
      */
     Crumb.prototype.render = function(){
         var app = this.app;
-        if(app.crumb){
+        var self = this;
+        if(app.crumbElement){
+            app.crumbElement.innerHTML = "";
             var path = this.app.rootNode.getPath();
             var domArr = this.getDom(path);
             domArr.forEach(function(v,i){
-                app.bread.appendChild(v);
+                app.crumbElement.appendChild(v);
+                // add event listener
+                $(app.crumbElement).find('a').on('click', function(){
+                    self.onEvent($(this));
+                });
             });
         }else{
             // create a crumb wrapper and render again
-            app.crumb = crel('div',{class:'crumb'});
+            app.crumbElement = crel('div',{class:'crumb'});
             if ($(app.frame).children()) {
-                $(app.frame).children().first().before(app.bread);
+                $(app.frame).children().first().before(app.crumbElement);
             } else {
-                app.frame.appendChild(this.bread);
+                app.frame.appendChild(app.crumbElement);
             }
             this.render();
+        }
+    };
+    Crumb.prototype.hide = function(){
+        var app = this.app;
+        if(app.crumbElement){
+            app.frame.removeChild(app.crumbElement);
+            app.crumbElement = undefined;
         }
     };
     Crumb.prototype.onEvent = function($this){
@@ -494,8 +461,7 @@ define(function (require, exports, module) {
                 node = node.parent;
             }
         }
-        app.eventMgr.fire('rootNodeChange',targetNode);
-        //app.zoomIn(targetNode);
+        app.zoomIn(targetNode);
     };
     Crumb.prototype.onRootNodeChange = function(newNode, oldNode){
         if(newNode == ths.app.veryRootNode){
@@ -503,63 +469,5 @@ define(function (require, exports, module) {
         }
         this.render();
     };
-    Crumb.prototype.temp = function(){
-        var app = this.app;
-        if (this.rootNode == this.veryRootNode) {
-            this.frame.removeChild(this.bread);
-            this.bread = undefined;
-            return;
-        }
-        function createEmptyBread() {
-            var bread = document.createElement('div');
-            bread.className = "bread";
-            return bread;
-        }
-
-        if (this.bread) {
-            var path = this.rootNode.getPath();
-            this.bread.innerHTML = "";
-            path.forEach(function (v, i) {
-                var content;
-                if (v.getContent() != "") {
-                    content = v.getContent();
-                } else if (v == app.veryRootNode) {
-                    content = 'Home';
-                } else {
-                    content = 'noname';
-                }
-                var link = document.createElement('div');
-                link.innerHTML = "<a href='#" + v.id + "'>" + content + "</a>>";
-                link.classList.add('bread-link');
-                app.bread.appendChild(link);
-            });
-            // add event listener
-            $(this.bread).find('a').on('click', function (e) {
-                var id = $(this).attr('href');
-                id = id.slice(1);
-                console.log(id);
-                var node = app.rootNode.parent;
-                var targetNode;
-                while (node) {
-                    if (node.id == id) {
-                        targetNode = node;
-                        break;
-                    } else {
-                        node = node.parent;
-                    }
-                }
-                app.zoomIn(targetNode);
-            });
-        } else {
-            this.bread = createEmptyBread();
-            if ($(this.frame).children()) {
-                $(this.frame).children().first().before(this.bread);
-            } else {
-                this.frame.appendChild(this.bread);
-            }
-            this._createBread();
-        }
-    };
-
     module.exports = Everything;
 });

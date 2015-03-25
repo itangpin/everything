@@ -32,11 +32,11 @@
     }
 
     // bread crumb
-    .bread{
+    .bread, .crumb {
         color: #979797;
         border-bottom: 1px solid #cacaca;
     }
-    .bread-link a{
+    .bread-link a, .crumb-link a{
         color:gray;
     }
 
