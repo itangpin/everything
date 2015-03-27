@@ -107,6 +107,8 @@ define(function(require, exports, module){
     };
 
     Node.prototype.refreshDom = function(){
+        this.childs = [];
+        this.childrenMap = {};
         this._createDom();
     };
 
@@ -177,7 +179,7 @@ define(function(require, exports, module){
             // Delete
             if(46 == event.keyCode){
                 event.preventDefault();
-                this.parent.removeChild(this);
+                this.parent.removeChildAndDom(this);
                 return false;
             }
             // Backspace on an 'empty' node
@@ -206,6 +208,13 @@ define(function(require, exports, module){
             if(target == this.contentElement){
                 this.app.setCurentNode(this);
             }
+        }
+
+        if( type == 'keyup' ||
+            type == 'paste'||
+            type == 'cut' ) {
+            // update value
+            this.onValueChange();
         }
 
 
@@ -247,13 +256,35 @@ define(function(require, exports, module){
     /* ============================================================
      *                   Data  Export && Import
      * ============================================================*/
+    Node.prototype.onValueChange = function(){
+        if(this.app.creating){
+            return;
+        }
+        this.updateValue();
+        if(this.parent){
+            this.parent.onValueChange();
+        }
 
+        var node = this.parent;
+        // todo trigger parent node's onvaluechange
+        //while(node){
+        //    node.updateValue();
+        //    node = node.parent;
+        //}
+        //this.app.veryRootNode.updateValue();
+        this.app.onAction('valueChange',{
+            node:this
+        });
+    };
+    Node.prototype.updateValue = function(){
+        this.value = this.getValue();
+    };
     /**
      * Get value, value is a JSON structure
      */
     Node.prototype.getValue = function(){
         var value = {
-            content: this.content,
+            content: this.contentElement.innerHTML
         };
         if(this.hasChild()){
             value.children = [];
@@ -261,6 +292,7 @@ define(function(require, exports, module){
                 value.children.push(v.getValue());
             });
         }
+        this.value = value;
         return value;
     };
 
@@ -270,6 +302,9 @@ define(function(require, exports, module){
      * @param {String|Array|Object} value content of the Node
      */
     Node.prototype.setValue = function(value){
+        if(this.value.content == '删除一行'){
+            var a;
+        }
         if($.isArray(value)){
             // root node's value is an array
             value = {
@@ -413,6 +448,7 @@ define(function(require, exports, module){
         // TODO
         // add updateDom method to Node
         $(this.row).before(node.row);
+        this.onValueChange(this.parent);
     };
     /**
      * Add a Node as a sibling Node right before this node
@@ -426,6 +462,7 @@ define(function(require, exports, module){
             // this is the last child of its parent node
             this.parent.appendChild(node);
         }
+        this.onValueChange(this.parent);
     };
 
     Node.prototype.addChildNodeAtHead = function(node){
@@ -443,6 +480,7 @@ define(function(require, exports, module){
         siblingNode.adjustDom({type:'after',el:this.row});
         this.parent._addChild(siblingNode);
         siblingNode.focus(siblingNode.contentElement);
+        this.onValueChange(this.parent);
     };
 
 /* ============================================================
@@ -462,6 +500,7 @@ define(function(require, exports, module){
         childNode.index = this.childs.length;
         this._addChild(childNode);
         childNode.focus(childNode.contentElement);
+        this.onValueChange(this.parent);
     };
     /**
      * Append a child Node at the tail of the Node
@@ -471,6 +510,7 @@ define(function(require, exports, module){
         this.childrenElement.appendChild(child.row);
         this._addChild(child);
         child.index = this.childs.length;
+        this.onValueChange(this.parent);
     };
     /**
      * Add a node to the children node map
@@ -479,6 +519,7 @@ define(function(require, exports, module){
     Node.prototype._addChild = function(childNode){
         this.childs.push(childNode);
         this.childrenMap[childNode.id] = childNode;
+        this.onValueChange(this.parent);
     };
 
     /**
@@ -490,9 +531,18 @@ define(function(require, exports, module){
         this.childs = this.childs.filter(function(child){
             return child.id != node.id;
         });
-        childNode.row.parentNode.removeChild(childNode.row);
+        //childNode.row.parentNode.removeChild(childNode.row);
         this.childrenMap[node.id] = undefined;
         this._updateDomIndexes();
+        this.onValueChange(this.parent);
+    };
+
+    Node.prototype.removeChildAndDom = function(node){
+        var childNode = this.childrenMap[node.id];
+        if(childNode.row.parentNode){
+            childNode.row.parentNode.removeChild(childNode.row);
+        }
+        this.removeChild(node);
     };
 
     /**
@@ -516,6 +566,7 @@ define(function(require, exports, module){
         newNode.setParent(null);
         this.addSiblingNodeBefore(newNode);
         newNode.focus(newNode.contentElement);
+        this.onValueChange(this.parent);
         // add the action to the History(redoMgr)
     };
 
@@ -534,6 +585,7 @@ define(function(require, exports, module){
             'afterNode':this,
             'parent':this.parent
         });
+        this.onValueChange(this.parent);
     };
     /**
      * Indent the Node,
@@ -546,6 +598,7 @@ define(function(require, exports, module){
             prevNode.appendChild(this);
             this.setParent(prevNode);
         }
+        this.onValueChange(this.parent);
     };
     /**
      *
@@ -553,7 +606,7 @@ define(function(require, exports, module){
     Node.prototype._onUnshift = function(value){
         var newNode = new Node(value, this.app);
         newNode.setParent(this);
-
+        this.onValueChange(this.parent);
     };
     Node.prototype._onZoomIn = function(){
         this.app.onAction('zoomin',{
@@ -600,13 +653,13 @@ define(function(require, exports, module){
     Node.prototype.indent = function(){
         // if is not the first node
         if(this.row.previousSibling){
-            var prevNodeElement = this.row.previousSibling;
-            var prevNodeId = prevNodeElement.getAttribute('projectId');
-            var prevNode = this.parent.findChildById(prevNodeId);
+            var prevNode = this.getRelativeNode('before');
+            this.parent.removeChildAndDom(this);
             prevNode.appendChild(this);
             this.parent = prevNode;
             this.focus(this.contentElement);
         }
+        this.onValueChange(this.parent);
     };
 
     Node.prototype.unindent= function(){
@@ -616,6 +669,7 @@ define(function(require, exports, module){
         this.parent.addSiblingNodeAfter(this);
         //TODO 有问题
         // this.parent.removeChild(this.id);
+        this.onValueChange(this.parent);
     };
 
     Node.prototype.getPrevNode = function(){

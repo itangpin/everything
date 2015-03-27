@@ -37,9 +37,8 @@ define(function(require,exports,module){
         fire : function(name, args, context) {
             var listeners = this._listeners[name];
             // if args is not an array, make it an array
-            if(args.length){
-                args = args || [];
-            }else{
+            args = args || [];
+            if(!args.length){
                 args = [args];
             }
             if(listeners !== undefined) {

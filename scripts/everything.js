@@ -8,10 +8,12 @@ define(function (require, exports, module) {
     var History = require('./history.js');
     var Package = require('./package.js');
     var EventMgr = require('./event.js');
+    var Saver = require('./saver.js');
     // packages
     var Editor = require('./packages/editor.js');
 
     var Everything = function (data, option) {
+        this.data = data;
         this.index = 0;
         if (!option.container) {
             // create a container
@@ -33,15 +35,19 @@ define(function (require, exports, module) {
         this.init();
         // move to this.init
         this.initPackages();
+        this.creating = true;
         this._create(data);
+        this.creating = false;
         this.mode = 'insert';
     };
 
     Everything.prototype.init = function(){
         this.eventMgr = new EventMgr();
         this.crumb = new Crumb(this);
+        this.saver = new Saver(this);
         // register event listener
         this.eventMgr.addListener('rootNodeChange', this.onRootNodeChange);
+        this.eventMgr.addListener('valueChange', this.onValueChange);
     };
 
     /**
@@ -68,6 +74,10 @@ define(function (require, exports, module) {
         return this._getValue('current');
     };
 
+    Everything.prototype.onValueChange = function(){
+        this.saver.save();
+    };
+
     Everything.prototype.createContainer = function () {
 
     };
@@ -89,7 +99,7 @@ define(function (require, exports, module) {
         var onEvent = function (event) {
             app.onEvent(event);
         };
-        var events = ['click', 'keydown'];
+        var events = ['click', 'keydown','propertychange','keyup','paste','cut'];
         $.each(events, function (index, value) {
             if(value == 'focus'){
                 app.frame.addEventListener(value,onEvent,true);
@@ -159,18 +169,24 @@ define(function (require, exports, module) {
         addBtnWrapper.classList.add('add-wrapper');
         addBtnWrapper.appendChild(addChildBtn);
         addBtnWrapper.appendChild(launchEditorBtn);
-
+        this.addBtnWrapper = addBtnWrapper;
         this.frame.appendChild(addBtnWrapper);
 
         // add child
         $(addChildBtn).on('click', function(){
             app.rootNode._createChild({});
-            app.frame.removeChild(addBtnWrapper);
+            if(app.addBtnWrapper){
+                app.frame.removeChild(addBtnWrapper);
+            }
+
         });
         // launch editor
         $(launchEditorBtn).on('click', function(){
             app.switchRootNodeWithPackage(['editor']);
-            app.frame.removeChild(addBtnWrapper);
+            if(app.addBtnWrapper){
+                app.frame.removeChild(addBtnWrapper);
+            }
+
         });
     };
 
@@ -229,7 +245,9 @@ define(function (require, exports, module) {
 
             }
         }
-
+        if(event.type == 'propertychange'){
+            var a;
+        }
         var node = Node.getNodeFromTarget(event.target);
         if (node) {
             node.onEvent(event);
@@ -249,6 +267,9 @@ define(function (require, exports, module) {
             }
             this.zoomIn(node);
         }
+        if(action == 'valueChange' && option.node == this.veryRootNode){
+            this.eventMgr.fire('valueChange',null,this);
+        }
         // add action to history
         if (this.history) {
             this.history.add(action, option);
@@ -257,21 +278,30 @@ define(function (require, exports, module) {
     };
 
     Everything.prototype.onRootNodeChange = function (newRootnode) {
+        // handle crumb
         if(newRootnode == this.veryRootNode){
             this.crumb.hide();
         }else{
             this.crumb.render();
         }
+
+        // handle add buttons
+        // todo 让这些元素的创建顺序不要影响他们最终出现在DOM中得位置
+        if(this.addBtnWrapper){
+            this.frame.removeChild(this.addBtnWrapper);
+            this.addBtnWrapper = undefined;
+        }
+
+        // save changes
+
     };
     Everything.prototype.zoomIn = function (node, hasContent) {
         var newRootNode = node;
         if (!newRootNode) {
             return;
         }
-        //this.rootNode.row.innerHTML = "";
         this.frame.removeChild(this.rootNode.row);
-        //this.frame.removeChild(this.);
-        //delete this.rootNode;
+        // TODO 这个refreshDom，问题大大的
         newRootNode.refreshDom();
         newRootNode.setRoot();
         newRootNode.adjustDom({
@@ -281,12 +311,11 @@ define(function (require, exports, module) {
         this.rootNode = newRootNode;
         this._createTitle(this.rootNode);
         //this._createBread();
+        this.eventMgr.fire('rootNodeChange', this.rootNode, this);
         if(hasContent === false ||
             (hasContent == undefined && !this.rootNode.hasChild())){
             this._createAddButton();
         }
-
-        this.eventMgr.fire('rootNodeChange', this.rootNode, this);
     };
 
     /**
@@ -315,7 +344,7 @@ define(function (require, exports, module) {
         if(prevMode=='insert' || this.mode=='move'){
             this.curentNode.highlight();
             // blur
-            $(this.curentNode).blur();
+            //$(this.curentNode).blur();
             this.curentNode.row.setAttribute('contentEditable', 'false');
         }
     };
@@ -469,5 +498,7 @@ define(function (require, exports, module) {
         }
         this.render();
     };
+
+
     module.exports = Everything;
 });
