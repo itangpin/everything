@@ -75,16 +75,10 @@ define(function(require,exports,module){
         return theme;
     };
     editor.node.launchEditor = function(theme){
-        this.row.className += ' package editor';
-        // take content offline
-        this.contentElement.innerHTML = "";
-        // add a title input
-        var title = document.createElement('div');
-        title.setAttribute('contentEditable', true);
-        title.className = "title";
-        title.innerText = this.value.content;
-        this.titleElement = title;
-        this.contentElement.appendChild(title);
+        this.row.classList.add('package', 'editor');
+        this.titleElement = crel('div',{class:'title',contentEditable:'true'},this.value.content);
+        this.editorElement = crel('div',{class:'editor'},this.titleElement);
+        this.row.insertBefore(this.editorElement,this.childrenElement);
         // add codemirror
         var createCodeMirror = function(el,contentValue,theme){
             var theme = theme || 'xq-light';
@@ -106,7 +100,7 @@ define(function(require,exports,module){
             return new CodeMirror(el, codeMirrorOptions);
         };
 
-        this.cm = createCodeMirror(this.contentElement,
+        this.cm = createCodeMirror(this.editorElement,
             this.value.detail || "",
             getTheme(this.app.theme));
         this.hasLauchEditor = true;
@@ -116,7 +110,8 @@ define(function(require,exports,module){
     };
     editor.node.unLaunchEditor = function(){
         $(this.row).removeClass("editor");
-        this.contentElement.removeChild(this.contentElement.childNodes[1]);
+        this.row.classList.remove('editor');
+        this.row.removeChild(this.editorElement);
         this.codemirror = undefined;
         this.hasLauchEditor = false;
     };

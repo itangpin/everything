@@ -185,7 +185,7 @@ define(function(require, exports, module){
             // Backspace on an 'empty' node
             if(8 == event.keyCode){
                 if(this.getContent() == ""){
-                    this.parent.removeChild(this);
+                    this.parent.removeChildAndDom(this);
                 }
             }
             // move events
@@ -283,17 +283,15 @@ define(function(require, exports, module){
      * Get value, value is a JSON structure
      */
     Node.prototype.getValue = function(){
-        var value = {
-            content: this.contentElement.innerHTML
-        };
+        var thisNode = this;
+        this.value.content = this.contentElement.innerHTML;
         if(this.hasChild()){
-            value.children = [];
+            this.value.children = [];
             this.childs.forEach(function(v){
-                value.children.push(v.getValue());
+                thisNode.value.children.push(v.getValue());
             });
         }
-        this.value = value;
-        return value;
+        return this.value;
     };
 
 
