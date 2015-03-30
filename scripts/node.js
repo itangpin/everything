@@ -247,6 +247,7 @@ define(function(require, exports, module){
         var thisNode = this;
         this.packageEvents = this.packageEvents || [];
         this.packages = this.app.getPackages(packageNameList);
+        this.value.packageValue = this.value.packageValue || {};
         $.each(this.packages, function(index, value){
             $.extend(thisNode, value.node);
             thisNode.packageEvents.push(value.onEvent);
@@ -265,13 +266,6 @@ define(function(require, exports, module){
             this.parent.onValueChange();
         }
 
-        var node = this.parent;
-        // todo trigger parent node's onvaluechange
-        //while(node){
-        //    node.updateValue();
-        //    node = node.parent;
-        //}
-        //this.app.veryRootNode.updateValue();
         this.app.onAction('valueChange',{
             node:this
         });
@@ -285,6 +279,7 @@ define(function(require, exports, module){
     Node.prototype.getValue = function(){
         var thisNode = this;
         this.value.content = this.contentElement.innerHTML;
+        this.value.packageValue = this.value.packageValue;
         if(this.hasChild()){
             this.value.children = [];
             this.childs.forEach(function(v){
@@ -300,34 +295,29 @@ define(function(require, exports, module){
      * @param {String|Array|Object} value content of the Node
      */
     Node.prototype.setValue = function(value){
-        if(this.value.content == '删除一行'){
-            var a;
-        }
         if($.isArray(value)){
             // root node's value is an array
             value = {
                 content: "",
                 children: value
             };
-            // value type is used for get value
-            this.valueType = 'array';
             this.value = value;
             this.setValue(this.value);
             return;
         }
         if($.type(value) == "string"){
-            this.valueType = 'string';
-            this.setContent(value);
+            this.value = {
+                content: value
+            };
+            this.setValue(this.value);
             return;
         }
 
-        if(value.content!=undefined){
+        if(value.content != undefined){
             this.setContent(value.content || "");
         }
-        if($.isArray(value.children)){
-            if(value.children){
-                this.setChildren(value.children);
-            }
+        if(value.children && value.children.length > 0){
+            this.setChildren(value.children);
         }
 
     };

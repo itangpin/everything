@@ -13,3 +13,11 @@
         }
     }
 }
+.everything .project.package.editor.onlychildren{
+    .editor{
+        margin-left: 50px;
+    }
+    .editor .CodeMirror{
+        height: 500px;
+    }
+}

@@ -4,6 +4,8 @@
  */
 define(function(require,exports,module){
     var editor = {
+        name:'editor',
+        extraValue: ['editorContent'],
         node:{},
         onEvent:{}
     };
@@ -26,7 +28,12 @@ define(function(require,exports,module){
                 node.launchEditor(theme);
             }
         });
-
+        if(!this.value.packageValue.editor){
+            this.value.packageValue.editor = {
+                editorContent:""
+            };
+        }
+        //this.packageValue['editor'] = {};
     };
     editor.onEvent = function(event){
         var type = event.type,
@@ -75,6 +82,7 @@ define(function(require,exports,module){
         return theme;
     };
     editor.node.launchEditor = function(theme){
+        var thisnode = this;
         this.row.classList.add('package', 'editor');
         this.titleElement = crel('div',{class:'title',contentEditable:'true'},this.value.content);
         this.editorElement = crel('div',{class:'editor'},this.titleElement);
@@ -101,8 +109,11 @@ define(function(require,exports,module){
         };
 
         this.cm = createCodeMirror(this.editorElement,
-            this.value.detail || "",
+            this.value.packageValue.editor.editorContent || "",
             getTheme(this.app.theme));
+        this.cm.on('change', function(cm,obj){
+            thisnode.onEditorContentChange(cm,obj);
+        });
         this.hasLauchEditor = true;
         this.focus(this.titleElement);
 
@@ -114,6 +125,14 @@ define(function(require,exports,module){
         this.row.removeChild(this.editorElement);
         this.codemirror = undefined;
         this.hasLauchEditor = false;
+    };
+    editor.node.onEditorContentChange = function(editor,changeObj){
+        console.log('change event');
+        this.editorSave(editor.getDoc().getValue());
+        this.onValueChange();
+    };
+    editor.node.editorSave = function(content){
+        this.value.packageValue.editor.editorContent = content;
     };
 
     module.exports = editor;
