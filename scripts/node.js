@@ -5,15 +5,16 @@
 define(function(require, exports, module){
     var util = require('./util.js');
 
-    var Node = function(value,app,option){
+    var Node = function(value,app){
         this.value = value;
-        // app is the instance of the application
-        // which hold the status of the apllication
         this.app = app;
-        var package = value.package;
-        if(package && package.length>0 && $.isArray(package)){
-            this.packageNameList = value.package;
-            this.initPackages(this.packageNameList);
+        //var package = value.package;
+        //if(package && package.length>0 ){
+        //    this.packageNameList = value.package;
+        //    this.initPackages(this.packageNameList);
+        //}
+        if(this.app.packages.length > 0){
+            this.init_packages();
         }
         this.childs = [];
         this.childrenMap = {};
@@ -243,11 +244,12 @@ define(function(require, exports, module){
      * Extend the node instance with package instance
      * @param packageNameList
      */
-    Node.prototype.initPackages = function(packageNameList){
+    Node.prototype.init_packages = function(){
         var thisNode = this;
         this.packageEvents = this.packageEvents || [];
-        this.packages = this.app.getPackages(packageNameList);
+        this.packages = this.app.getPackages();
         this.value.packageValue = this.value.packageValue || {};
+
         $.each(this.packages, function(index, value){
             $.extend(thisNode, value.node);
             thisNode.packageEvents.push(value.onEvent);

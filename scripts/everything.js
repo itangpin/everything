@@ -15,6 +15,7 @@ define(function (require, exports, module) {
     var Everything = function (data, option) {
         this.data = data;
         this.index = 0;
+        this.packages = [];
         if (!option.container) {
             // create a container
             this.createContainer();
@@ -41,7 +42,7 @@ define(function (require, exports, module) {
         this.mode = 'insert';
     };
 
-    Everything.prototype.init = function(){
+    Everything.prototype.init = function () {
         this.eventMgr = new EventMgr();
         this.crumb = new Crumb(this);
         this.saver = new Saver(this);
@@ -56,25 +57,25 @@ define(function (require, exports, module) {
      * @returns {*}
      * @private
      */
-    Everything.prototype._getValue = function(type){
-        if(type == 'current'){
+    Everything.prototype._getValue = function (type) {
+        if (type == 'current') {
             return this.rootNode.getValue();
         }
 
-        if(type == 'root'){
+        if (type == 'root') {
             return this.veryRootNode.getValue();
         }
     };
 
-    Everything.prototype.getRootValue = function(){
+    Everything.prototype.getRootValue = function () {
         return this._getValue('root');
     };
 
-    Everything.prototype.getCurentValue = function(){
+    Everything.prototype.getCurentValue = function () {
         return this._getValue('current');
     };
 
-    Everything.prototype.onValueChange = function(){
+    Everything.prototype.onValueChange = function () {
         this.saver.save();
     };
 
@@ -99,11 +100,11 @@ define(function (require, exports, module) {
         var onEvent = function (event) {
             app.onEvent(event);
         };
-        var events = ['click', 'keydown','propertychange','keyup','paste','cut'];
+        var events = ['click', 'keydown', 'propertychange', 'keyup', 'paste', 'cut'];
         $.each(events, function (index, value) {
-            if(value == 'focus'){
-                app.frame.addEventListener(value,onEvent,true);
-            }else{
+            if (value == 'focus') {
+                app.frame.addEventListener(value, onEvent, true);
+            } else {
                 app.frame.addEventListener(value, onEvent);
                 app.toobarElement.addEventListener(value, onEvent);
             }
@@ -156,13 +157,13 @@ define(function (require, exports, module) {
         }
     };
 
-    Everything.prototype._createAddButton = function(){
+    Everything.prototype._createAddButton = function () {
         var app = this;
         var addChildBtn = document.createElement('a');
         addChildBtn.innerHTML = "Add a child";
-        addChildBtn.setAttribute('href','#');
+        addChildBtn.setAttribute('href', '#');
         var launchEditorBtn = document.createElement('a');
-        launchEditorBtn.setAttribute('href','#');
+        launchEditorBtn.setAttribute('href', '#');
         launchEditorBtn.innerHTML = 'Edit';
 
         var addBtnWrapper = document.createElement('div');
@@ -173,20 +174,19 @@ define(function (require, exports, module) {
         this.frame.appendChild(addBtnWrapper);
 
         // add child
-        $(addChildBtn).on('click', function(){
+        $(addChildBtn).on('click', function () {
             app.rootNode._createChild({});
-            if(app.addBtnWrapper){
+            if (app.addBtnWrapper) {
                 app.frame.removeChild(addBtnWrapper);
             }
 
         });
         // launch editor
-        $(launchEditorBtn).on('click', function(){
+        $(launchEditorBtn).on('click', function () {
             app.switchRootNodeWithPackage(['editor']);
-            if(app.addBtnWrapper){
+            if (app.addBtnWrapper) {
                 app.frame.removeChild(addBtnWrapper);
             }
-
         });
     };
 
@@ -195,23 +195,30 @@ define(function (require, exports, module) {
      */
     Everything.prototype.initPackages = function () {
         this.packageMgr.add('editor', Editor);
+        this.packages.push('editor');
     };
-    Everything.prototype.getPackages = function (packageList) {
+    /**
+     * Get all the packages that registered in the app
+     * for Node instance to extend it self
+     * TODO: handle the situation when the package does not registered
+     * @returns {Array}
+     */
+    Everything.prototype.getPackages = function () {
         var packages = [];
         var app = this;
-        $.each(packageList, function (index, value) {
-            packages.push(app.packageMgr.get(value));
+        this.packages.forEach(function (v) {
+            packages.push(app.packageMgr.get(v));
         });
         return packages;
     };
-    Everything.prototype.switchRootNodeWithPackage = function(packages){
+    Everything.prototype.switchRootNodeWithPackage = function (packages) {
         // concat the two array
         var nodeValue = this.rootNode.getValue();
         nodeValue.package = packages;
-        var node = new Node(nodeValue,this);
+        var node = new Node(nodeValue, this);
         node.setParent(this.rootNode.parent);
-        this.zoomIn(node,true);
-        if(packages.indexOf('editor') != -1){
+        this.zoomIn(node, true);
+        if (packages.indexOf('editor') != -1) {
             node.launchEditor();
         }
     };
@@ -219,15 +226,15 @@ define(function (require, exports, module) {
      * Handle events on the application element
      */
     Everything.prototype.onEvent = function (event) {
-        if(this.mode == 'move'){
-            if (event.type == 'keydown' || event.type=='focus') {
+        if (this.mode == 'move') {
+            if (event.type == 'keydown' || event.type == 'focus') {
                 this.move(event);
                 console.log('keydown');
             }
-        }else if(this.mode == 'insert'){
+        } else if (this.mode == 'insert') {
 
         }
-        if(event.keyCode == 27){
+        if (event.keyCode == 27) {
             this.setMode('move');
         }
         //if(event.type == 'focus'){
@@ -245,7 +252,7 @@ define(function (require, exports, module) {
 
             }
         }
-        if(event.type == 'propertychange'){
+        if (event.type == 'propertychange') {
             var a;
         }
         var node = Node.getNodeFromTarget(event.target);
@@ -267,8 +274,8 @@ define(function (require, exports, module) {
             }
             this.zoomIn(node);
         }
-        if(action == 'valueChange' && option.node == this.veryRootNode){
-            this.eventMgr.fire('valueChange',null,this);
+        if (action == 'valueChange' && option.node == this.veryRootNode) {
+            this.eventMgr.fire('valueChange', null, this);
         }
         // add action to history
         if (this.history) {
@@ -279,15 +286,15 @@ define(function (require, exports, module) {
 
     Everything.prototype.onRootNodeChange = function (newRootnode) {
         // handle crumb
-        if(newRootnode == this.veryRootNode){
+        if (newRootnode == this.veryRootNode) {
             this.crumb.hide();
-        }else{
+        } else {
             this.crumb.render();
         }
 
         // handle add buttons
         // todo 让这些元素的创建顺序不要影响他们最终出现在DOM中得位置
-        if(this.addBtnWrapper){
+        if (this.addBtnWrapper) {
             this.frame.removeChild(this.addBtnWrapper);
             this.addBtnWrapper = undefined;
         }
@@ -312,8 +319,8 @@ define(function (require, exports, module) {
         this._createTitle(this.rootNode);
         //this._createBread();
         this.eventMgr.fire('rootNodeChange', this.rootNode, this);
-        if(hasContent === false ||
-            (hasContent == undefined && !this.rootNode.hasChild())){
+        if (hasContent === false ||
+            (hasContent == undefined && !this.rootNode.hasChild())) {
             this._createAddButton();
         }
     };
@@ -341,7 +348,7 @@ define(function (require, exports, module) {
     Everything.prototype.setMode = function (mode) {
         var prevMode = this.mode;
         this.mode = mode;
-        if(prevMode=='insert' || this.mode=='move'){
+        if (prevMode == 'insert' || this.mode == 'move') {
             this.curentNode.highlight();
             // blur
             //$(this.curentNode).blur();
@@ -351,7 +358,7 @@ define(function (require, exports, module) {
     Everything.prototype.setCurentNode = function (node) {
         var oldCurentNode = this.curentNode;
         this.curentNode = node;
-        if(this.mode == 'move'){
+        if (this.mode == 'move') {
             oldCurentNode.noHighlight();
             node.highlight();
         }
@@ -366,51 +373,54 @@ define(function (require, exports, module) {
      */
     Everything.prototype.move = function (event) {
         event.preventDefault();
-        if(event.keyCode==74){
+        if (event.keyCode == 74) {
             this.moveNext();
         }
-        if(event.keyCode==75){
+        if (event.keyCode == 75) {
             this.movePrev();
         }
         return false;
     };
-    Everything.prototype.moveNext = function(){
+    Everything.prototype.moveNext = function () {
         this.index++;
-        if(this.index == 2){
+        if (this.index == 2) {
             console.log(this.curentNode);
         }
         var curentNode = this.curentNode;
-        if(curentNode){
+        if (curentNode) {
             var newCurentNode;
-            if(curentNode.hasChild()){
+            if (curentNode.hasChild()) {
                 newCurentNode = curentNode.childs[0];
-            }else{
+            } else {
                 newCurentNode = curentNode.getRelativeNode('after');
             }
             curentNode.noHighlight();
             newCurentNode.highlight();
             //this.setCurentNode(newCurentNode);
             this.curentNode = newCurentNode;
-            console.log('c'+curentNode.getContent()+';;;n'+newCurentNode.getContent());
-        }else{
+            console.log('c' + curentNode.getContent() + ';;;n' + newCurentNode.getContent());
+        } else {
             this.moveToFirst();
         }
     };
-    Everything.prototype.movePrev = function(){};
-    Everything.prototype.moveToFirst = function(){
-        if(this.rootNode && this.rootNode.hasChild()){
+    Everything.prototype.movePrev = function () {
+    };
+    Everything.prototype.moveToFirst = function () {
+        if (this.rootNode && this.rootNode.hasChild()) {
             var firstChild = this.rootNode.childs[0];
             this.setCurentNode(firstChild);
             firstChild.highlight();
         }
     };
-    Everything.prototype.moveToLast = function(){};
-
+    Everything.prototype.moveToLast = function () {
+    };
 
 
     // Bread crumb manager
-    var Crumb = function(app){
-        if(!app){return;}
+    var Crumb = function (app) {
+        if (!app) {
+            return;
+        }
         this.app = app;
         //this.app.eventMgr.addListener('rootNodeChange', this.onRootNodeChange);
     };
@@ -419,19 +429,19 @@ define(function (require, exports, module) {
      * @param path
      * @returns {Array} array contains all the dom of the crumb
      */
-    Crumb.prototype.getDom = function(path){
+    Crumb.prototype.getDom = function (path) {
         var app = this.app;
         var self = this;
         var domArray = [];
-        path.forEach(function(v,i){
+        path.forEach(function (v, i) {
             var content = v.getContent();
-            if(v == app.veryRootNode){
+            if (v == app.veryRootNode) {
                 content = 'Home';
-            } else if (v.getContent() == ""){
+            } else if (v.getContent() == "") {
                 content = 'noname';
             }
             var link = crel('div', {class: 'crumb-link'},
-                crel('a',{href: '#'+ v.id}, content),
+                crel('a', {href: '#' + v.id}, content),
                 '>'
             );
 
@@ -445,23 +455,23 @@ define(function (require, exports, module) {
      * or create crumb if not exist
      * and the append the links
      */
-    Crumb.prototype.render = function(){
+    Crumb.prototype.render = function () {
         var app = this.app;
         var self = this;
-        if(app.crumbElement){
+        if (app.crumbElement) {
             app.crumbElement.innerHTML = "";
             var path = this.app.rootNode.getPath();
             var domArr = this.getDom(path);
-            domArr.forEach(function(v,i){
+            domArr.forEach(function (v, i) {
                 app.crumbElement.appendChild(v);
                 // add event listener
-                $(app.crumbElement).find('a').on('click', function(){
+                $(app.crumbElement).find('a').on('click', function () {
                     self.onEvent($(this));
                 });
             });
-        }else{
+        } else {
             // create a crumb wrapper and render again
-            app.crumbElement = crel('div',{class:'crumb'});
+            app.crumbElement = crel('div', {class: 'crumb'});
             if ($(app.frame).children()) {
                 $(app.frame).children().first().before(app.crumbElement);
             } else {
@@ -470,14 +480,14 @@ define(function (require, exports, module) {
             this.render();
         }
     };
-    Crumb.prototype.hide = function(){
+    Crumb.prototype.hide = function () {
         var app = this.app;
-        if(app.crumbElement){
+        if (app.crumbElement) {
             app.frame.removeChild(app.crumbElement);
             app.crumbElement = undefined;
         }
     };
-    Crumb.prototype.onEvent = function($this){
+    Crumb.prototype.onEvent = function ($this) {
         var app = this.app;
         var id = $this.attr('href').slice(1);
         var targetNode;
@@ -492,8 +502,8 @@ define(function (require, exports, module) {
         }
         app.zoomIn(targetNode);
     };
-    Crumb.prototype.onRootNodeChange = function(newNode, oldNode){
-        if(newNode == ths.app.veryRootNode){
+    Crumb.prototype.onRootNodeChange = function (newNode, oldNode) {
+        if (newNode == ths.app.veryRootNode) {
             this.hide();
         }
         this.render();
