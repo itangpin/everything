@@ -8,13 +8,8 @@ define(function(require, exports, module){
     var Node = function(value,app){
         this.value = value;
         this.app = app;
-        //var package = value.package;
-        //if(package && package.length>0 ){
-        //    this.packageNameList = value.package;
-        //    this.initPackages(this.packageNameList);
-        //}
         if(this.app.packages.length > 0){
-            this.init_packages();
+            this.initPackages();
         }
         this.childs = [];
         this.childrenMap = {};
@@ -32,7 +27,6 @@ define(function(require, exports, module){
             }
             target = target.parentNode;
         }
-
         return undefined;
     };
 
@@ -244,8 +238,9 @@ define(function(require, exports, module){
      * Extend the node instance with package instance
      * @param packageNameList
      */
-    Node.prototype.init_packages = function(){
+    Node.prototype.initPackages = function(){
         var thisNode = this;
+
         this.packageEvents = this.packageEvents || [];
         this.packages = this.app.getPackages();
         this.value.packageValue = this.value.packageValue || {};
@@ -282,8 +277,8 @@ define(function(require, exports, module){
         var thisNode = this;
         this.value.content = this.contentElement.innerHTML;
         this.value.packageValue = this.value.packageValue;
+        this.value.children = [];
         if(this.hasChild()){
-            this.value.children = [];
             this.childs.forEach(function(v){
                 thisNode.value.children.push(v.getValue());
             });

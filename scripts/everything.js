@@ -49,6 +49,14 @@ define(function (require, exports, module) {
         // register event listener
         this.eventMgr.addListener('rootNodeChange', this.onRootNodeChange);
         this.eventMgr.addListener('valueChange', this.onValueChange);
+
+        // app events
+        this.appEvents = ['contentChange'];
+        this.appEventsHandler = {};
+        var app = this;
+        this.appEvents.forEach(function(v){
+            app.appEventsHandler[v] = [];
+        });
     };
 
     /**
@@ -415,8 +423,23 @@ define(function (require, exports, module) {
     Everything.prototype.moveToLast = function () {
     };
 
+    /**
+     * Add event handlers from outside. events:
+     * 'contentChange',
+     * @param {String} eventName
+     * @param {Function} handler
+     */
+    Everything.prototype.on = function(eventName, handler){
+        var eventsList = ['contentChange'];
+        if(eventsList.indexOf(eventName) == -1){
+            return;
+        }
+        this.appEvents[eventName].push(handler);
+    };
 
-    // Bread crumb manager
+    /*========================================================
+                          Bread crumb manager
+      ========================================================*/
     var Crumb = function (app) {
         if (!app) {
             return;
