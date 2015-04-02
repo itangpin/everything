@@ -65,12 +65,15 @@ $lightblue: rgba(231, 235, 244, 0.91);
         height: 0;
     }
     //  function btn
-    .function-btn {
+    .function-btn, dot{
         position: absolute;
         height: 34px;
         width: 34px;
     }
-    .function-btn span.function-dot-1 {
+    .dot{
+        
+    }
+    .function-btn span.function-dot-1, {
         position: absolute;
         border-radius: 50%;
         width: 16px;

@@ -5,3 +5,4 @@ Rlease_log.md
 stylesheets/.sass-cache/
 spm_modules/
 bower_components/
+server/node_modules

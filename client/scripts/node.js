@@ -7,19 +7,31 @@ define(function(require, exports, module){
 
     var Node = function(value,app){
         this.value = value;
+        this.formatValue();
         this.app = app;
-        if(this.app.packages.length > 0){
-            this.initPackages();
-        }
         this.childs = [];
         this.childrenMap = {};
         this.isRootNode = false;
         this.id = util.uuid();
+        // let packages extend the node and listen for events
+        if(this.app.packages.length > 0){
+            this.initPackages();
+        }
         this._createDom();
         this.getPath();
         this.highlighted = false;
     };
 
+    /*=============================================================
+     *                    Static Methods
+     ==============================================================*/
+    /**
+     * Get the node instance by the event.target
+     * The application would use it to determin
+     * which node to dispatch events to
+     * @param target
+     * @returns {*}
+     */
     Node.getNodeFromTarget = function(target){
         while (target) {
             if (target.node) {
@@ -43,7 +55,10 @@ define(function(require, exports, module){
         }
     };
 
-    Node.prototype.getPath = function(){
+    /**
+     * Re-calculate the path of the node's parents
+     */
+    Node.prototype.refreshPath = function(){
         this.path = [];
         var node = this;
         while(node){
@@ -52,6 +67,14 @@ define(function(require, exports, module){
             }
             node = node.parent;
         }
+    };
+    /**
+     * Get the path of the node
+     * last element of the array is the closest parent of the node
+     * @returns {Array}
+     */
+    Node.prototype.getPath = function(){
+        this.refreshPath();
         return this.path;
     };
 
@@ -64,6 +87,9 @@ define(function(require, exports, module){
         var row = document.createElement('div');
         row.className = "project";
         row.setAttribute('projectId',this.id);
+        // the round dot
+        var dot = crel('a',{class:'dot'});
+        var row = crel('div',{class:'project', projectId:this.id});
         // used when finding node from event target(target.node)
         row.node = this;
         this.row = row;
@@ -90,15 +116,15 @@ define(function(require, exports, module){
         this.childrenElement = children;
         this.row.appendChild(children);
 
-        // tell packages they are ready to  handle DOM
-        this._onDomReady();
-
         // todo: remove 'write here'
         if(this.value){
             this.setValue(this.value);
         }else{
             this.setValue('');
         }
+
+        // tell packages they are ready to  handle DOM
+        this._onDomReady();
     };
 
     Node.prototype.refreshDom = function(){
@@ -286,37 +312,41 @@ define(function(require, exports, module){
         return this.value;
     };
 
+    /**
+     * Format the value into complete style
+     */
+    Node.prototype.formatValue = function(){
+        if(Array.isArray(this.value)){
+            // root node's value is an array
+            this.value = {
+                content: "",
+                children: this.value,
+                packageValue: {}
+            };
+            return this.value;
+        }
+        if((typeof this.value == 'string') || this.value.constructor == String){
+            // string means no child nodes and no packageValue
+            this.value = {
+                content:value,
+                children:[],
+                packageValue:{}
+            };
+        }
+    };
 
     /**
      * Set content and children of the node,
      * @param {String|Array|Object} value content of the Node
      */
     Node.prototype.setValue = function(value){
-        if($.isArray(value)){
-            // root node's value is an array
-            value = {
-                content: "",
-                children: value
-            };
+        if(value){
+            // reset value
             this.value = value;
-            this.setValue(this.value);
-            return;
+            this.formatValue();
         }
-        if($.type(value) == "string"){
-            this.value = {
-                content: value
-            };
-            this.setValue(this.value);
-            return;
-        }
-
-        if(value.content != undefined){
-            this.setContent(value.content || "");
-        }
-        if(value.children && value.children.length > 0){
-            this.setChildren(value.children);
-        }
-
+        this.setContent(this.value.content);
+        this.setChildren(this.value.children);
     };
 
     /**
