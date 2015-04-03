@@ -100,11 +100,7 @@ define(function(require, exports, module){
         this.childrenElement = children;
         this.row = row;
 
-        if(this.value){
-            this.setValue(this.value);
-        }else{
-            this.setValue('');
-        }
+        this.setValue();
 
         // tell packages they are ready to  handle DOM
         this._onDomReady();
@@ -331,8 +327,12 @@ define(function(require, exports, module){
             this.value = value;
             this.formatValue();
         }
-        this.setContent(this.value.content);
-        this.setChildren(this.value.children);
+        if(this.value){
+            this.setContent(this.value.content);
+            this.setChildren(this.value.children);
+        }else{
+            this.setValue('');
+        }
     };
 
     /**
