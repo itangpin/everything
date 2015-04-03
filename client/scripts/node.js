@@ -331,6 +331,7 @@ define(function(require, exports, module){
             this.setContent(this.value.content);
             this.setChildren(this.value.children);
         }else{
+            // create the node with null data
             this.setValue('');
         }
     };
@@ -340,9 +341,7 @@ define(function(require, exports, module){
      * @param value
      */
     Node.prototype.setContent= function(value){
-        // TODO
-        // replace http link text with a real link
-        if($.type(value)=="string"){
+        if((typeof this.value.content == 'string') || this.value.content.constructor == String){
             this.content = value;
             this.contentElement.innerHTML = this.content;
         }
@@ -362,7 +361,7 @@ define(function(require, exports, module){
      */
     Node.prototype.setChildren = function(children){
         var self = this;
-        if($.isArray(children) && children.length) {
+        if(Array.isArray(children) && children.length>0) {
             children.forEach(function(value,index){
                 self._createChild(value);
             });
@@ -385,7 +384,7 @@ define(function(require, exports, module){
      * Used when create root Node .etc
      */
     Node.prototype.setRoot = function(){
-        this.row.className += " onlychildren";
+        this.row.classList.add('root');
         this.isRootNode = true;
     };
 

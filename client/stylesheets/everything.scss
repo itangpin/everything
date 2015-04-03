@@ -20,20 +20,20 @@ $lightblue: rgba(231, 235, 244, 0.91);
         line-height: 30px;
         outline: none;
     }
-    .project.onlychildren > .children {
+    .project.onlychildren > .children, .project.root>.children{
         border-left: 0;
     }
-    .project.onlychildren > .project-content {
+    .project.onlychildren > .project-content, .project.root>.project-content {
         display: none;
     }
-    .project.onlychildren > .dot{
+    .project.onlychildren > .dot, .project.root>.dot{
         display: none;
     }
-    .project.onlychildren.editor > .project-content{
+    .project.onlychildren.editor > .project-content, .project.root.editor>.project-content{
         display: block;
         margin-left: 50px;
     }
-    .project.onlychildren.editor > .project-content .CodeMirror{
+    .project.onlychildren.editor > .project-content .CodeMirror, .project.root.editor>.project-content  .CodeMirror{
         height: 500px;
     }
     .et-row.hi {

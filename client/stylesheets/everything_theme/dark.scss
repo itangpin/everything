@@ -11,7 +11,7 @@
     .project .children{
         border-left: 1px solid #505050;
     }
-    .project.onlychildren>.children{
+    .project.root>.children{
         border-left: 0;
     }
 
