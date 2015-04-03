@@ -100,35 +100,6 @@ define(function(require, exports, module){
         this.childrenElement = children;
         this.row = row;
 
-
-        //// the outer
-        //var row = document.createElement('div');
-        //row.className = "project";
-        //row.setAttribute('projectId',this.id);
-        //// function button
-        //var linkOuter = document.createElement('a');
-        //linkOuter.className = 'function-btn';
-        //var button = document.createElement('span');
-        //button.className = "function-dot-1";
-        //var button2= document.createElement('span');
-        //button2.className = "function-dot-2";
-        //button.appendChild(button2);
-        //linkOuter.appendChild(button);
-        //this.row.appendChild(linkOuter);
-        //this.buttonElement = linkOuter;
-        //// content
-        //var content = document.createElement('div');
-        //content.className = "project-content";
-        //this.contentElement = content;
-        //this.contentElement.setAttribute('contentEditable', true);
-        //this.row.appendChild(content);
-        //// children
-        //var children = document.createElement('div');
-        //children.className = 'children';
-        //this.childrenElement = children;
-        //this.row.appendChild(children);
-
-        // todo: remove 'write here'
         if(this.value){
             this.setValue(this.value);
         }else{
@@ -139,6 +110,9 @@ define(function(require, exports, module){
         this._onDomReady();
     };
 
+    /**
+     * Rerender DOM structure with current data
+     */
     Node.prototype.refreshDom = function(){
         this.childs = [];
         this.childrenMap = {};
