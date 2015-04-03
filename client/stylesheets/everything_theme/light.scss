@@ -16,12 +16,15 @@
     }
 
     // function dot
-    .function-btn span.function-dot-2{
-        background-color: #666666;
+    .dot{
+        .b:hover{
+            background-color: #bbbbbb;
+        }
+        .s{
+            background-color: #666666;
+        }
     }
-    .function-btn span.function-dot-1:hover{
-        background-color: #bbbbbb;
-    }
+
 
     // editor
     .project.package.editor .title {

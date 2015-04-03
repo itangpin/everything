@@ -26,7 +26,7 @@ $lightblue: rgba(231, 235, 244, 0.91);
     .project.onlychildren > .project-content {
         display: none;
     }
-    .project.onlychildren > .function-btn {
+    .project.onlychildren > .dot{
         display: none;
     }
     .project.onlychildren.editor > .project-content{
@@ -65,14 +65,12 @@ $lightblue: rgba(231, 235, 244, 0.91);
         height: 0;
     }
     //  function btn
-    .function-btn, dot{
+    .function-btn, .dot{
         position: absolute;
         height: 34px;
         width: 34px;
     }
-    .dot{
-        
-    }
+
     .function-btn span.function-dot-1, {
         position: absolute;
         border-radius: 50%;

@@ -1,0 +1,40 @@
+@mixin transition($sec) {
+    transition: $sec;
+    -moz-transition: $sec;
+    -webkit-transition: $sec;
+}
+.everything{
+    // the dot in front of content
+    .dot{
+        // the big dot
+        .b{
+            position: absolute;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            margin: 9px;
+            background-color: transparent;
+            @include transition(.2s);
+            cursor: pointer;
+        }
+        .b:hover{
+            background-color: #5a5a5a;
+        }
+        // the small one
+        .s{
+            position: absolute;
+            border-radius: 50%;
+            width: 6px;
+            height: 6px;
+            margin: 5px;
+            background-color: #bbbbbb;
+            cursor: pointer;
+        }
+    }
+    // the dot of collapsed project
+    .project.collapse .dot{
+        .b{
+            background-color: #5a5a5a;
+        }
+    }
+}

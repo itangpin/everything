@@ -83,38 +83,50 @@ define(function(require, exports, module){
      * @private
      */
     Node.prototype._createDom = function(){
-        // the outer
-        var row = document.createElement('div');
-        row.className = "project";
-        row.setAttribute('projectId',this.id);
         // the round dot
-        var dot = crel('a',{class:'dot'});
-        var row = crel('div',{class:'project', projectId:this.id});
+        var dot = crel('a',{class:'dot'},
+            crel('span',{class:'b'},
+                crel('span',{class:'s'}))
+        );
+        // text content
+        var content = crel('div',{class:'project-content',contentEditable:true});
+        // children wrapper
+        var children = crel('div',{class:'children'});
+        var row = crel('div',{class:'project', projectId:this.id}, dot, content, children);
         // used when finding node from event target(target.node)
         row.node = this;
-        this.row = row;
-        // function button
-        var linkOuter = document.createElement('a');
-        linkOuter.className = 'function-btn';
-        var button = document.createElement('span');
-        button.className = "function-dot-1";
-        var button2= document.createElement('span');
-        button2.className = "function-dot-2";
-        button.appendChild(button2);
-        linkOuter.appendChild(button);
-        this.row.appendChild(linkOuter);
-        this.buttonElement = linkOuter;
-        // content
-        var content = document.createElement('div');
-        content.className = "project-content";
+        this.buttonElement = dot;
         this.contentElement = content;
-        this.contentElement.setAttribute('contentEditable', true);
-        this.row.appendChild(content);
-        // children
-        var children = document.createElement('div');
-        children.className = 'children';
         this.childrenElement = children;
-        this.row.appendChild(children);
+        this.row = row;
+
+
+        //// the outer
+        //var row = document.createElement('div');
+        //row.className = "project";
+        //row.setAttribute('projectId',this.id);
+        //// function button
+        //var linkOuter = document.createElement('a');
+        //linkOuter.className = 'function-btn';
+        //var button = document.createElement('span');
+        //button.className = "function-dot-1";
+        //var button2= document.createElement('span');
+        //button2.className = "function-dot-2";
+        //button.appendChild(button2);
+        //linkOuter.appendChild(button);
+        //this.row.appendChild(linkOuter);
+        //this.buttonElement = linkOuter;
+        //// content
+        //var content = document.createElement('div');
+        //content.className = "project-content";
+        //this.contentElement = content;
+        //this.contentElement.setAttribute('contentEditable', true);
+        //this.row.appendChild(content);
+        //// children
+        //var children = document.createElement('div');
+        //children.className = 'children';
+        //this.childrenElement = children;
+        //this.row.appendChild(children);
 
         // todo: remove 'write here'
         if(this.value){
