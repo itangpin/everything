@@ -101,7 +101,6 @@ define(function(require, exports, module){
         this.row = row;
 
         this.setValue();
-
         // tell packages they are ready to  handle DOM
         this._onDomReady();
     };
@@ -365,7 +364,7 @@ define(function(require, exports, module){
             children.forEach(function(value,index){
                 self._createChild(value);
             });
-            // change style of the function dot if has children
+            // change style of the dot if has children
             this.row.className += " hasChild";
         }
     };
