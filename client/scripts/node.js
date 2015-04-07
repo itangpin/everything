@@ -314,6 +314,12 @@ define(function(require, exports, module){
                 packageValue:{}
             };
         }
+        if(!this.value.content){
+            this.value.content = "";
+        }
+        if(!this.value.children){
+            this.value.children = [];
+        }
     };
 
     /**
