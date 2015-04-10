@@ -43,7 +43,10 @@ define(function (require, exports, module) {
     };
 
     Everything.prototype.init = function () {
+        // events manager for intern use
         this.eventMgr = new EventMgr();
+        // events magager for packages
+        this.packageEventsMgr = new EventMgr();
         this.crumb = new Crumb(this);
         this.saver = new Saver(this);
         // register event listener
@@ -434,8 +437,11 @@ define(function (require, exports, module) {
         if(eventsList.indexOf(eventName) == -1){
             return;
         }
+        this.packageEventsMgr.addListener();
         this.appEvents[eventName].push(handler);
     };
+
+
 
     /*========================================================
                           Bread crumb manager
