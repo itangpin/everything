@@ -2,8 +2,7 @@
  * @author 唐品 (Tang Pin)
  * created at 2015-2-8
  */
-define(function(require, exports, module){
-    var util = require('./util.js');
+define(['util'],function(util){
 
     var Node = function(value,app){
         this.value = value;
@@ -775,6 +774,5 @@ define(function(require, exports, module){
         return false;
     };
 
-
-    module.exports = Node;
+    return Node;
 });

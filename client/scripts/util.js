@@ -1,4 +1,4 @@
-define(function(require, exports, module){
+define(function(){
     var util = {};
     util.uuid = function guid() {
         function s4() {

@@ -2,16 +2,24 @@
  * @author 唐品 (Tang Pin)
  * created at 2015-2-13
  */
-define(function (require, exports, module) {
+define([
+    'node',
+    'history',
+    'package',
+    'event',
+    'saver',
+    'packages/editor',
+    'packages/highlight'
+],function (Node,History,Package,EventMgr,Saver,Editor,Highlighter) {
 
-    var Node = require('./node.js');
-    var History = require('./history.js');
-    var Package = require('./package.js');
-    var EventMgr = require('./event.js');
-    var Saver = require('./saver.js');
-    // packages
-    var Editor = require('./packages/editor.js');
-    var Highlighter = require('./packages/highlight.js');
+    //var Node = require('./node.js');
+    //var History = require('./history.js');
+    //var Package = require('./package.js');
+    //var EventMgr = require('./event.js');
+    //var Saver = require('./saver.js');
+    //// packages
+    //var Editor = require('./packages/editor.js');
+    //var Highlighter = require('./packages/highlight.js');
 
     var Everything = function (data, option) {
         this.data = data;
@@ -562,6 +570,5 @@ define(function (require, exports, module) {
         this.render();
     };
 
-
-    module.exports = Everything;
+    return Everything;
 });

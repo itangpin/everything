@@ -1,4 +1,4 @@
-define(function(require, exports, module){
+define(function(){
     var Saver = function(app){
         this.app = app;
     };
@@ -9,5 +9,5 @@ define(function(require, exports, module){
         var value = this.app.getRootValue();
         window.localStorage.setItem('value',JSON.stringify(value));
     };
-    module.exports = Saver;
+    return Saver;
 });

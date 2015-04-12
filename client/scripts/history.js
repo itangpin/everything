@@ -1,4 +1,4 @@
-define(function(require, exports, module){
+define(function(){
     /**
      * @constructor History
      * Store action history, enables undo and redo

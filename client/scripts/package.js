@@ -3,7 +3,7 @@
  * Created on 3/10/15.
  */
 
-define(function(require, exports, module){
+define(function(){
     var Package = function(app){
         this.packages = {};
         this.app = app;
@@ -24,5 +24,5 @@ define(function(require, exports, module){
         return this.packages[packaName];
     };
 
-    module.exports = Package;
+    return Package;
 });

@@ -3,7 +3,7 @@
  * Copyright (c) 2009, Howard Rauscher
  * Licensed under the MIT License
  */
-define(function(require,exports,module){
+define(function(){
     function EventManager() {
         this._listeners = {};
     }
@@ -94,8 +94,7 @@ define(function(require,exports,module){
         }
     };
 
-    module.exports = EventManager;
-    //window.EventManager = EventManager;
+    return EventManager;
 });
 
 
