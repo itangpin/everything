@@ -253,8 +253,13 @@ define(function(require, exports, module){
         this.value.packageValue = this.value.packageValue || {};
 
         $.each(this.packages, function(index, value){
-            $.extend(thisNode, value.node);
-            thisNode.packageEvents.push(value.onEvent);
+            if(value.node){
+                $.extend(thisNode, value.node);
+            }
+            if(value.onEvent){
+                thisNode.packageEvents.push(value.onEvent);
+            }
+
         });
     };
 
