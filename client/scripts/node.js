@@ -291,7 +291,6 @@ define(['util'],function(util){
     Node.prototype.getValue = function(){
         var thisNode = this;
         this.value.content = this.contentElement.innerHTML;
-        this.value.packageValue = this.value.packageValue;
         this.value.children = [];
         if(this.hasChild()){
             this.childs.forEach(function(v){
@@ -317,7 +316,7 @@ define(['util'],function(util){
         if((typeof this.value == 'string') || this.value.constructor == String){
             // string means no child nodes and no packageValue
             this.value = {
-                content:value,
+                content:this.value,
                 children:[],
                 packageValue:{}
             };
@@ -354,7 +353,8 @@ define(['util'],function(util){
      * @param value
      */
     Node.prototype.setContent= function(value){
-        if((typeof this.value.content == 'string') || this.value.content.constructor == String){
+        //var value = value || this.value;
+        if((typeof value == 'string') || value.constructor == String){
             this.content = value;
             this.contentElement.innerHTML = this.content;
             this.onValueChange();

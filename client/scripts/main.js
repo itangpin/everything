@@ -4,7 +4,6 @@
 
 requirejs.config({
         path:{
-            'jQuery': '../bower_components/jquery/dist/jquery.min.js',
             'codeMirror': '../spm_modules/codemirror/codemirror.js',
             'Everything': 'everything.js'
         }

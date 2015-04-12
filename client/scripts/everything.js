@@ -30,6 +30,9 @@ define([
             this.createContainer();
         }
         this.frame = option.container;
+        $(this.frame).on('click', function(){
+            console.log('frame');
+        });
 
         // theme
         this.themes = ['dark', 'light'];
@@ -344,6 +347,7 @@ define([
 
     };
     Everything.prototype.zoomIn = function (node, hasContent) {
+        this.creating = true;
         var newRootNode = node;
         if (!newRootNode) {
             return;
@@ -364,6 +368,7 @@ define([
             (hasContent == undefined && !this.rootNode.hasChild())) {
             this._createAddButton();
         }
+        this.creating;
     };
 
     /**
@@ -526,7 +531,7 @@ define([
             domArr.forEach(function (v, i) {
                 app.crumbElement.appendChild(v);
                 // add event listener
-                $(app.crumbElement).find('a').on('click', function () {
+                $(v).find('a').on('click', function () {
                     self.onEvent($(this));
                 });
             });
