@@ -11,6 +11,7 @@ define(function (require, exports, module) {
     var Saver = require('./saver.js');
     // packages
     var Editor = require('./packages/editor.js');
+    var Highlighter = require('./packages/highlight.js');
 
     var Everything = function (data, option) {
         this.data = data;
@@ -32,7 +33,7 @@ define(function (require, exports, module) {
         $(this.frame).addClass(this.theme);
         $(document.body).addClass(this.theme);
         this.history = new History();
-        this.packageMgr = new Package();
+        this.packageMgr = new Package(this);
         this.init();
         // move to this.init
         this.initPackages();
@@ -43,6 +44,7 @@ define(function (require, exports, module) {
     };
 
     Everything.prototype.init = function () {
+        var app = this;
         // events manager for intern use
         this.eventMgr = new EventMgr();
         // events magager for packages
@@ -56,7 +58,6 @@ define(function (require, exports, module) {
         // app events
         this.appEvents = ['contentChange'];
         this.appEventsHandler = {};
-        var app = this;
         this.appEvents.forEach(function(v){
             app.appEventsHandler[v] = [];
         });
@@ -120,6 +121,21 @@ define(function (require, exports, module) {
                 app.toobarElement.addEventListener(value, onEvent);
             }
         });
+        app.frame.addEventListener('input',app.event('input'));
+    };
+
+    Everything.prototype.event = function(type){
+        var self = this;
+        // 使用闭包来保留this引用，不知道是否合适
+        if(type == 'input'){
+            return function(e){
+                // fire the change event for packages
+                var node = Node.getNodeFromTarget(e.target);
+                self.appEventsHandler['contentChange'].forEach(function(v){
+                    v(node);
+                });
+            };
+        }
     };
 
     /**
@@ -207,6 +223,8 @@ define(function (require, exports, module) {
     Everything.prototype.initPackages = function () {
         this.packageMgr.add('editor', Editor);
         this.packages.push('editor');
+        this.packageMgr.add('highlight', Highlighter);
+        this.packages.push('highlight');
     };
     /**
      * Get all the packages that registered in the app
@@ -263,7 +281,7 @@ define(function (require, exports, module) {
 
             }
         }
-        if (event.type == 'propertychange') {
+        if (event.type == 'keyup') {
             var a;
         }
         var node = Node.getNodeFromTarget(event.target);
@@ -429,6 +447,9 @@ define(function (require, exports, module) {
     /**
      * Add event handlers from outside. events:
      * 'contentChange',
+     * @example: app.on('contenteChange', function(){
+     *      self.handler();
+     * })
      * @param {String} eventName
      * @param {Function} handler
      */
@@ -437,8 +458,7 @@ define(function (require, exports, module) {
         if(eventsList.indexOf(eventName) == -1){
             return;
         }
-        this.packageEventsMgr.addListener();
-        this.appEvents[eventName].push(handler);
+        this.appEventsHandler[eventName].push(handler);
     };
 
 

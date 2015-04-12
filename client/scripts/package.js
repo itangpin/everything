@@ -4,8 +4,9 @@
  */
 
 define(function(require, exports, module){
-    var Package = function(){
+    var Package = function(app){
         this.packages = {};
+        this.app = app;
         this.init();
     };
 
@@ -15,6 +16,9 @@ define(function(require, exports, module){
     };
     Package.prototype.add = function(packName,pack){
         this.packages[packName]=pack;
+        if($.isFunction(pack.init)){
+            pack.init(this.app);
+        }
     };
     Package.prototype.get = function(packaName){
         return this.packages[packaName];
