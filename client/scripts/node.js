@@ -219,6 +219,10 @@ define(function(require, exports, module){
             this.onValueChange();
         }
 
+        // content change
+        if(event.type == 'input'){
+            this.onValueChange();
+        }
 
 
         // send events to packages' handler
@@ -354,6 +358,7 @@ define(function(require, exports, module){
         if((typeof this.value.content == 'string') || this.value.content.constructor == String){
             this.content = value;
             this.contentElement.innerHTML = this.content;
+            this.onValueChange();
         }
     };
 

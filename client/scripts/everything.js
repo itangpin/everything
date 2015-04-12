@@ -129,11 +129,15 @@ define(function (require, exports, module) {
         // 使用闭包来保留this引用，不知道是否合适
         if(type == 'input'){
             return function(e){
-                // fire the change event for packages
                 var node = Node.getNodeFromTarget(e.target);
-                self.appEventsHandler['contentChange'].forEach(function(v){
-                    v(node);
-                });
+                if(node){
+                    // let node it self handle the event first
+                    node.onEvent(e);
+                    // fire the change event for packages
+                    self.appEventsHandler['contentChange'].forEach(function(v){
+                        v(node);
+                    });
+                }
             };
         }
     };
