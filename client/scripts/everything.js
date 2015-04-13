@@ -172,8 +172,9 @@ define([
             app.buttons[value] = btn;
             app.toobarElement.appendChild(btn);
         });
-        var newButton = crel('div', {class:'new-article'},'New Article');
-        toolbar.appendChild(newButton);
+        var newButton = crel('button', {class:'new-article'},'New Article');
+        var buttonWrapper = crel('div',{class:'button-wrapper'},newButton);
+        toolbar.appendChild(buttonWrapper);
     };
     Everything.prototype._createTitle = function (node) {
         var titleText = node.getContent();

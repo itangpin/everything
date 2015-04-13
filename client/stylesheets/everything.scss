@@ -160,12 +160,12 @@ $lightblue: rgba(231, 235, 244, 0.91);
     top: 0;
     width: 100%;
     height: 40px;
-    background-color: rgba(0.9, 0.9, 0.9, 0.5);
+    background-color: #777;
 }
 
 .toolbar {
     button.theme {
-        position: relative;
+        position: absolute;
         left: 100px;
         height: 80%;
         width: 70px;
@@ -177,7 +177,29 @@ $lightblue: rgba(231, 235, 244, 0.91);
         font-size: 18px;
         border-radius: 2px;
     }
+    .button-wrapper{
+        position: relative;
+        width: 500px;
+        height: 100%;
+        margin: auto;
+        text-align: center;
+    }
     .new-article{
-
+        width: 400px;
+        height: 100%;
+        line-height: 100%;
+        margin:auto;
+        border: 0;
+        outline: none;
+        background-color: #444;
+        color: white;
+        font-size: 18px;
+        transition: background-color .2s;
+    }
+    .new-article:hover{
+        background-color: #5d5d5d;
+    }
+    .new-article:active{
+        background: #000;
     }
 }
