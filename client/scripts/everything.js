@@ -172,6 +172,8 @@ define([
             app.buttons[value] = btn;
             app.toobarElement.appendChild(btn);
         });
+        var newButton = crel('div', {class:'new-article'},'New Article');
+        toolbar.appendChild(newButton);
     };
     Everything.prototype._createTitle = function (node) {
         var titleText = node.getContent();
@@ -368,7 +370,7 @@ define([
             (hasContent == undefined && !this.rootNode.hasChild())) {
             this._createAddButton();
         }
-        this.creating;
+        this.creating = false;
     };
 
     /**
