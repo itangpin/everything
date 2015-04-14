@@ -10,7 +10,7 @@ requirejs.config({
     }
 );
 
-require(['Everything'], function(Everything){
+require(['Everything','./editor'], function(Everything, Editor){
     var value = [
         '@author Tang Pin',
         'Version 0.5.1',
@@ -56,5 +56,13 @@ require(['Everything'], function(Everything){
     var everything = new Everything(value, {
         container: container,
         theme: 'light'
+    });
+
+    $('.new-article').on('click', function(){
+        $('#container').hide();
+        var editor = new Editor({
+            titleEl: $('.editor-title')[0],
+            contentEl: $('.editor-content')[0]
+        });
     });
 });

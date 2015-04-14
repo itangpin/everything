@@ -2,20 +2,19 @@
  * Created by pin on 4/13/15.
  */
 
-define(['codeMirror'],function(CM){
-    var Editor = function(option){
+define(['../bower_components/codemirror/lib/codemirror'], function (CodeMirror) {
+    var Editor = function (option) {
         this.el = {
             titleEl: option.titleEl,
             contentEl: option.contentEl
         };
         this.init();
     };
-    Editor.prototype.init = function(){
+    Editor.prototype.init = function () {
 
-        var createCodeMirror = function(el,contentValue,theme){
-            var theme = theme || 'xq-light';
+        var createCodeMirror = function (el, content, theme) {
             var codeMirrorOptions = {
-                theme: theme,
+                theme: theme || 'xq-light',
                 tabSize: 4,
                 lineNumbers: false,
                 lineWrapping: true,
@@ -27,13 +26,13 @@ define(['codeMirror'],function(CM){
                     taskLists: true,
                     fencedCodeBlocks: true
                 },
-                value:contentValue
+                value: content || ''
             };
             return new CodeMirror(el, codeMirrorOptions);
         };
 
-        this.cm = createCodeMirror(this.editorElement,
-            this.value.packageValue.editor.editorContent || "",
-            getTheme(this.app.theme));
+        this.cm = createCodeMirror(this.el.contentEl);
     };
+
+    return Editor;
 });

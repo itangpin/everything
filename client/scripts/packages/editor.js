@@ -135,5 +135,6 @@ define(function(require,exports,module){
         this.value.packageValue.editor.editorContent = content;
     };
 
-    module.exports = editor;
+    return editor;
+    //module.exports = editor;
 });
