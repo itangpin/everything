@@ -1,22 +1,26 @@
 .editor-container{
-    padding-top: 50px;
+    padding-top: 100px;
     background-color: #F0F0F0;
     height: 100%;
 }
 .editor-container{
+    .CodeMirror{
+        height: 100%;
+    }
     .editor-title{
         position: relative;
         margin: auto;
-        width: 800px;
+        width: 600px;
         height: 50px;
         border-bottom: 1px solid #a3a3a3;
         outline: none;
         font-size: 30px;
+        text-align: center;
     }
     .editor-content{
         position: relative;
-        margin: auto;
-        width: 800px;
+        margin: 20px auto;
+        width: 600px;
         height: 500px;
     }
 }

@@ -14,7 +14,7 @@ define(['../bower_components/codemirror/lib/codemirror'], function (CodeMirror) 
 
         var createCodeMirror = function (el, content, theme) {
             var codeMirrorOptions = {
-                theme: theme || 'xq-light',
+                theme: theme || 'xq-light-big',
                 tabSize: 4,
                 lineNumbers: false,
                 lineWrapping: true,
