@@ -38,7 +38,7 @@ define(function(){
             var listeners = this._listeners[name];
             // if args is not an array, make it an array
             args = args || [];
-            if(!args.length){
+            if(!Array.isArray(args)){
                 args = [args];
             }
             if(listeners !== undefined) {
