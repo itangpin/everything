@@ -2,23 +2,32 @@
  * Created by pin on 4/14/15.
  */
 
-define(['everything','toolbar'],function(Everything,Toolbar){
+define(['everything','toolbar','event'],function(Everything,Toolbar, Event){
     var APP = {};
+    APP.eventMgr = new Event();
     APP.init = function(){
         this.toolbar = new Toolbar({
             container: '#toolbar',
             switcherEl: [
                 {
                     button: '#writing-btn',
-                    panel : '#editor-container'
+                    panel : '#panel-writing',
+                    name: 'writing'
                 },
                 {
                     button: '#list-btn',
-                    panel : '#container'
+                    panel : '#container',
+                    name: 'list'
+                },
+                {
+                    button: '#setting-btn',
+                    panel: '#panel-setting',
+                    name: 'setting'
                 }
             ],
             panelClass: '.panel',
-            buttonClass: '.button'
+            buttonClass: '.button',
+            eventMgr: this.eventMgr
         });
     };
     return APP;

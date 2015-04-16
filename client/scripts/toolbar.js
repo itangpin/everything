@@ -9,6 +9,7 @@ define(function(){
         this.switcherEl = option.switcherEl;
         this.panelClass = option.panelClass;
         this.buttonClass = option.buttonClass;
+        this.eventMgr = option.eventMgr;
         this.init();
     };
     Toolbar.prototype.init = function(){
@@ -16,6 +17,7 @@ define(function(){
         this.switcherEl.forEach(function(v){
             self.container.querySelector(v.button).addEventListener('click', function(e){
                 self.switchPanel(v.panel, v.button);
+                self.eventMgr.fire('panelChange', v.name);
             });
         });
     };
