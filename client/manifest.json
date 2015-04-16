@@ -1,5 +1,5 @@
 {
-  "name": "Hello World!",
+  "name": "Everything",
   "description": "My first Chrome App.",
   "version": "0.1",
   "manifest_version": 2,
@@ -8,5 +8,8 @@
       "scripts": ["background.js"]
     }
   },
+  "permissions": [
+    "storage"
+  ],
   "icons": { "16": "icon.png", "128": "icon.png" }
 }

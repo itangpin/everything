@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./stylesheets/style.css"/>
     <link rel="stylesheet" href="./stylesheets/site.css"/>
     <link rel="stylesheet" href="./stylesheets/editor.css"/>
+    <link rel="stylesheet" href="./stylesheets/toolbar.css"/>
     <!-- Everything Theme -->
     <link rel="stylesheet" href="./stylesheets/everything_theme/light.css"/>
     <link rel="stylesheet" href="./stylesheets/everything_theme/dark.css"/>
@@ -30,17 +31,24 @@
     </style>
 </head>
 <body>
-<a target="_blank" href="https://github.com/itangpin/everything"><img
-        style="position: absolute; top: 40px; right: 0; border: 0;" src="./pic/fork_me_on_github.png"
-        alt="Fork me on GitHub"
-        data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png"></a>
+<!--<a target="_blank" href="https://github.com/itangpin/everything"><img-->
+        <!--style="position: absolute; top: 40px; right: 0; border: 0;" src="./pic/fork_me_on_github.png"-->
+        <!--alt="Fork me on GitHub"-->
+        <!--data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png"></a>-->
 
-<div id="container">
+<div id="toolbar" class="toolbar" nselectable="on" style="-moz-user-select:none;-webkit-user-select:none;" onselectstart="return false;">
+    <div class="switcher">
+        <div class="button" id="writing-btn">WRITING</div>
+        <div class="button hi" id="list-btn">LIST</div>
+    </div>
+    <div class="button" id="setting">#</div>
+</div>
+<div id="container" class="panel">
     <div class="everything">
     </div>
 </div>
 
-<div class="editor-container">
+<div class="editor-container panel" id="editor-container">
     <div class="editor-title" contenteditable="true"></div>
     <div class="editor-content"></div>
 </div>

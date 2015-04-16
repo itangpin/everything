@@ -1,0 +1,54 @@
+$toolbar-background-color: #666;
+$toolbar-text-color: #fff;
+$toolbar-text-size: 14px;
+$toolbar-height: 36px;
+$toolbar-switcher-hover-color: #555;
+$toolbar-switcher-active-color: #444;
+$toolbar-switcher-hi-color: #444;
+.toolbar{
+    position: fixed;
+    height: $toolbar-height;
+    background-color: $toolbar-background-color;
+    z-index: 999;
+}
+.toolbar{
+    // mode switcher
+    .button{
+        transition: box-shadow .1s;
+        cursor: pointer;
+        height: 100%;
+        line-height: $toolbar-height;
+        font-size: $toolbar-text-size;
+    }
+    .switcher{
+        float: left;
+        width: 150px;
+        line-height: 100%;
+        font-size: 0;
+    }
+    .switcher>.button{
+        display: inline-block;
+        padding: 0 10px;
+        text-align: center;
+        color: $toolbar-text-color;
+    }
+    // setting button
+    #setting{
+        float: right;
+        color: $toolbar-text-color;
+        font-size: 20px;
+        padding: 0 20px;
+    }
+    .button:hover{
+        background-color: $toolbar-switcher-hover-color;
+    }
+    .button:active{
+        background: $toolbar-switcher-active-color;
+        //box-shadow: inset 0 0 10px black;
+    }
+    .button.hi{
+        background-color: $toolbar-switcher-hi-color;
+        box-shadow: inset 0 0 10px black;
+    }
+
+}

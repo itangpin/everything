@@ -109,7 +109,7 @@ define([
     Everything.prototype._create = function (data) {
         var app = this;
         // create the tool bar
-        this._createToolBar();
+        //this._createToolBar();
         var rootNode = new Node(data, app);
         rootNode.adjustDom({
             type: 'append',
@@ -129,10 +129,11 @@ define([
                 app.frame.addEventListener(value, onEvent, true);
             } else {
                 app.frame.addEventListener(value, onEvent);
-                app.toobarElement.addEventListener(value, onEvent);
+                //app.toobarElement.addEventListener(value, onEvent);
             }
         });
         app.frame.addEventListener('input',app.event('input'));
+        //app.frame.addEventListener('input', onEvent);
     };
 
     Everything.prototype.event = function(type){
@@ -290,10 +291,10 @@ define([
 
         if (event.type == 'click') {
             // toggle theme
-            if (event.target == this.buttons['theme']) {
-                console.log('theme');
-                this.toggleTheme();
-            }
+            //if (event.target == this.buttons['theme']) {
+            //    console.log('theme');
+            //    this.toggleTheme();
+            //}
             // bread
             if (event.target == this.bread) {
 
