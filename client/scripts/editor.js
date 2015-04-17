@@ -34,5 +34,9 @@ define(['../bower_components/codemirror/lib/codemirror'], function (CodeMirror) 
         this.cm = createCodeMirror(this.el.contentEl);
     };
 
+    Editor.prototype.onPanelActive = function(data){
+
+    };
+
     return Editor;
 });

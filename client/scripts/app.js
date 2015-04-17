@@ -3,22 +3,29 @@
  * Events: ['panelChange']
  */
 
-define(['everything','toolbar','event'],function(Everything,Toolbar, Event){
+define([
+    'everything',
+    'toolbar',
+    'event',
+    'editor'], function (Everything,
+                         Toolbar,
+                         EventMgr,
+                         Editor) {
     var APP = {};
-    APP.eventMgr = new Event();
-    APP.init = function(){
+    APP.init = function () {
+        this.eventMgr = new EventMgr();
         // initiat toolbar
         this.toolbar = new Toolbar({
             container: '#toolbar',
             switcherEl: [
                 {
                     button: '#writing-btn',
-                    panel : '#panel-writing',
+                    panel: '#panel-writing',
                     name: 'writing'
                 },
                 {
                     button: '#list-btn',
-                    panel : '#container',
+                    panel: '#container',
                     name: 'list'
                 },
                 {
@@ -31,11 +38,19 @@ define(['everything','toolbar','event'],function(Everything,Toolbar, Event){
             buttonClass: '.button',
             eventMgr: this.eventMgr
         });
+        this.editor = new Editor({
+            titleEl: $('.editor-title')[0],
+            contentEl: $('.editor-content')[0]
+        });
         this.listenEvents();
     };
-    APP.listenEvents = function(){
-        this.eventMgr.addListener('panelChange', function(data){
-
+    APP.listenEvents = function () {
+        var self = this;
+        // panel change event
+        this.eventMgr.addListener('panelChange', function (data) {
+            if(data.panel == 'writing'){
+                self.editor.onPanelActive(data);
+            }
         });
     };
     return APP;

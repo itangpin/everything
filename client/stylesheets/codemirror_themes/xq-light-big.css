@@ -42,7 +42,9 @@ THE SOFTWARE.
 .cm-s-xq-light-big .CodeMirror-activeline-background {background: #e8f2ff !important;}
 .cm-s-xq-light-big .CodeMirror-matchingbracket {outline:1px solid grey;color:black !important;background:yellow;}
 
-.CodeMirror.cm-s-xq-light-big {background-color: #F0F0F0;}
+.CodeMirror.cm-s-xq-light-big {
+    /*background-color: #F0F0F0;*/
+}
 .CodeMirror.cm-s-xq-light-big pre {color: #444;}
 .cm-s-xq-light-big .cm-header-1 {font-size: 24px;}
 .cm-s-xq-light-big pre {line-height: 30px; font-size: 20px;}
