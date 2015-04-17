@@ -48,3 +48,6 @@ THE SOFTWARE.
 .CodeMirror.cm-s-xq-light-big pre {color: #444;}
 .cm-s-xq-light-big .cm-header-1 {font-size: 24px;}
 .cm-s-xq-light-big pre {line-height: 30px; font-size: 20px;}
+.CodeMirror-empty.cm-s-xq-light-big pre{
+    color: #999;
+}

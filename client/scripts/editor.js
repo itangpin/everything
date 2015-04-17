@@ -2,7 +2,7 @@
  * Created by pin on 4/13/15.
  */
 
-define(['../bower_components/codemirror/lib/codemirror'], function (CodeMirror) {
+define([], function () {
     var Editor = function (option) {
         this.el = {
             titleEl: option.titleEl,
@@ -26,12 +26,13 @@ define(['../bower_components/codemirror/lib/codemirror'], function (CodeMirror) 
                     taskLists: true,
                     fencedCodeBlocks: true
                 },
-                value: content || ''
+                value: content || '',
+                placeholder: 'Content...'
             };
             return new CodeMirror(el, codeMirrorOptions);
         };
 
-        this.cm = createCodeMirror(this.el.contentEl);
+        this.cm = createCodeMirror(this.el.contentEl,null,null);
     };
 
     Editor.prototype.onPanelActive = function(data){

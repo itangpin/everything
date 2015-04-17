@@ -103,7 +103,8 @@ define(function(require,exports,module){
                     taskLists: true,
                     fencedCodeBlocks: true
                 },
-                value:contentValue
+                value:contentValue,
+                placeholder: 'content...'
             };
             return new CodeMirror(el, codeMirrorOptions);
         };
