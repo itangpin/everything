@@ -12,6 +12,14 @@ define([
                          EventMgr,
                          Editor) {
     var APP = {};
+    APP.status = {
+        editor:{
+            launched: false
+        },
+        list:{
+
+        }
+    };
     APP.init = function () {
         this.eventMgr = new EventMgr();
         // initiat toolbar
@@ -38,6 +46,11 @@ define([
             buttonClass: '.button',
             eventMgr: this.eventMgr
         });
+        this.editor = new Editor({
+            titleEl: $('.editor-title')[0],
+            contentEl: $('.editor-content')[0]
+        });
+        this.status.editor.launched = true;
         this.listenEvents();
     };
     APP.listenEvents = function () {
@@ -45,10 +58,6 @@ define([
         // panel change event
         this.eventMgr.addListener('panelChange', function (data) {
             if(data.panel == 'writing'){
-                self.editor = new Editor({
-                    titleEl: $('.editor-title')[0],
-                    contentEl: $('.editor-content')[0]
-                });
                 self.editor.onPanelActive(data);
             }
         });

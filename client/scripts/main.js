@@ -70,10 +70,10 @@ require(['Everything','./editor','app'], function(Everything, Editor, APP){
             $('.new-article').on('click', function(){
                 $('#container').hide();
                 $('.editor-container').show();
-                var editor = new Editor({
-                    titleEl: $('.editor-title')[0],
-                    contentEl: $('.editor-content')[0]
-                });
+                //var editor = new Editor({
+                //    titleEl: $('.editor-title')[0],
+                //    contentEl: $('.editor-content')[0]
+                //});
             });
         });
     });
