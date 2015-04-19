@@ -45,7 +45,7 @@ define([], function () {
     Editor.prototype.onPanelActive = function(data){
         // if editor has not be initiated
         // create one
-        if(!this.status.editorInstantiated){
+        if(data.from == 'toolbar' && !this.status.editorInstantiated){
             this.createEditor();
         }
     };

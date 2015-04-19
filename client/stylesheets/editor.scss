@@ -28,4 +28,24 @@
         height: 500px;
     }
 
+    // buttons
+    .icon{
+        position: fixed;
+        top: 136px;
+        left: 30px;
+    }
+    .icon{
+        .iconfont{
+            font-size: 24px;
+            cursor: pointer;
+            //color: #0095FF;
+        }
+        .iconfont:hover{
+            color:#3498db;
+            font-weight: bold;
+        }
+        .icon-category{
+            margin-bottom: 30px;
+        }
+    }
 }

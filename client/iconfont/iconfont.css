@@ -1,0 +1,55 @@
+
+@font-face {font-family: "iconfont";
+  src: url('iconfont.eot'); /* IE9*/
+  src: url('iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff') format('woff'), /* chrome、firefox */
+  url('iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-all:before { content: "\e600"; }
+.icon-back:before { content: "\e601"; }
+.icon-cart:before { content: "\e602"; }
+.icon-category:before { content: "\e603"; }
+.icon-close:before { content: "\e604"; }
+.icon-comments:before { content: "\e605"; }
+.icon-cry:before { content: "\e606"; }
+.icon-delete:before { content: "\e607"; }
+.icon-edit:before { content: "\e608"; }
+.icon-email:before { content: "\e609"; }
+.icon-favorites:before { content: "\e60a"; }
+.icon-folder:before { content: "\e60b"; }
+.icon-form:before { content: "\e60c"; }
+.icon-help:before { content: "\e60d"; }
+.icon-information:before { content: "\e60e"; }
+.icon-less:before { content: "\e60f"; }
+.icon-moreunfold:before { content: "\e610"; }
+.icon-more:before { content: "\e611"; }
+.icon-pic:before { content: "\e612"; }
+.icon-qrcode:before { content: "\e613"; }
+.icon-refresh:before { content: "\e614"; }
+.icon-rfq:before { content: "\e615"; }
+.icon-search:before { content: "\e616"; }
+.icon-selected:before { content: "\e617"; }
+.icon-set:before { content: "\e618"; }
+.icon-smile:before { content: "\e619"; }
+.icon-success:before { content: "\e61a"; }
+.icon-survey:before { content: "\e61b"; }
+.icon-training:before { content: "\e61c"; }
+.icon-viewgallery:before { content: "\e61d"; }
+.icon-viewlist:before { content: "\e61e"; }
+.icon-warning:before { content: "\e61f"; }
+.icon-wrong:before { content: "\e620"; }
+.icon-account:before { content: "\e621"; }
+.icon-add:before { content: "\e622"; }
+.icon-clock:before { content: "\e623"; }
+.icon-remind:before { content: "\e624"; }
+.icon-calendar:before { content: "\e625"; }
