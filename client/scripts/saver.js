@@ -6,8 +6,8 @@ define(function(){
         this.saveLocalStorage();
     };
     Saver.prototype.saveLocalStorage = function(){
-        //var value = this.app.getRootValue();
-        //window.localStorage.setItem('value',JSON.stringify(value));
+        var value = this.app.getRootValue();
+        window.localStorage.setItem('value',JSON.stringify(value));
     };
     return Saver;
 });

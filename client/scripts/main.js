@@ -16,7 +16,7 @@ require(['Everything','./editor','app'], function(Everything, Editor, APP){
             {
                 content:'写作',
                 children: [
-                    
+
                 ]
             },
             'Version 0.5.1',
@@ -59,9 +59,10 @@ require(['Everything','./editor','app'], function(Everything, Editor, APP){
         //}else{
         //    store = localstorage;
         //}
-        //if(store.getItem('value')){
-        //    value = JSON.parse(store.getItem('value'))
-        //}
+
+        if(localStorage.getItem('value')){
+            value = JSON.parse(localStorage.getItem('value'))
+        }
 
         var container = document.querySelector(".everything");
 
