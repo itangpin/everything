@@ -13,7 +13,12 @@ requirejs.config({
 require(['Everything','./editor','app'], function(Everything, Editor, APP){
     $(function(){
         var value = [
-            '@author Tang Pin',
+            {
+                content:'写作',
+                children: [
+                    
+                ]
+            },
             'Version 0.5.1',
             {
                 content: "功能用法",
