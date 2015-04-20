@@ -17,7 +17,7 @@ define([], function () {
 
     };
 
-    Editor.prototype.createEditor = function(){
+    Editor.prototype.launchEditor = function(value){
         var createCodeMirror = function (el, content, theme) {
             var codeMirrorOptions = {
                 theme: theme || 'xq-light-big',
@@ -38,7 +38,7 @@ define([], function () {
             return new CodeMirror(el, codeMirrorOptions);
         };
 
-        this.editor = createCodeMirror(this.el.contentEl,null,null);
+        this.editor = createCodeMirror(this.el.contentEl,value,null);
         this.status.editorInstantiated = true;
     };
 
@@ -46,7 +46,26 @@ define([], function () {
         // if editor has not be initiated
         // create one
         if(data.from == 'toolbar' && !this.status.editorInstantiated){
-            this.createEditor();
+            this.launchEditor();
+        }
+    };
+
+    Editor.prototype.launchEditorFromNode = function(node){
+        var value = node.getValue();
+        var title = value.content;
+        var content;
+        if(!value.packageValue || !value.packageValue.editor){
+            content = "";
+        }else{
+            content = value.packageValue.editor.editorContent;
+        }
+        if(this.status.editorInstantiated){
+            // change the value
+            this.editor.setValue(content);
+            this.titleEl.innerHTML = title;
+        }else{
+            // launch new editor
+            this.launchEditor(content);
         }
     };
 

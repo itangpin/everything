@@ -62,5 +62,13 @@ define([
             }
         });
     };
+    /**
+     * Launch editor from the data of a given node
+     * @param {Node}node
+     */
+    APP.launchEditorFromNode = function(node){
+        this.toolbar.switchPanel('writing');
+        this.editor.launchEditorFromNode(node);
+    };
     return APP;
 });

@@ -1,9 +1,145 @@
+/**
+ * Created by pin on 4/14/15.
+ * Events: ['panelChange']
+ */
+
+define([
+    'everything',
+    'toolbar',
+    'event',
+    'editor'], function (Everything,
+                         Toolbar,
+                         EventMgr,
+                         Editor) {
+    var APP = {};
+    APP.status = {
+        editor:{
+            launched: false
+        },
+        list:{
+
+        }
+    };
+    APP.init = function () {
+        this.eventMgr = new EventMgr();
+        // initiat toolbar
+        this.toolbar = new Toolbar({
+            container: '#toolbar',
+            switcherEl: [
+                {
+                    button: '#writing-btn',
+                    panel: '#panel-writing',
+                    name: 'writing'
+                },
+                {
+                    button: '#list-btn',
+                    panel: '#container',
+                    name: 'list'
+                },
+                {
+                    button: '#setting-btn',
+                    panel: '#panel-setting',
+                    name: 'setting'
+                }
+            ],
+            panelClass: '.panel',
+            buttonClass: '.button',
+            eventMgr: this.eventMgr
+        });
+        this.editor = new Editor({
+            titleEl: $('.editor-title')[0],
+            contentEl: $('.editor-content')[0]
+        });
+        this.status.editor.launched = true;
+        this.listenEvents();
+    };
+    APP.listenEvents = function () {
+        var self = this;
+        // panel change event
+        this.eventMgr.addListener('panelChange', function (data) {
+            if(data.panel == 'writing'){
+                self.editor.onPanelActive(data);
+            }
+        });
+    };
+    /**
+     * Launch editor from the data of a given node
+     * @param {Node}node
+     */
+    APP.launchEditorFromNode = function(node){
+
+    };
+    return APP;
+});
+
+/**
+ * Created by pin on 4/13/15.
+ */
+
+define([], function () {
+    var Editor = function (option) {
+        this.el = {
+            titleEl: option.titleEl,
+            contentEl: option.contentEl
+        };
+        this.status = {
+            editorInstantiated: false
+        };
+        this.init();
+    };
+    Editor.prototype.init = function () {
+
+    };
+
+    Editor.prototype.launchEditor = function(value){
+        var createCodeMirror = function (el, content, theme) {
+            var codeMirrorOptions = {
+                theme: theme || 'xq-light-big',
+                tabSize: 4,
+                lineNumbers: false,
+                lineWrapping: true,
+                autoCloseBrackets: true,
+                extraKeys: this.keyMaps,
+                mode: {
+                    name: 'markdown',
+                    underscoresBreakWords: false,
+                    taskLists: true,
+                    fencedCodeBlocks: true
+                },
+                value: content || '',
+                placeholder: 'content'
+            };
+            return new CodeMirror(el, codeMirrorOptions);
+        };
+
+        this.editor = createCodeMirror(this.el.contentEl,value,null);
+        this.status.editorInstantiated = true;
+    };
+
+    Editor.prototype.onPanelActive = function(data){
+        // if editor has not be initiated
+        // create one
+        if(data.from == 'toolbar' && !this.status.editorInstantiated){
+            this.launchEditor();
+        }
+    };
+
+    Editor.prototype.launchEditorFromNode = function(node){
+        if(this.status.editorInstantiated){
+            this.save();
+        }
+        var value = node.getValue();
+    };
+
+    return Editor;
+});
+
 /* EventManager, v1.0.1
  *
  * Copyright (c) 2009, Howard Rauscher
  * Licensed under the MIT License
  */
-define(function(require,exports,module){
+define(function(){
     function EventManager() {
         this._listeners = {};
     }
@@ -38,7 +174,7 @@ define(function(require,exports,module){
             var listeners = this._listeners[name];
             // if args is not an array, make it an array
             args = args || [];
-            if(!args.length){
+            if(!Array.isArray(args)){
                 args = [args];
             }
             if(listeners !== undefined) {
@@ -94,8 +230,7 @@ define(function(require,exports,module){
         }
     };
 
-    module.exports = EventManager;
-    //window.EventManager = EventManager;
+    return EventManager;
 });
 
 
@@ -105,18 +240,19 @@ define(function(require,exports,module){
  * @author 唐品 (Tang Pin)
  * created at 2015-2-13
  */
-define(function (require, exports, module) {
+define([
+    'node',
+    'history',
+    'package',
+    'event',
+    'saver',
+    'packages/editor',
+    'packages/highlight'
+],function (Node,History,Package,EventMgr,Saver,Editor,Highlighter) {
 
-    var Node = require('./node.js');
-    var History = require('./history.js');
-    var Package = require('./package.js');
-    var EventMgr = require('./event.js');
-    var Saver = require('./saver.js');
-    // packages
-    var Editor = require('./packages/editor.js');
-
-    var Everything = function (data, option) {
+    var Everything = function (data, app, option) {
         this.data = data;
+        this.app = app;
         this.index = 0;
         this.packages = [];
         if (!option.container) {
@@ -124,6 +260,9 @@ define(function (require, exports, module) {
             this.createContainer();
         }
         this.frame = option.container;
+        $(this.frame).on('click', function(){
+            console.log('frame');
+        });
 
         // theme
         this.themes = ['dark', 'light'];
@@ -135,7 +274,7 @@ define(function (require, exports, module) {
         $(this.frame).addClass(this.theme);
         $(document.body).addClass(this.theme);
         this.history = new History();
-        this.packageMgr = new Package();
+        this.packageMgr = new Package(this);
         this.init();
         // move to this.init
         this.initPackages();
@@ -146,7 +285,11 @@ define(function (require, exports, module) {
     };
 
     Everything.prototype.init = function () {
+        var app = this;
+        // events manager for intern use
         this.eventMgr = new EventMgr();
+        // events magager for packages
+        this.packageEventsMgr = new EventMgr();
         this.crumb = new Crumb(this);
         this.saver = new Saver(this);
         // register event listener
@@ -156,7 +299,6 @@ define(function (require, exports, module) {
         // app events
         this.appEvents = ['contentChange'];
         this.appEventsHandler = {};
-        var app = this;
         this.appEvents.forEach(function(v){
             app.appEventsHandler[v] = [];
         });
@@ -197,7 +339,7 @@ define(function (require, exports, module) {
     Everything.prototype._create = function (data) {
         var app = this;
         // create the tool bar
-        this._createToolBar();
+        //this._createToolBar();
         var rootNode = new Node(data, app);
         rootNode.adjustDom({
             type: 'append',
@@ -217,9 +359,29 @@ define(function (require, exports, module) {
                 app.frame.addEventListener(value, onEvent, true);
             } else {
                 app.frame.addEventListener(value, onEvent);
-                app.toobarElement.addEventListener(value, onEvent);
+                //app.toobarElement.addEventListener(value, onEvent);
             }
         });
+        app.frame.addEventListener('input',app.event('input'));
+        //app.frame.addEventListener('input', onEvent);
+    };
+
+    Everything.prototype.event = function(type){
+        var self = this;
+        // 使用闭包来保留this引用，不知道是否合适
+        if(type == 'input'){
+            return function(e){
+                var node = Node.getNodeFromTarget(e.target);
+                if(node){
+                    // let node it self handle the event first
+                    node.onEvent(e);
+                    // fire the change event for packages
+                    self.appEventsHandler['contentChange'].forEach(function(v){
+                        v(node);
+                    });
+                }
+            };
+        }
     };
 
     /**
@@ -241,6 +403,9 @@ define(function (require, exports, module) {
             app.buttons[value] = btn;
             app.toobarElement.appendChild(btn);
         });
+        var newButton = crel('button', {class:'new-article'},'New Article');
+        var buttonWrapper = crel('div',{class:'button-wrapper'},newButton);
+        toolbar.appendChild(buttonWrapper);
     };
     Everything.prototype._createTitle = function (node) {
         var titleText = node.getContent();
@@ -268,8 +433,13 @@ define(function (require, exports, module) {
         }
     };
 
+    /**
+     * Show 2 buttons when you zoom into the bottom node
+     * @private
+     */
     Everything.prototype._createAddButton = function () {
         var app = this;
+        var self = this;
         var addChildBtn = document.createElement('a');
         addChildBtn.innerHTML = "Add a child";
         addChildBtn.setAttribute('href', '#');
@@ -293,11 +463,13 @@ define(function (require, exports, module) {
 
         });
         // launch editor
+        // switch to editor panel
         $(launchEditorBtn).on('click', function () {
-            app.switchRootNodeWithPackage(['editor']);
-            if (app.addBtnWrapper) {
-                app.frame.removeChild(addBtnWrapper);
-            }
+            //app.switchRootNodeWithPackage(['editor']);
+            //if (app.addBtnWrapper) {
+            //    app.frame.removeChild(addBtnWrapper);
+            //}
+            self.app.launchEditorFromNode(self.rootNode);
         });
     };
 
@@ -307,6 +479,8 @@ define(function (require, exports, module) {
     Everything.prototype.initPackages = function () {
         this.packageMgr.add('editor', Editor);
         this.packages.push('editor');
+        this.packageMgr.add('highlight', Highlighter);
+        this.packages.push('highlight');
     };
     /**
      * Get all the packages that registered in the app
@@ -354,16 +528,16 @@ define(function (require, exports, module) {
 
         if (event.type == 'click') {
             // toggle theme
-            if (event.target == this.buttons['theme']) {
-                console.log('theme');
-                this.toggleTheme();
-            }
+            //if (event.target == this.buttons['theme']) {
+            //    console.log('theme');
+            //    this.toggleTheme();
+            //}
             // bread
             if (event.target == this.bread) {
 
             }
         }
-        if (event.type == 'propertychange') {
+        if (event.type == 'keyup') {
             var a;
         }
         var node = Node.getNodeFromTarget(event.target);
@@ -414,6 +588,7 @@ define(function (require, exports, module) {
 
     };
     Everything.prototype.zoomIn = function (node, hasContent) {
+        this.creating = true;
         var newRootNode = node;
         if (!newRootNode) {
             return;
@@ -434,6 +609,7 @@ define(function (require, exports, module) {
             (hasContent == undefined && !this.rootNode.hasChild())) {
             this._createAddButton();
         }
+        this.creating = false;
     };
 
     /**
@@ -529,6 +705,9 @@ define(function (require, exports, module) {
     /**
      * Add event handlers from outside. events:
      * 'contentChange',
+     * @example: app.on('contenteChange', function(){
+     *      self.handler();
+     * })
      * @param {String} eventName
      * @param {Function} handler
      */
@@ -537,8 +716,10 @@ define(function (require, exports, module) {
         if(eventsList.indexOf(eventName) == -1){
             return;
         }
-        this.appEvents[eventName].push(handler);
+        this.appEventsHandler[eventName].push(handler);
     };
+
+
 
     /*========================================================
                           Bread crumb manager
@@ -591,7 +772,7 @@ define(function (require, exports, module) {
             domArr.forEach(function (v, i) {
                 app.crumbElement.appendChild(v);
                 // add event listener
-                $(app.crumbElement).find('a').on('click', function () {
+                $(v).find('a').on('click', function () {
                     self.onEvent($(this));
                 });
             });
@@ -635,11 +816,10 @@ define(function (require, exports, module) {
         this.render();
     };
 
-
-    module.exports = Everything;
+    return Everything;
 });
 
-define(function(require, exports, module){
+define(function(){
     /**
      * @constructor History
      * Store action history, enables undo and redo
@@ -863,11 +1043,97 @@ define(function(require, exports, module){
 });
 
 /**
+ * Created by pin on 4/12/15.
+ */
+
+requirejs.config({
+        path:{
+            'codeMirror': '../spm_modules/codemirror/codemirror.js',
+            'Everything': 'everything.js'
+        }
+    }
+);
+
+require(['Everything','editor','app'], function(Everything, Editor, APP){
+    $(function(){
+        var value = [
+            {
+                content:'写作',
+                children: [
+
+                ]
+            },
+            'Version 0.5.1',
+            {
+                content: "功能用法",
+                children: [
+                    '创建新的一行(Enter键)',
+                    '向右缩进(Tab键)',
+                    {
+                        content: '删除一行',
+                        children: [
+                            'delete键',
+                            '在空行上按退格键'
+                        ]
+                    },
+                    {
+                        content:"文本编辑器",
+                        package:['editor']
+                    }
+                ],
+                expand: false
+            },
+            {
+                content:"新增功能",
+                children:
+                    [
+                        "主题切换",
+                        "切换根节点"
+                    ]
+            },
+            {
+                content: "新特性：编辑器，包管理。在这行上按Alt+O",
+                detail: "#标题\n\n*italic*\n\n**加粗**普通",
+                package: ['editor']
+            }
+        ];
+        var store;
+        //if(chrome.storage.sync){
+        //    store = chrome.storage.local;
+        //}else{
+        //    store = localstorage;
+        //}
+
+        if(localStorage.getItem('value')){
+            value = JSON.parse(localStorage.getItem('value'))
+        }
+
+        var container = document.querySelector(".everything");
+
+
+        $(function(){
+            APP.init();
+            $('.new-article').on('click', function(){
+                $('#container').hide();
+                $('.editor-container').show();
+                //var editor = new Editor({
+                //    titleEl: $('.editor-title')[0],
+                //    contentEl: $('.editor-content')[0]
+                //});
+            });
+            var everything = new Everything(value,app, {
+                container: container,
+                theme: 'light'
+            });
+        });
+    });
+
+});
+/**
  * @author 唐品 (Tang Pin)
  * created at 2015-2-8
  */
-define(function(require, exports, module){
-    var util = require('./util.js');
+define(['util'],function(util){
 
     var Node = function(value,app){
         this.value = value;
@@ -1083,6 +1349,10 @@ define(function(require, exports, module){
             this.onValueChange();
         }
 
+        // content change
+        if(event.type == 'input'){
+            this.onValueChange();
+        }
 
 
         // send events to packages' handler
@@ -1117,8 +1387,13 @@ define(function(require, exports, module){
         this.value.packageValue = this.value.packageValue || {};
 
         $.each(this.packages, function(index, value){
-            $.extend(thisNode, value.node);
-            thisNode.packageEvents.push(value.onEvent);
+            if(value.node){
+                $.extend(thisNode, value.node);
+            }
+            if(value.onEvent){
+                thisNode.packageEvents.push(value.onEvent);
+            }
+
         });
     };
 
@@ -1147,7 +1422,6 @@ define(function(require, exports, module){
     Node.prototype.getValue = function(){
         var thisNode = this;
         this.value.content = this.contentElement.innerHTML;
-        this.value.packageValue = this.value.packageValue;
         this.value.children = [];
         if(this.hasChild()){
             this.childs.forEach(function(v){
@@ -1173,7 +1447,7 @@ define(function(require, exports, module){
         if((typeof this.value == 'string') || this.value.constructor == String){
             // string means no child nodes and no packageValue
             this.value = {
-                content:value,
+                content:this.value,
                 children:[],
                 packageValue:{}
             };
@@ -1210,9 +1484,11 @@ define(function(require, exports, module){
      * @param value
      */
     Node.prototype.setContent= function(value){
-        if((typeof this.value.content == 'string') || this.value.content.constructor == String){
+        //var value = value || this.value;
+        if((typeof value == 'string') || value.constructor == String){
             this.content = value;
             this.contentElement.innerHTML = this.content;
+            this.onValueChange();
         }
     };
 
@@ -1629,8 +1905,7 @@ define(function(require, exports, module){
         return false;
     };
 
-
-    module.exports = Node;
+    return Node;
 });
 
 /**
@@ -1638,9 +1913,10 @@ define(function(require, exports, module){
  * Created on 3/10/15.
  */
 
-define(function(require, exports, module){
-    var Package = function(){
+define(function(){
+    var Package = function(app){
         this.packages = {};
+        this.app = app;
         this.init();
     };
 
@@ -1650,16 +1926,19 @@ define(function(require, exports, module){
     };
     Package.prototype.add = function(packName,pack){
         this.packages[packName]=pack;
+        if($.isFunction(pack.init)){
+            pack.init(this.app);
+        }
     };
     Package.prototype.get = function(packaName){
         return this.packages[packaName];
     };
 
-    module.exports = Package;
+    return Package;
 });
 
 
-define(function(require, exports, module){
+define(function(){
     var Saver = function(app){
         this.app = app;
     };
@@ -1670,9 +1949,55 @@ define(function(require, exports, module){
         var value = this.app.getRootValue();
         window.localStorage.setItem('value',JSON.stringify(value));
     };
-    module.exports = Saver;
+    return Saver;
 });
-define(function(require, exports, module){
+/**
+ * Created by pin on 4/14/15.
+ */
+
+define(function(){
+
+    var Toolbar = function(option){
+        this.container = document.querySelector(option.container);
+        this.switcherEl = option.switcherEl;
+        this.panelClass = option.panelClass;
+        this.buttonClass = option.buttonClass;
+        this.eventMgr = option.eventMgr;
+        this.init();
+    };
+    Toolbar.prototype.init = function(){
+        var self = this;
+        this.switcherEl.forEach(function(v){
+            self.container.querySelector(v.button).addEventListener('click', function(e){
+                self.switchPanel(v);
+                self.eventMgr.fire('panelChange', {panel: v.name, from: 'toolbar'});
+            });
+        });
+    };
+    Toolbar.prototype.on = function(type, el, handler){
+        this.buttons.push(el);
+        var self = this;
+        handler.forEach(function(v){
+            self.container.querySelector(el).addEventListener(v.type, v.callback);
+        });
+    };
+    Toolbar.prototype.switchPanel = function(p){
+        if(this.currentPanel = p){
+            return;
+        }
+        var panel = p.panel,
+            button = p.button;
+        $(this.panelClass).hide();
+        $(panel).show();
+        $(this.buttonClass).removeClass('hi');
+        $(button).addClass('hi');
+        this.currentPanel = p;
+    };
+
+    return Toolbar;
+});
+
+define(function(){
     var util = {};
     util.uuid = function guid() {
         function s4() {
@@ -1685,6 +2010,14 @@ define(function(require, exports, module){
     };
     return util;
 });
+/**
+ * Created by pin on 4/16/15.
+ */
+
+define([],function(){
+
+});
+
 /**
  * @author 唐品(Tang Pin)
  * Created on 3/10/15.
@@ -1790,7 +2123,8 @@ define(function(require,exports,module){
                     taskLists: true,
                     fencedCodeBlocks: true
                 },
-                value:contentValue
+                value:contentValue,
+                placeholder: 'content...'
             };
             return new CodeMirror(el, codeMirrorOptions);
         };
@@ -1822,7 +2156,8 @@ define(function(require,exports,module){
         this.value.packageValue.editor.editorContent = content;
     };
 
-    module.exports = editor;
+    return editor;
+    //module.exports = editor;
 });
 
 /**
@@ -1831,10 +2166,31 @@ define(function(require,exports,module){
  */
 
 define(function(require, exports, module){
+    var strRegex = '((https|http|ftp|rtsp|mms)?://)'
+        + '?(([0-9a-z_!~*\'().&=+$%-]+: )?[0-9a-z_!~*\'().&=+$%-]+@)?' //ftp的user@
+        + '(([0-9]{1,3}.){3}[0-9]{1,3}' // IP形式的URL- 199.194.52.184
+        + '|' // 允许IP和DOMAIN（域名）
+        + '([0-9a-z_!~*\'()-]+.)*' // 域名- www.
+        + '([0-9a-z][0-9a-z-]{0,61})?[0-9a-z].' // 二级域名
+        + '[a-z]{2,6})' // first level domain- .com or .museum
+        + '(:[0-9]{1,4})?' // 端口- :80
+        + '((/?)|' // a slash isn't required if there is no file name
+        + '(/[0-9a-z_!~*\'().;?:@&=+$,%#-]+)+/?)';
+    var re=new RegExp(strRegex);
     var highlight = {
         name: 'hightlight'
     };
+    /**
+     * Will be trigged after the package is loaded
+     * @param app
+     */
     highlight.init = function(app){
-
+        // listen for content change in the node
+        app.on('contentChange', function(node){
+            console.log('highlight'+node.value.content);
+            //node.setContent(node.value.content.replace(re, '<a href="$&">$&</a>'));
+        });
     };
+
+    module.exports = highlight;
 });

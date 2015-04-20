@@ -77,7 +77,7 @@ require(['Everything','./editor','app'], function(Everything, Editor, APP){
                 //    contentEl: $('.editor-content')[0]
                 //});
             });
-            var everything = new Everything(value,app, {
+            var everything = new Everything(value,APP, {
                 container: container,
                 theme: 'light'
             });

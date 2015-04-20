@@ -201,6 +201,7 @@ define([
      */
     Everything.prototype._createAddButton = function () {
         var app = this;
+        var self = this;
         var addChildBtn = document.createElement('a');
         addChildBtn.innerHTML = "Add a child";
         addChildBtn.setAttribute('href', '#');
@@ -230,7 +231,7 @@ define([
             //if (app.addBtnWrapper) {
             //    app.frame.removeChild(addBtnWrapper);
             //}
-
+            self.app.launchEditorFromNode(self.rootNode);
         });
     };
 
