@@ -18,7 +18,7 @@ define(function(){
         this.switcherEl.forEach(function(v){
             self.panels[v.name] = v;
             self.container.querySelector(v.button).addEventListener('click', function(e){
-                self.switchPanel(v);
+                self.switchPanel(v.name);
                 self.eventMgr.fire('panelChange', {panel: v.name, from: 'toolbar'});
             });
         });

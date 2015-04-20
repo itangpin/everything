@@ -23,6 +23,7 @@ define([], function () {
                 theme: theme || 'xq-light-big',
                 tabSize: 4,
                 lineNumbers: false,
+                scrollbarStyle: 'null',
                 lineWrapping: true,
                 autoCloseBrackets: true,
                 extraKeys: this.keyMaps,
@@ -62,7 +63,7 @@ define([], function () {
         if(this.status.editorInstantiated){
             // change the value
             this.editor.setValue(content);
-            this.titleEl.innerHTML = title;
+            this.el.titleEl.innerHTML = title;
         }else{
             // launch new editor
             this.launchEditor(content);
