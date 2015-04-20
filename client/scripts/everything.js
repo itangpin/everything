@@ -21,8 +21,9 @@ define([
     //var Editor = require('./packages/editor.js');
     //var Highlighter = require('./packages/highlight.js');
 
-    var Everything = function (data, option) {
+    var Everything = function (data, app, option) {
         this.data = data;
+        this.app = app;
         this.index = 0;
         this.packages = [];
         if (!option.container) {
