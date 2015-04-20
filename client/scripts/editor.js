@@ -63,10 +63,12 @@ define([], function () {
         if(this.status.editorInstantiated){
             // change the value
             this.editor.setValue(content);
+            // TODO: replace it with this.setTitle()
             this.el.titleEl.innerHTML = title;
         }else{
             // launch new editor
             this.launchEditor(content);
+            this.el.titleEl.innerHTML = title;
         }
     };
 

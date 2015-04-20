@@ -60,9 +60,6 @@ require(['Everything','./editor','app'], function(Everything, Editor, APP){
         //    store = localstorage;
         //}
 
-        if(localStorage.getItem('value')){
-            value = JSON.parse(localStorage.getItem('value'))
-        }
 
         var container = document.querySelector(".everything");
 
@@ -77,6 +74,13 @@ require(['Everything','./editor','app'], function(Everything, Editor, APP){
                 //    contentEl: $('.editor-content')[0]
                 //});
             });
+            if(!chrome.storage){
+                value = JSON.parse(localStorage.getItem('value'));
+            }else{
+                chrome.storage.local.get('value', function(data){
+                    value = data.value;
+                });
+            }
             var everything = new Everything(value,APP, {
                 container: container,
                 theme: 'light'
