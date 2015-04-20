@@ -12,15 +12,6 @@ define([
     'packages/highlight'
 ],function (Node,History,Package,EventMgr,Saver,Editor,Highlighter) {
 
-    //var Node = require('./node.js');
-    //var History = require('./history.js');
-    //var Package = require('./package.js');
-    //var EventMgr = require('./event.js');
-    //var Saver = require('./saver.js');
-    //// packages
-    //var Editor = require('./packages/editor.js');
-    //var Highlighter = require('./packages/highlight.js');
-
     var Everything = function (data, app, option) {
         this.data = data;
         this.app = app;
