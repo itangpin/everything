@@ -66,10 +66,6 @@ require(['Everything','./editor','app'], function(Everything, Editor, APP){
 
         var container = document.querySelector(".everything");
 
-        var everything = new Everything(value, {
-            container: container,
-            theme: 'light'
-        });
 
         $(function(){
             APP.init();
@@ -80,6 +76,10 @@ require(['Everything','./editor','app'], function(Everything, Editor, APP){
                 //    titleEl: $('.editor-title')[0],
                 //    contentEl: $('.editor-content')[0]
                 //});
+            });
+            var everything = new Everything(value, {
+                container: container,
+                theme: 'light'
             });
         });
     });

@@ -203,6 +203,10 @@ define([
         }
     };
 
+    /**
+     * Show 2 buttons when you zoom into the bottom node
+     * @private
+     */
     Everything.prototype._createAddButton = function () {
         var app = this;
         var addChildBtn = document.createElement('a');
@@ -228,11 +232,13 @@ define([
 
         });
         // launch editor
+        // switch to editor panel
         $(launchEditorBtn).on('click', function () {
-            app.switchRootNodeWithPackage(['editor']);
-            if (app.addBtnWrapper) {
-                app.frame.removeChild(addBtnWrapper);
-            }
+            //app.switchRootNodeWithPackage(['editor']);
+            //if (app.addBtnWrapper) {
+            //    app.frame.removeChild(addBtnWrapper);
+            //}
+
         });
     };
 
