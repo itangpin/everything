@@ -79,12 +79,12 @@ require(['Everything','./editor','app'], function(Everything, Editor, APP){
             }else{
                 chrome.storage.local.get('value', function(data){
                     value = data.value;
+                    var everything = new Everything(value,APP, {
+                        container: container,
+                        theme: 'light'
+                    });
                 });
             }
-            var everything = new Everything(value,APP, {
-                container: container,
-                theme: 'light'
-            });
         });
     });
 
