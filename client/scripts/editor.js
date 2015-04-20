@@ -18,6 +18,7 @@ define([], function () {
     };
 
     Editor.prototype.launchEditor = function(value){
+        var self = this;
         var createCodeMirror = function (el, content, theme) {
             var codeMirrorOptions = {
                 theme: theme || 'xq-light-big',
@@ -40,6 +41,9 @@ define([], function () {
         };
 
         this.editor = createCodeMirror(this.el.contentEl,value,null);
+        this.editor.on('change', function(cm,obj){
+            self.node.onEditorContentChange(cm,obj);
+        });
         this.status.editorInstantiated = true;
     };
 
@@ -52,6 +56,7 @@ define([], function () {
     };
 
     Editor.prototype.launchEditorFromNode = function(node){
+        this.node = node;
         var value = node.getValue();
         var title = value.content;
         var content;

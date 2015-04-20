@@ -76,6 +76,10 @@ require(['Everything','./editor','app'], function(Everything, Editor, APP){
             });
             if(!chrome.storage){
                 value = JSON.parse(localStorage.getItem('value'));
+                var everything = new Everything(value,APP, {
+                    container: container,
+                    theme: 'light'
+                });
             }else{
                 chrome.storage.local.get('value', function(data){
                     value = data.value;
