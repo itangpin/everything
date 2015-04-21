@@ -132,7 +132,7 @@ define(['util'],function(util){
                     break;
             }
         }else{
-            this.parent.appendChild(this.row);z
+            this.parent.appendChild(this.row);
         }
 
         function insertAfter(el){
@@ -463,6 +463,7 @@ define(['util'],function(util){
         // add updateDom method to Node
         $(this.row).before(node.row);
         this.onValueChange(this.parent);
+        this.parent._updateDomIndexes();
     };
     /**
      * Add a Node as a sibling Node right before this node
