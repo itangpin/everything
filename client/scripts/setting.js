@@ -4,6 +4,6 @@
 
 define(function(){
     var Setting = {};
-    
+
     return Setting;
 });

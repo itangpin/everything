@@ -1,0 +1,23 @@
+$height: 25px;
+#status-bar{
+    position: fixed;
+    bottom: 0;
+    padding: 0 10px;
+    width: 100%;
+    height: $height;
+    //background-color: #9ecaec;
+    background: #ddd;
+}
+#status-bar{
+    .item{
+        float: left;
+        height: 100%;
+        line-height: $height;
+        font-size: 12px;
+        color: #333;
+    }
+    a,a:visited
+    {
+        color: inherit;
+    }
+}
