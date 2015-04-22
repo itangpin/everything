@@ -12,7 +12,7 @@ requirejs.config({
 
 require(['Everything','./editor','app'], function(Everything, Editor, APP){
     $(function(){
-        var value = [
+        var defaultValue = [
             {
                 content:'写作',
                 children: [
@@ -66,16 +66,9 @@ require(['Everything','./editor','app'], function(Everything, Editor, APP){
 
         $(function(){
             APP.init();
-            $('.new-article').on('click', function(){
-                $('#container').hide();
-                $('.editor-container').show();
-                //var editor = new Editor({
-                //    titleEl: $('.editor-title')[0],
-                //    contentEl: $('.editor-content')[0]
-                //});
-            });
+            APP.toolbar.switchPanel('setting');
             if(!chrome.storage){
-                value = JSON.parse(localStorage.getItem('value'));
+                value = JSON.parse(localStorage.getItem('value')) || defaultValue;
                 var everything = new Everything(value,APP, {
                     container: container,
                     theme: 'light'
