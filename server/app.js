@@ -4,10 +4,33 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var mongoose = require('mongoose');
 
 //var routes = require('./routes/index');
 var clientRoutes = require('./routes/client');
 var users = require('./routes/users');
+
+// mongoose
+mongoose.connect('localhost', 'everything');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function callback() {
+  console.log('Connected to DB');
+});
+
+// passport configure
+passport.use(new LocalStrategy(
+    function(username, password, done) {
+      //User.findOne({ username: username }, function (err, user) {
+      //  if (err) { return done(err); }
+      //  if (!user) { return done(null, false); }
+      //  if (!user.verifyPassword(password)) { return done(null, false); }
+      //  return done(null, user);
+      //});
+    }
+));
 
 var app = express();
 

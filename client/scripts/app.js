@@ -7,18 +7,18 @@ define([
     'everything',
     'toolbar',
     'event',
-    'editor'], function (Everything,
-                         Toolbar,
-                         EventMgr,
-                         Editor) {
+    'editor',
+    'setting'], function (Everything,
+                          Toolbar,
+                          EventMgr,
+                          Editor,
+                          Setting) {
     var APP = {};
     APP.status = {
-        editor:{
+        editor: {
             launched: false
         },
-        list:{
-
-        }
+        list: {}
     };
     APP.init = function () {
         this.eventMgr = new EventMgr();
@@ -46,18 +46,22 @@ define([
             buttonClass: '.button',
             eventMgr: this.eventMgr
         });
+        // init editor
         this.editor = new Editor({
             titleEl: $('.editor-title')[0],
             contentEl: $('.editor-content')[0]
         });
         this.status.editor.launched = true;
+        // init setting
+        this.setting = Setting;
+        this.setting.init();
         this.listenEvents();
     };
     APP.listenEvents = function () {
         var self = this;
         // panel change event
         this.eventMgr.addListener('panelChange', function (data) {
-            if(data.panel == 'writing'){
+            if (data.panel == 'writing') {
                 self.editor.onPanelActive(data);
             }
         });
@@ -66,7 +70,7 @@ define([
      * Launch editor from the data of a given node
      * @param {Node}node
      */
-    APP.launchEditorFromNode = function(node){
+    APP.launchEditorFromNode = function (node) {
         this.toolbar.switchPanel('writing');
         this.editor.launchEditorFromNode(node);
     };
