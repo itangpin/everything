@@ -7,6 +7,9 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');
+var session = require('express-session');
+
+var User = require('./models/user');
 
 //var routes = require('./routes/index');
 var clientRoutes = require('./routes/client');
@@ -20,15 +23,30 @@ db.once('open', function callback() {
   console.log('Connected to DB');
 });
 
+// Passport session setup.
+//   To support persistent login sessions, Passport needs to be able to
+//   serialize users into and deserialize users out of the session.  Typically,
+//   this will be as simple as storing the user ID when serializing, and finding
+//   the user by ID when deserializing.
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function (err, user) {
+    done(err, user);
+  });
+});
+
 // passport configure
 passport.use(new LocalStrategy(
     function(username, password, done) {
-      //User.findOne({ username: username }, function (err, user) {
-      //  if (err) { return done(err); }
-      //  if (!user) { return done(null, false); }
-      //  if (!user.verifyPassword(password)) { return done(null, false); }
-      //  return done(null, user);
-      //});
+      User.findOne({ username: username }, function (err, user) {
+        if (err) { return done(err); }
+        if (!user) { return done(null, false); }
+        if (!user.verifyPassword(password)) { return done(null, false); }
+        return done(null, user);
+      });
     }
 ));
 
@@ -44,10 +62,13 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(session({secret:'keyboard king'}));
 app.use(express.static(path.join(__dirname, '../client')));
 
 app.use('/', clientRoutes);
-app.use('/users', users);
+app.use('/api/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
