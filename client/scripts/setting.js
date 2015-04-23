@@ -10,12 +10,16 @@ define(function () {
     Setting.bindEvents = function () {
         $('#register-form').submit(function (e) {
             e.preventDefault();
-            var username = $('#re-name').val(),
+            var email = $('#re-email').val(),
+                name = $('#re-name').val(),
                 password = $('#re-password').val();
 
             $.post('/api/user/register', {
-                username: username,
+                email: email,
+                name: name,
                 password: password
+            }).done(function(data){
+                console.log(data.message);
             });
         });
     };

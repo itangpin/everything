@@ -40,8 +40,8 @@ passport.deserializeUser(function(id, done) {
 
 // passport configure
 passport.use(new LocalStrategy(
-    function(username, password, done) {
-      User.findOne({ username: username }, function (err, user) {
+    function(email, password, done) {
+      User.findOne({ email : email}, function (err, user) {
         if (err) { return done(err); }
         if (!user) { return done(null, false); }
         if (!user.verifyPassword(password)) { return done(null, false); }
@@ -68,7 +68,7 @@ app.use(session({secret:'keyboard king'}));
 app.use(express.static(path.join(__dirname, '../client')));
 
 app.use('/', clientRoutes);
-app.use('/api/users', users);
+app.use('/api/user', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
