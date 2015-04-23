@@ -7,6 +7,11 @@ define(function () {
     Setting.init = function () {
         this.bindEvents();
     };
+    Setting.checkLoginStatus = function(){
+        $.post('/api/user/status').done(function(data){
+
+        });
+    };
     Setting.bindEvents = function () {
         $('#register-form').submit(function (e) {
             e.preventDefault();
@@ -20,6 +25,17 @@ define(function () {
                 password: password
             }).done(function(data){
                 console.log(data.message);
+            });
+        });
+        $('#signin-form').submit(function(e){
+            e.preventDefault();
+            var email = $('#sign-email').val(),
+                password = $('#sign-password').val();
+            $.post('api/user/signin',{
+                username: email,
+                password: password
+            }).done(function(data){
+                console.log(data);
             });
         });
     };

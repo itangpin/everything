@@ -41,11 +41,17 @@ passport.deserializeUser(function(id, done) {
 // passport configure
 passport.use(new LocalStrategy(
     function(email, password, done) {
-      User.findOne({ email : email}, function (err, user) {
+      User.findOne({ email: email}, function(err, user) {
         if (err) { return done(err); }
-        if (!user) { return done(null, false); }
-        if (!user.verifyPassword(password)) { return done(null, false); }
-        return done(null, user);
+        if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
+        user.comparePassword(password, function(err, isMatch) {
+          if (err) return done(err);
+          if(isMatch) {
+            return done(null, user);
+          } else {
+            return done(null, false, { message: 'Invalid password' });
+          }
+        });
       });
     }
 ));
@@ -65,6 +71,11 @@ app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(session({secret:'keyboard king'}));
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
 app.use(express.static(path.join(__dirname, '../client')));
 
 app.use('/', clientRoutes);
