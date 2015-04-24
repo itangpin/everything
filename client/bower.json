@@ -26,6 +26,7 @@
     "seajs": "~2.3.0",
     "codemirror": "~5.0.0",
     "crel.min": "https://raw.githubusercontent.com/KoryNunn/crel/master/crel.min.js",
-    "require": "http://requirejs.org/docs/release/2.1.17/minified/require.js"
+    "require": "http://requirejs.org/docs/release/2.1.17/minified/require.js",
+    "angular": "~1.3.15"
   }
 }

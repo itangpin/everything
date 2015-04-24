@@ -21,6 +21,12 @@ define([
         list: {}
     };
     APP.init = function () {
+        // if it is inside chrome app
+        if(chrome.storage){
+            this.type = 'chrome';
+        }else{
+            this.type = 'web';
+        }
         this.eventMgr = new EventMgr();
         // initiat toolbar
         this.toolbar = new Toolbar({
@@ -54,7 +60,7 @@ define([
         this.status.editor.launched = true;
         // init setting
         this.setting = Setting;
-        this.setting.init();
+        this.setting.init({type:this.type});
         this.listenEvents();
     };
     APP.listenEvents = function () {

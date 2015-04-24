@@ -34,7 +34,7 @@ router.post('/signin', function(req, res, next){
     })(req, res, next);
 });
 
-router.post('/status', function(req, res, next){
+router.get('/status', function(req, res, next){
     if(req.isAuthenticated()){
         res.send({status:200});
     }else{

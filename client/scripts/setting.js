@@ -2,15 +2,17 @@
  * Created by pin on 4/22/15.
  */
 
-define(function () {
+define(['backend-api'],function (api) {
     var Setting = {};
-    Setting.init = function () {
+    Setting.init = function (option) {
+        this.type = option.type;
+        this.api = new api({type:this.type});
         this.bindEvents();
         this.checkLoginStatus();
     };
     Setting.checkLoginStatus = function(){
-        $.post('/api/user/status').done(function(data){
-
+        this.api.checkSignin().done(function(data){
+            console.log(data);
         });
     };
     Setting.bindEvents = function () {
