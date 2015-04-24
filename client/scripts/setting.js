@@ -6,6 +6,7 @@ define(function () {
     var Setting = {};
     Setting.init = function () {
         this.bindEvents();
+        this.checkLoginStatus();
     };
     Setting.checkLoginStatus = function(){
         $.post('/api/user/status').done(function(data){
