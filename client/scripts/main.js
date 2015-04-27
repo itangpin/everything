@@ -3,10 +3,10 @@
  */
 
 requirejs.config({
-        paths:{
+        paths: {
             'angular': '../bower_components/angular/angular'
         },
-        shim:{
+        shim: {
             'angular': {
                 exports: 'angular'
             }
@@ -14,14 +14,21 @@ requirejs.config({
     }
 );
 
-require(['Everything','./editor','app','angular'], function(Everything, Editor, APP, angular){
-    $(function(){
+require([
+    'Everything',
+    './editor',
+    'app',
+    'angular',
+    'option'], function (Everything,
+                         Editor,
+                         APP,
+                         angular,
+                         option) {
+
         var defaultValue = [
             {
-                content:'写作',
-                children: [
-
-                ]
+                content: '写作',
+                children: []
             },
             'Version 0.5.1',
             {
@@ -37,19 +44,18 @@ require(['Everything','./editor','app','angular'], function(Everything, Editor, 
                         ]
                     },
                     {
-                        content:"文本编辑器",
-                        package:['editor']
+                        content: "文本编辑器",
+                        package: ['editor']
                     }
                 ],
                 expand: false
             },
             {
-                content:"新增功能",
-                children:
-                    [
-                        "主题切换",
-                        "切换根节点"
-                    ]
+                content: "新增功能",
+                children: [
+                    "主题切换",
+                    "切换根节点"
+                ]
             },
             {
                 content: "新特性：编辑器，包管理。在这行上按Alt+O",
@@ -60,32 +66,33 @@ require(['Everything','./editor','app','angular'], function(Everything, Editor, 
 
         var container = document.querySelector(".everything");
 
-        $(function(){
-            var angularAppModule = angular.module('app',[])
-            angularAppModule.controller('settingController',function($scope){
+        // dom ready
+        $(function () {
+
+            var angularAppModule = angular.module('app', ['app.option'])
+            angularAppModule.controller('settingController', function ($scope) {
                 $scope.aa = 'aa'
             })
 
 
-            angular.bootstrap(window.document,['app'])
+            angular.bootstrap(window.document, ['app'])
             APP.init();
             APP.toolbar.switchPanel('setting');
-            if(!chrome.storage){
+            if (!chrome.storage) {
                 value = JSON.parse(localStorage.getItem('value')) || defaultValue;
-                var everything = new Everything(value,APP, {
+                var everything = new Everything(value, APP, {
                     container: container,
                     theme: 'light'
                 });
-            }else{
-                chrome.storage.local.get('value', function(data){
+            } else {
+                chrome.storage.local.get('value', function (data) {
                     value = data.value;
-                    var everything = new Everything(value,APP, {
+                    var everything = new Everything(value, APP, {
                         container: container,
                         theme: 'light'
                     });
                 });
             }
         });
-    });
 
 });

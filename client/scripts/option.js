@@ -5,8 +5,10 @@
 // angular module for option panel
 
 define(['angular'],function(angular){
-    var appOptionModule = angular.module('app.option')
+    var appOptionModule = angular.module('app.option',[])
     appOptionModule.controller('optionController',[function($scope){
         $scope.auth = true
     }])
+
+    return appOptionModule
 })
