@@ -3,14 +3,18 @@
  */
 
 requirejs.config({
-        path:{
-            'codeMirror': '../spm_modules/codemirror/codemirror.js',
-            'Everything': 'everything.js'
+        paths:{
+            'angular': '../bower_components/angular/angular'
+        },
+        shim:{
+            'angular': {
+                exports: 'angular'
+            }
         }
     }
 );
 
-require(['Everything','./editor','app'], function(Everything, Editor, APP){
+require(['Everything','./editor','app','angular'], function(Everything, Editor, APP, angular){
     $(function(){
         var defaultValue = [
             {
@@ -53,18 +57,17 @@ require(['Everything','./editor','app'], function(Everything, Editor, APP){
                 package: ['editor']
             }
         ];
-        var store;
-        //if(chrome.storage.sync){
-        //    store = chrome.storage.local;
-        //}else{
-        //    store = localstorage;
-        //}
-
 
         var container = document.querySelector(".everything");
 
-
         $(function(){
+            var angularAppModule = angular.module('app',[])
+            angularAppModule.controller('settingController',function($scope){
+                $scope.aa = 'aa'
+            })
+
+
+            angular.bootstrap(window.document,['app'])
             APP.init();
             APP.toolbar.switchPanel('setting');
             if(!chrome.storage){

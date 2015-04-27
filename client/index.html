@@ -30,8 +30,8 @@
     <!-- Other libraries which will be loaded by RequireJS in the future after I alter seajs with requirejs -->
     <script src="./bower_components/crel.min/index.js"></script>
     <script src="./bower_components/jquery/dist/jquery.min.js"></script>
+    <!--<script src="./bower_components/angular/angular.js"></script>-->
     <script src="./bower_components/require/index.js" data-main="./scripts/main.js"></script>
-    <script src="./bower_components/angular/angular.min.js"></script>
     <style>
     </style>
 </head>
@@ -61,7 +61,8 @@
         <div class="iconfont icon-information"></div>
     </div>
 </div>
-<div id="panel-setting" class="panel">
+<div id="panel-setting" class="panel" ng-controller="settingController">
+    {{aa}}
     <div id="register">
         <form action="" id="register-form">
             <input type="email" name="username" placeholder="email" id="re-email"/>
