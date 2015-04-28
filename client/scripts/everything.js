@@ -9,8 +9,9 @@ define([
     'event',
     'saver',
     'packages/editor',
-    'packages/highlight'
-],function (Node,History,Package,EventMgr,Saver,Editor,Highlighter) {
+    'packages/highlight',
+    'angular'
+],function (Node,History,Package,EventMgr,Saver,Editor,Highlighter,angular) {
 
     var Everything = function (data, app, option) {
         this.data = data;
@@ -578,5 +579,8 @@ define([
         this.render();
     };
 
+    angular.module('app').factory('app.everything',function(){
+        return Everything
+    })
     return Everything;
 });

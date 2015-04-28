@@ -6,7 +6,7 @@
 
 define(['angular'],function(angular){
     var appOptionModule = angular.module('app.option',[])
-    appOptionModule.controller('optionController',[function($scope){
+    appOptionModule.controller('optionController',['$scope',function($scope){
         $scope.auth = true
     }])
 

@@ -15,7 +15,7 @@ requirejs.config({
 );
 
 require([
-    'Everything',
+    'everything',
     './editor',
     'app',
     'angular',
@@ -70,29 +70,29 @@ require([
         $(function () {
 
             var angularAppModule = angular.module('app', ['app.option'])
-            angularAppModule.controller('settingController', function ($scope) {
-                $scope.aa = 'aa'
-            })
 
-
-            angular.bootstrap(window.document, ['app'])
-            APP.init();
-            APP.toolbar.switchPanel('setting');
-            if (!chrome.storage) {
-                value = JSON.parse(localStorage.getItem('value')) || defaultValue;
-                var everything = new Everything(value, APP, {
-                    container: container,
-                    theme: 'light'
-                });
-            } else {
-                chrome.storage.local.get('value', function (data) {
-                    value = data.value;
+            angularAppModule.controller('app', ['$scope', function($scope){
+                APP.init();
+                //APP.toolbar.switchPanel('setting');
+                if (!chrome.storage) {
+                    value = JSON.parse(localStorage.getItem('value')) || defaultValue;
                     var everything = new Everything(value, APP, {
                         container: container,
                         theme: 'light'
                     });
-                });
-            }
+                } else {
+                    chrome.storage.local.get('value', function (data) {
+                        value = data.value;
+                        var everything = new Everything(value, APP, {
+                            container: container,
+                            theme: 'light'
+                        });
+                    });
+                }
+
+            }])
+
+            angular.bootstrap(window.document, ['app'])
         });
 
 });
