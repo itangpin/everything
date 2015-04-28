@@ -27,14 +27,15 @@
     <!--<link rel="stylesheet" href="./stylesheets/codemirror_themes/monokai.css"/>-->
     <!--<link rel="stylesheet" href="./stylesheets/codemirror_themes/xq-light.css"/>-->
     <!--<link rel="stylesheet" href="./stylesheets/codemirror_themes/xq-light-big.css"/>-->
-    <!--<link rel="stylesheet" href="./iconfont/iconfont.css"/>-->
+    <link rel="stylesheet" href="./iconfont/iconfont.css"/>
     <!-- Other libraries which will be loaded by RequireJS in the future after I alter seajs with requirejs -->
     <script src="./bower_components/crel.min/index.js"></script>
     <script src="./bower_components/jquery/dist/jquery.min.js"></script>
     <!--<script src="./bower_components/angular/angular.js"></script>-->
     <script src="./bower_components/require/index.js" data-main="./scripts/main.js"></script>
 </head>
-<body ng-controller="app">
+<body ng-controller="appController">
+<!--<body>-->
 <!--<a target="_blank" href="https://github.com/itangpin/everything"><img-->
         <!--style="position: absolute; top: 40px; right: 0; border: 0;" src="./pic/fork_me_on_github.png"-->
         <!--alt="Fork me on GitHub"-->
@@ -60,13 +61,14 @@
         <div class="iconfont icon-information"></div>
     </div>
 </div>
-<div id="panel-setting" class="panel" ng-controller="optionController">
+<!-- setting panel -->
+<div id="panel-setting" class="panel" ng-controller="optionController as ctl">
     {{aa}}
     <div id="register">
-        <form action="" id="register-form">
-            <input type="email" name="username" placeholder="email" id="re-email"/>
-            <input type="text" name="email" placeholder="nickname" id="re-name"/>
-            <input type="password" name="password" placeholder="password" id="re-password"/>
+        <form action="" id="register-form" ng-submit="ctl.re()">
+            <input type="email" name="username" placeholder="email" id="re-email" ng-model="ctl.reEmail"/>
+            <input type="text" name="email" placeholder="nickname" id="re-name" ng-model="ctl.reName"/>
+            <input type="password" name="password" placeholder="password" id="re-password" ng-model="ctl.rePassword"/>
             <input type="submit" value="register"/>
         </form>
     </div>

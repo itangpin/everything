@@ -228,7 +228,7 @@ THE SOFTWARE.
     margin-bottom: 10px;
 }
 
-.cm-s-xq-light-big pre {
+.CodeMirror.cm-s-xq-light-big pre {
     line-height: 30px;
     font-size: 20px;
 }
