@@ -579,8 +579,8 @@ define([
         this.render();
     };
 
-    angular.module('app').factory('app.everything',function(){
-        return Everything
-    })
+    //angular.module('app').factory('app.everything',function(){
+    //    return Everything
+    //})
     return Everything;
 });
