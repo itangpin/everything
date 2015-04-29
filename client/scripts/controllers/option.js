@@ -7,10 +7,11 @@
 define(['./module'],function(controllerModule){
 
     controllerModule.controller('optionController',['$scope',function($scope){
-        $scope.auth = true
         var option = this
-        this.re = function(){
-            console.log(option.reEmail)
+
+        // register
+        option.re = function(){
+
         }
     }])
 
