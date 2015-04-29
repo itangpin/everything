@@ -17,7 +17,7 @@
     <!--<link rel="stylesheet" href="./stylesheets/everything_theme/dark.css"/>-->
     <!-- Package Theme -->
     <!--<link rel="stylesheet" href="./stylesheets/everything_package/editor.css"/>-->
-    <!--<link rel="stylesheet" href="./stylesheets/setting.css"/>-->
+    <link rel="stylesheet" href="./stylesheets/setting.css"/>
     <!--<script src="./bower_components/seajs/dist/sea.js"></script>-->
     <!-- Codemirror -->
     <script src="./bower_components/codemirror/lib/codemirror.js"></script>
@@ -62,22 +62,29 @@
     </div>
 </div>
 <!-- setting panel -->
-<div id="panel-setting" class="panel" ng-controller="optionController as ctl">
-    {{aa}}
-    <div id="register">
-        <form action="" id="register-form" ng-submit="ctl.re()">
-            <input type="email" name="username" placeholder="email" id="re-email" ng-model="ctl.reEmail"/>
-            <input type="text" name="email" placeholder="nickname" id="re-name" ng-model="ctl.reName"/>
-            <input type="password" name="password" placeholder="password" id="re-password" ng-model="ctl.rePassword"/>
-            <input type="submit" value="register"/>
-        </form>
-    </div>
-    <div id="sign-in">
-        <form action="" id="signin-form">
-            <input type="email" name="email" placeholder="email" id="sign-email"/>
-            <input type="password" name="password" placeholder="password" id="sign-password"/>
-            <input type="submit" value="sign in"/>
-        </form>
+<div id="panel-setting" class="panel" ng-controller="optionController as option">
+    <div class="signin-register-form" ng-controller="registerSigninController as user">
+        <div class="logo">
+            <img src="./pic/logo-tmp.png" alt=""/>
+        </div>
+        <div class="app-name">
+            Everything
+        </div>
+        <div id="register" ng-show="option.userFormType == 'register'">
+            <form id="register-form" ng-submit="ctl.re()">
+                <input ng-model="user.reEmail"    type="email"    placeholder="email"    />
+                <!--<input ng-model="user.reName"     type="text"     placeholder="nickname" />-->
+                <input ng-model="user.rePassword" type="password" placeholder="password" />
+                <button>REGISTER</button>
+            </form>
+        </div>
+        <div id="sign-in" ng-show="option.userFormType == 'signIn'">
+            <form action="" id="signin-form">
+                <input type="email" name="email" placeholder="email" id="sign-email"/>
+                <input type="password" name="password" placeholder="password" id="sign-password"/>
+                <input type="submit" value="sign in"/>
+            </form>
+        </div>
     </div>
 </div>
 <div id="status-bar">

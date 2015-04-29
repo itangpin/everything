@@ -20,13 +20,16 @@ html{
   height:100%;
   //background-color: #F0F0F0;
 }
+body{
+    background-color: transparent;
+}
 body.dark{
   background-color: #333;
   color:white;
 }
 // theme
 body.light{
-  background-color: #fff;
+  background-color: #eee;
   color:#333;
 }
 body.blue{

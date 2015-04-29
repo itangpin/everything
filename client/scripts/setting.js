@@ -16,7 +16,7 @@ define(['backend-api'],function (api) {
         });
     };
     Setting.bindEvents = function () {
-        $('#register-form').submit(function (e) {
+        $('#register-formm').submit(function (e) {
             e.preventDefault();
             var email = $('#re-email').val(),
                 name = $('#re-name').val(),

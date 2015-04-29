@@ -9,18 +9,25 @@ define(['./module'], function (controllerModule) {
     controllerModule.controller('optionController',
         ['$scope', 'service.user', function ($scope, User) {
             var option = this
+            option.userFormType = 'register'
+        }])
+
+    controllerModule.controller('registerSigninController',
+        ['service.user', function (User) {
+            var userCtl = this
 
             // register
-            option.re = function () {
+            userCtl.re = function () {
                 var user = new User({
-                    email: option.reEmail,
-                    name: option.reName,
-                    password: option.rePassword
+                    email: userCtl.reEmail,
+                    name: userCtl.reName,
+                    password: userCtl.rePassword
                 })
-                user.$save(function(user){
+                user.$save(function (user) {
 
                 })
             }
+
         }])
 
 })

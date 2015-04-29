@@ -1,10 +1,74 @@
-#panel-setting{
+#panel-setting {
     min-height: 100%;
     padding-top: 50px;
     display: none;
 }
-#sign-in, #register{
-    input{
+
+#sign-in, #register {
+    input {
         outline: none;
+    }
+}
+
+.signin-register-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -250px auto auto -200px;
+    width: 400px;
+    height: 500px;
+    background-color: #fff;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.signin-register-form {
+    .logo {
+        text-align: center;
+        margin: 40px auto 20px;
+    }
+    .logo > img {
+        width: 120px;
+        height: 120px;
+    }
+    .app-name {
+        text-align: center;
+        font-size: 36px;
+        color: #777;
+    }
+
+    // register form
+    #sign-in, #register {
+        input {
+            margin-bottom: 10px;
+            padding: 5px 20px;
+            width: 280px;
+            height: 40px;
+            background-color: #eee;
+            font-size: 24px;
+            line-height: 40px;
+            color: #777;
+            border: 0;
+            border-radius: 4px;
+        }
+        button{
+            margin-top: 10px;
+            width: 320px;
+            height: 55px;
+            background: #62b3ed;
+            font-size: 24px;
+            line-height: 55px;
+            border: 0;
+            color: #fff;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+        }
+    }
+    #sign-in, #register{
+        position: relative;
+        margin: 40px auto 10px;
+        text-align: center;
     }
 }
