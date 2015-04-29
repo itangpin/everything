@@ -8,7 +8,7 @@ define(['backend-api'],function (api) {
         this.type = option.type;
         this.api = new api({type:this.type});
         this.bindEvents();
-        this.checkLoginStatus();
+        //this.checkLoginStatus();
     };
     Setting.checkLoginStatus = function(){
         this.api.checkSignin().done(function(data){
