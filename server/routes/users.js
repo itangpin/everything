@@ -3,8 +3,8 @@ var router = express.Router();
 var User = require('../models/user');
 var passport = require('passport');
 
-/* GET users listing. */
-router.post('/register', function(req, res, next) {
+/* register new user */
+router.post('/', function(req, res, next) {
     var name = req.body.name,
         email = req.body.email,
         password = req.body.password;
@@ -19,7 +19,8 @@ router.post('/register', function(req, res, next) {
     });
 });
 
-router.post('/signin', function(req, res, next){
+/* sign in */
+router.post('/in', function(req, res, next){
     passport.authenticate('local', function(err,user,info){
         if(err){return next(err);}
         if (!user) {
@@ -41,4 +42,5 @@ router.get('/status', function(req, res, next){
         res.send({status:401});
     }
 });
+
 module.exports = router;

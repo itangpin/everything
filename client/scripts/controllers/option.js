@@ -4,15 +4,23 @@
 
 // angular controller for option panel
 
-define(['./module'],function(controllerModule){
+define(['./module'], function (controllerModule) {
 
-    controllerModule.controller('optionController',['$scope',function($scope){
-        var option = this
+    controllerModule.controller('optionController',
+        ['$scope', 'service.user', function ($scope, User) {
+            var option = this
 
-        // register
-        option.re = function(){
+            // register
+            option.re = function () {
+                var user = new User({
+                    email: option.reEmail,
+                    name: option.reName,
+                    password: option.rePassword
+                })
+                user.$save(function(user){
 
-        }
-    }])
+                })
+            }
+        }])
 
 })

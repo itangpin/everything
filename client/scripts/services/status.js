@@ -2,9 +2,8 @@
  * Created by pin on 4/28/15.
  * An Angular Service that tells the status of the application
  */
-define(['angular', 'config'], function (angular, config) {
-    angular.module('app').
-        factory('app.status', ['$http', function ($http) {
+define(['./module', '../config'], function (serviceModule, config) {
+        serviceModule.factory('service.status', ['$http', function ($http) {
             var status = {}
             // in chrome app or just a webpage
             status.env = (function () {
@@ -14,8 +13,11 @@ define(['angular', 'config'], function (angular, config) {
                     return 'web-page'
                 }
             }())
+
             // if the user has sign in
             var urlPrefix = status.env == 'chrome-app' ? config.domain : ''
+            status.urlPrefix = urlPrefix
+
             status.updateSignInStatus = function (callback) {
                 $http.get(urlPrefix + '/api/user/status')
                     .success(function (data, status) {
@@ -30,6 +32,7 @@ define(['angular', 'config'], function (angular, config) {
                         callback(null, error)
                     })
             }
+
             // default status
             status.signInStatus = 'pending'
 
