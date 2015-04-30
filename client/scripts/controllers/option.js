@@ -8,12 +8,12 @@ define(['./module'], function (controllerModule) {
 
     controllerModule.controller('optionController',
         ['$scope', 'service.user','service.status', function ($scope, User, status) {
-            var optionn = this
-            optionn.userFormType = 'register'
-            optionn.hasSignedIn = status.signInStatus
+            var option = this
+            option.userFormType = 'register'
+            option.hasSignedIn = status.signInStatus
             // todo: show pending icon
             status.updateSignInStatus(function(statusResult){
-                optionn.hasSignedIn = statusResult
+                option.hasSignedIn = statusResult
                 if(statusResult == 'false'){
                 }
             })

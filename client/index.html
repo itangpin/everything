@@ -75,12 +75,13 @@
             Everything
         </div>
         <div id="register" ng-show="option.userFormType == 'register'">
-            <form id="register-form" ng-submit="ctl.re()">
+            <form id="register-form" ng-submit="user.re()">
                 <input ng-model="user.reEmail"    type="email"    placeholder="email"/>
                 <input ng-model="user.reName"     type="text"     placeholder="nickname" />
                 <input ng-model="user.rePassword" type="password" placeholder="password"/>
-                <button>REGISTER</button>
+                <button >REGISTER</button>
             </form>
+            <div class="switch" ng-click="user.switch('sign')"><a href>sign in</a></div>
         </div>
         <div id="sign-in" ng-show="option.userFormType == 'signIn'">
             <form action="" id="signin-form">
@@ -88,6 +89,7 @@
                 <input type="password" name="password" placeholder="password" id="sign-password"/>
                 <input type="submit" value="sign in"/>
             </form>
+            <div class="switch" ng-click="user.switch('register')"></div>
         </div>
     </div>
 </div>

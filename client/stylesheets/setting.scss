@@ -16,7 +16,7 @@
     left: 50%;
     margin: -250px auto auto -200px;
     width: 400px;
-    height: 500px;
+    //height: 500px;
     background-color: #fff;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -44,10 +44,10 @@
             margin-bottom: 10px;
             padding: 5px 20px;
             width: 280px;
-            height: 40px;
+            height: 36px;
             background-color: #eee;
-            font-size: 24px;
-            line-height: 40px;
+            font-size: 22px;
+            line-height: 36px;
             color: #777;
             border: 0;
             border-radius: 4px;
@@ -55,10 +55,10 @@
         button{
             margin-top: 10px;
             width: 320px;
-            height: 55px;
+            height: 50px;
             background: #62b3ed;
             font-size: 24px;
-            line-height: 55px;
+            line-height: 50px;
             border: 0;
             color: #fff;
             border-radius: 4px;
@@ -68,7 +68,21 @@
     }
     #sign-in, #register{
         position: relative;
-        margin: 40px auto 10px;
+        margin: 30px auto 18px;
         text-align: center;
+    }
+    .switch{
+        margin-top: 16px;
+    }
+    .switch>a{
+        font-size: 16px;
+        color: #aaa;
+        text-decoration: none;
+    }
+    .switch>a:hover{
+        text-decoration: underline;
+    }
+    .switch>a:hover, .switch>a:visited{
+        color: #aaa;
     }
 }
