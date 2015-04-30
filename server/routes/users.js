@@ -8,13 +8,21 @@ router.post('/', function(req, res, next) {
     var name = req.body.name,
         email = req.body.email,
         password = req.body.password;
-    // new user
+    // check the email
+    User.findOne({email: email}, function(err, user){
+        if(user){
+            res.send({status: 403,message: 'EMAIL_EXISTS'})
+        }
+    })
     var user =  new User({email: email, name: name, password: password});
     user.save(function(err){
         if(err){
             console.log(err);
         }else{
-            res.send('success');
+            res.send({
+                status: 200,
+                message: 'SUCCESS'
+            });
         }
     });
 });

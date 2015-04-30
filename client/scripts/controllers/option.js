@@ -7,14 +7,13 @@
 define(['./module'], function (controllerModule) {
 
     controllerModule.controller('optionController',
-        ['$scope', 'service.user','service.status', function ($scope, User, status) {
+        ['$scope', 'service.user', 'service.status', function ($scope, User, status) {
             var option = this
-            option.userFormType = 'register'
             option.hasSignedIn = status.signInStatus
             // todo: show pending icon
-            status.updateSignInStatus(function(statusResult){
+            status.updateSignInStatus(function (statusResult) {
                 option.hasSignedIn = statusResult
-                if(statusResult == 'false'){
+                if (statusResult == 'false') {
                 }
             })
         }])
@@ -30,9 +29,27 @@ define(['./module'], function (controllerModule) {
                     name: userCtl.reName,
                     password: userCtl.rePassword
                 })
-                user.$save(function (user) {
-
+                user.$save(function (data) {
+                    if (data.status == '403' && data.message == 'EMAIL_EXISTS') {
+                        userCtl.reEmail = 'Email has been used'
+                    }
                 })
+            }
+
+            // sign in
+            userCtl.si = function () {
+                
+            }
+
+            // switch between register and sign in
+            userCtl.userFormType = 'register'
+            userCtl.switch = function (type) {
+                if (type == 'register') {
+                    userCtl.userFormType = 'register'
+                }
+                if (type == 'signIn') {
+                    userCtl.userFormType = 'signIn'
+                }
             }
 
         }])
