@@ -7,9 +7,16 @@
 define(['./module'], function (controllerModule) {
 
     controllerModule.controller('optionController',
-        ['$scope', 'service.user', function ($scope, User) {
-            var option = this
-            option.userFormType = 'register'
+        ['$scope', 'service.user','service.status', function ($scope, User, status) {
+            var optionn = this
+            optionn.userFormType = 'register'
+            optionn.hasSignedIn = status.signInStatus
+            // todo: show pending icon
+            status.updateSignInStatus(function(statusResult){
+                optionn.hasSignedIn = statusResult
+                if(statusResult == 'false'){
+                }
+            })
         }])
 
     controllerModule.controller('registerSigninController',

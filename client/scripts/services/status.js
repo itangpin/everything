@@ -15,13 +15,13 @@ define(['./module', '../config'], function (serviceModule, config) {
             }())
 
             // if the user has sign in
-            var urlPrefix = status.env == 'chrome-app' ? config.domain : ''
+            var urlPrefix = config.domain
             status.urlPrefix = urlPrefix
 
             status.updateSignInStatus = function (callback) {
                 $http.get(urlPrefix + '/api/user/status')
-                    .success(function (data, status) {
-                        if (data.status == '200') {
+                    .success(function (data, resStatus) {
+                        if (!data.status == '200') {
                             status.signInStatus = 'true'
                         } else {
                             status.signInStatus = 'false'
