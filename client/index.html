@@ -85,8 +85,8 @@
         </div>
         <div id="sign-in" ng-show="user.userFormType == 'signIn'">
             <form ng-submit="user.si()">
-                <input type="email" name="email" placeholder="email" id="sign-email"/>
-                <input type="password" name="password" placeholder="password" id="sign-password"/>
+                <input ng-model="user.siEmail"    type="email"    name="email"    placeholder="email"/>
+                <input ng-model="user.siPassword" type="password" name="password" placeholder="password" />
                 <button>SIGN IN</button>
             </form>
             <div class="switch" >

@@ -34,11 +34,11 @@ router.post('/in', function(req, res, next){
         if (!user) {
             req.session.messages =  [info.message];
             console.log(info.message);
-            return res.send({status: 401, message: 'wrong password'});
+            return res.send({status: 401, message: 'SIGN_IN_FAIL'});
         }
         req.logIn(user, function(err) {
             if (err) { return next(err); }
-            return res.send({status:200});
+            return res.send({status:200, message:'SIGN_IN_SUCCESS'});
         });
     })(req, res, next);
 });

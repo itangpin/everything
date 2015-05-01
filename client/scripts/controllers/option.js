@@ -38,7 +38,12 @@ define(['./module'], function (controllerModule) {
 
             // sign in
             userCtl.si = function () {
-                
+                User.signIn({
+                    email: userCtl.siEmail,
+                    password: userCtl.siPassword
+                }).success(function(data){
+
+                })
             }
 
             // switch between register and sign in

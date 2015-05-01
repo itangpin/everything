@@ -21,7 +21,7 @@ define(['./module', '../config'], function (serviceModule, config) {
             status.updateSignInStatus = function (callback) {
                 $http.get(urlPrefix + '/api/user/status')
                     .success(function (data, resStatus) {
-                        if (!data.status == '200') {
+                        if (data.status == 200) {
                             status.signInStatus = 'true'
                         } else {
                             status.signInStatus = 'false'
