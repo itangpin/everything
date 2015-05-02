@@ -154,7 +154,7 @@ define(['util'],function(util){
         // Keyboard events
         if(type == 'keydown'){
             var keyNum = event.keyCode;
-            // Ctrl + Enter
+            // Ctrl + Enter new line
             if(keyNum==13 && event.ctrlKey){
                 event.preventDefault();
                 this.createSiblingNodeAfter();
@@ -188,9 +188,6 @@ define(['util'],function(util){
                 if(this.getContent() == ""){
                     this.parent.removeChildAndDom(this);
                 }
-            }
-            // move events
-            if(this.app.mode == "move"){
             }
         }
 
@@ -273,7 +270,9 @@ define(['util'],function(util){
         if(this.app.creating){
             return;
         }
+
         this.updateValue();
+
         if(this.parent){
             this.parent.onValueChange();
         }
