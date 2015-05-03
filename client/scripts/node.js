@@ -4,7 +4,7 @@
  */
 define(['util'],function(util){
 
-    var Node = function(value,app){
+    var Node = function(value,app,parent){
         this.value = value;
         this.formatValue();
         this.app = app;
@@ -266,28 +266,42 @@ define(['util'],function(util){
     /* ============================================================
      *                   Data  Export && Import
      * ============================================================*/
+    /**
+     * Value change handler,
+     * triggered be multiple events
+     */
     Node.prototype.onValueChange = function(){
         if(this.app.creating){
             return;
         }
-
         this.updateValue();
-
+        // notify parent node one of its child has changed
         if(this.parent){
-            this.parent.onValueChange();
+            this.parent.onChildValueChange(this)
         }
-
         this.app.onAction('valueChange',{
             node:this
         });
     };
+    Node.prototype.onContentValueChange = function(){
+
+    }
+    Node.prototype.onChildValueChange = function(node){
+        this.value.children[node.index] = node.value
+        if(this.parent){
+            this.parent.onChildValueChange(this)
+        }
+        this.app.onAction('valueChange', {
+            node: this
+        })
+    }
     Node.prototype.updateValue = function(){
-        this.value = this.getValue();
+        this.value.content = this.contentElement.innerHTML
     };
     /**
      * Get value, value is a JSON structure
      */
-    Node.prototype.getValue = function(){
+    Node.prototype.getValue = function(node){
         var thisNode = this;
         this.value.content = this.contentElement.innerHTML;
         this.value.children = [];
@@ -492,6 +506,7 @@ define(['util'],function(util){
             // this is the last child of its parent node
             this.parent.appendChild(node);
         }
+        this.parent._updateDomIndexes();
         this.onValueChange(this.parent);
     };
 
@@ -505,7 +520,7 @@ define(['util'],function(util){
      * Create an empty Node after this node
      */
     Node.prototype.createSiblingNodeAfter = function(){
-        var siblingNode = new Node({},this.app);
+        var siblingNode = new Node({},this.app, this.parent);
         siblingNode.setParent(this.parent);
         siblingNode.adjustDom({type:'after',el:this.row});
         this.parent._addChild(siblingNode);
