@@ -186,8 +186,8 @@ define(['util'],function(util){
             }
             // Backspace on an 'empty' node
             if(8 == event.keyCode){
-                event.preventDefault()
                 if(this.getContent() == ""){
+                    event.preventDefault()
                     this.parent.removeChildAndDom(this);
                 }
                 return false
