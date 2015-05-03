@@ -8,6 +8,7 @@ define(['util'],function(util){
         this.value = value;
         this.formatValue();
         this.app = app;
+        this.parent = parent
         this.childs = [];
         this.childrenMap = {};
         this.isRootNode = false;
@@ -188,6 +189,7 @@ define(['util'],function(util){
                 if(this.getContent() == ""){
                     this.parent.removeChildAndDom(this);
                 }
+                return false
             }
         }
 
@@ -353,7 +355,7 @@ define(['util'],function(util){
             this.formatValue();
         }
         if(this.value){
-            this.setContent(this.value.content);
+            this._setContent(this.value.content);
             this.setChildren(this.value.children);
         }else{
             // create the node with null data
@@ -372,14 +374,21 @@ define(['util'],function(util){
      * Set the content
      * @param value
      */
-    Node.prototype.setContent= function(value){
+    Node.prototype._setContent= function(value){
         //var value = value || this.value;
+        if((typeof value == 'string') || value.constructor == String){
+            this.content = value;
+            this.contentElement.innerHTML = this.content;
+            //this.onValueChange();
+        }
+    };
+    Node.prototype.setContent = function(value){
         if((typeof value == 'string') || value.constructor == String){
             this.content = value;
             this.contentElement.innerHTML = this.content;
             this.onValueChange();
         }
-    };
+    }
 
     /**
      * Set parent Node
@@ -539,7 +548,7 @@ define(['util'],function(util){
      * @param {object} value
      */
     Node.prototype._createChild = function(value){
-        var childNode = new Node(value,this.app);
+        var childNode = new Node(value,this.app, this);
         childNode.setParent(this);
         childNode.adjustDom({type:'append',el:this.childrenElement});
         childNode.index = this.childs.length;
@@ -607,8 +616,8 @@ define(['util'],function(util){
      * @param {Object} value value to initiating a node
      */
     Node.prototype._onInsertBefore = function(value){
-        var newNode = new Node(value,this.app);
-        newNode.setParent(null);
+        var newNode = new Node(value,this.app,this.parent);
+        newNode.setParent(this.parent);
         this.addSiblingNodeBefore(newNode);
         newNode.focus(newNode.contentElement);
         this.onValueChange(this.parent);
