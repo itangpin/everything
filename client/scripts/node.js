@@ -186,6 +186,7 @@ define(['util'],function(util){
             }
             // Backspace on an 'empty' node
             if(8 == event.keyCode){
+                event.preventDefault()
                 if(this.getContent() == ""){
                     this.parent.removeChildAndDom(this);
                 }
@@ -288,6 +289,10 @@ define(['util'],function(util){
     Node.prototype.onContentValueChange = function(){
 
     }
+    /**
+     * Handler for child node value change event
+     * @param node
+     */
     Node.prototype.onChildValueChange = function(node){
         this.value.children[node.index] = node.value
         if(this.parent){
@@ -373,6 +378,7 @@ define(['util'],function(util){
     /**
      * Set the content
      * @param value
+     * @private
      */
     Node.prototype._setContent= function(value){
         //var value = value || this.value;
@@ -382,6 +388,10 @@ define(['util'],function(util){
             //this.onValueChange();
         }
     };
+    /**
+     * Change content.(For external use)
+     * @param value
+     */
     Node.prototype.setContent = function(value){
         if((typeof value == 'string') || value.constructor == String){
             this.content = value;
@@ -448,6 +458,19 @@ define(['util'],function(util){
  * ============================================================*/
 
     /**
+     * Create an empty Node after this node
+     */
+    Node.prototype.createSiblingNodeAfter = function(){
+        var siblingNode = new Node({},this.app, this.parent);
+        siblingNode.setParent(this.parent);
+        siblingNode.adjustDom({type:'after',el:this.row});
+        // for temp use. Replace it with node.index later
+        var indexTmp = this.parent.childs.indexOf(this)
+        this.parent._addChild(siblingNode,indexTmp+1);
+        siblingNode.focus(siblingNode.contentElement);
+        //this.onValueChange(this.parent);
+    };
+    /**
      * Get sibling node before/after this node,
      * get parent node,
      * get child nodes
@@ -500,7 +523,6 @@ define(['util'],function(util){
         // TODO
         // add updateDom method to Node
         $(this.row).before(node.row);
-        this.onValueChange(this.parent);
         this.parent._updateDomIndexes();
     };
     /**
@@ -524,17 +546,6 @@ define(['util'],function(util){
     };
     Node.prototype.addChildNodeAtTail= function(){
 
-    };
-    /**
-     * Create an empty Node after this node
-     */
-    Node.prototype.createSiblingNodeAfter = function(){
-        var siblingNode = new Node({},this.app, this.parent);
-        siblingNode.setParent(this.parent);
-        siblingNode.adjustDom({type:'after',el:this.row});
-        this.parent._addChild(siblingNode);
-        siblingNode.focus(siblingNode.contentElement);
-        this.onValueChange(this.parent);
     };
 
 /* ============================================================
@@ -568,12 +579,24 @@ define(['util'],function(util){
     };
     /**
      * Add a node to the children node map
+     * @childNode {Node} node to be add
+     * @position {Number} position to insert into array
      * @private
      */
-    Node.prototype._addChild = function(childNode){
-        this.childs.push(childNode);
+    Node.prototype._addChild = function(childNode,position){
+        if(position){
+            this.value.children.splice(position,0,childNode.value)
+            this.childs.splice(position,0,childNode)
+            childNode.index = position
+        }else{
+            this.value.children.push(childNode.value)
+            this.childs.push(childNode);
+            childNode.index = this.childs.indexOf(childNode)
+        }
         this.childrenMap[childNode.id] = childNode;
-        this.onValueChange(this.parent);
+        if(this.parent){
+            this.parent.onChildValueChange(this)
+        }
     };
 
     /**

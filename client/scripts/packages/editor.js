@@ -11,7 +11,7 @@ define(function(require,exports,module){
     };
     // Add buttons and Editor to DOM
     editor.node._onDomReady = function(){
-        console.log('editor package init');
+        //console.log('editor package init');
         var node = this;
         // application events
         this.app.eventMgr.addListener('themeChange', function(theme){
