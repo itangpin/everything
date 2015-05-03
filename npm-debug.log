@@ -1,0 +1,21 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   '-g',
+1 verbose cli   'bower' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.35
+4 verbose node symlink C:\Program Files\nodejs\\node.exe
+5 error EEXIST, mkdir 'C:\Users\Pin\AppData\Roaming\npm'
+File exists: C:\Users\Pin\AppData\Roaming\npm
+Move it away, and try again.
+6 error System Windows_NT 6.1.7601
+7 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "-g" "bower"
+8 error cwd D:\coding\everything
+9 error node -v v0.10.35
+10 error npm -v 1.4.28
+11 error path C:\Users\Pin\AppData\Roaming\npm
+12 error code EEXIST
+13 error errno 47
+14 verbose exit [ 47, true ]

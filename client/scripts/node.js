@@ -345,6 +345,11 @@ define(['util'],function(util){
             // create the node with null data
             this.setValue('');
         }
+        this.childValueChanged = []
+        var self = this
+        this.value.children.forEach(function(value, index){
+            self.childValueChanged[index] = false
+        })
     };
 
     /**
@@ -400,6 +405,15 @@ define(['util'],function(util){
         this.row.classList.add('root');
         this.isRootNode = true;
     };
+
+    /**
+     * Tell the node which child of it
+     * has its value changed
+     * @param node
+     */
+    Node.prototype.childValueChanged = function(node){
+        this.childValueChanged[node.index] = true
+    }
 
 
 
