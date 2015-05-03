@@ -345,6 +345,8 @@ define(['util'],function(util){
             // create the node with null data
             this.setValue('');
         }
+        // set children value changed status
+        // when value first setted, it's all false
         this.childValueChanged = []
         var self = this
         this.value.children.forEach(function(value, index){
