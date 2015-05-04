@@ -15,7 +15,6 @@ define(function(){
         }else if(this.type == 'chrome'){
             this.saveChromeStorage();
         }
-
     };
     Saver.prototype.saveLocalStorage = function(){
         var value = this.app.getRootValue();

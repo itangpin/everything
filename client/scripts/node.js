@@ -360,6 +360,7 @@ define(['util'],function(util){
             this.formatValue();
         }
         if(this.value){
+            this.formatValue()
             this._setContent(this.value.content);
             this.setChildren(this.value.children);
         }else{
@@ -381,11 +382,9 @@ define(['util'],function(util){
      * @private
      */
     Node.prototype._setContent= function(value){
-        //var value = value || this.value;
         if((typeof value == 'string') || value.constructor == String){
             this.content = value;
             this.contentElement.innerHTML = this.content;
-            //this.onValueChange();
         }
     };
     /**
@@ -415,7 +414,7 @@ define(['util'],function(util){
     Node.prototype.setChildren = function(children){
         var self = this;
         if(Array.isArray(children) && children.length>0) {
-            children.forEach(function(value,index){
+            children.forEach(function(value){
                 self._createChild(value);
             });
             // change style of the dot if has children
@@ -467,8 +466,10 @@ define(['util'],function(util){
         // for temp use. Replace it with node.index later
         var indexTmp = this.parent.childs.indexOf(this)
         this.parent._addChild(siblingNode,indexTmp+1);
+        if(this.parent.parent){
+            this.parent.parent.onChildValueChange(this.parent)
+        }
         siblingNode.focus(siblingNode.contentElement);
-        //this.onValueChange(this.parent);
     };
     /**
      * Get sibling node before/after this node,
@@ -559,13 +560,12 @@ define(['util'],function(util){
      * @param {object} value
      */
     Node.prototype._createChild = function(value){
-        var childNode = new Node(value,this.app, this);
-        childNode.setParent(this);
+        var childNode = new Node(value, this.app, this);
         childNode.adjustDom({type:'append',el:this.childrenElement});
-        childNode.index = this.childs.length;
+        //childNode.index = this.childs.length;
         this._addChild(childNode);
         childNode.focus(childNode.contentElement);
-        this.onValueChange(this.parent);
+        //this.onValueChange(this.parent);
     };
     /**
      * Append a child Node at the tail of the Node
@@ -589,14 +589,13 @@ define(['util'],function(util){
             this.childs.splice(position,0,childNode)
             childNode.index = position
         }else{
+            // creating the list
             this.value.children.push(childNode.value)
             this.childs.push(childNode);
             childNode.index = this.childs.indexOf(childNode)
+            childNode.row.setAttribute('index', childNode.index)
         }
         this.childrenMap[childNode.id] = childNode;
-        if(this.parent){
-            this.parent.onChildValueChange(this)
-        }
     };
 
     /**
