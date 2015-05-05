@@ -14,6 +14,7 @@ var User = require('./models/user');
 //var routes = require('./routes/index');
 var clientRoutes = require('./routes/client');
 var users = require('./routes/users');
+var data = require('./routes/data')
 
 // mongoose
 mongoose.connect('localhost', 'everything');
@@ -83,6 +84,7 @@ app.use(express.static(path.join(__dirname, '../client')));
 
 app.use('/', clientRoutes);
 app.use('/api/user', users);
+app.use('/api/data', data)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
