@@ -4,9 +4,11 @@
 define([
     './module',
     '../app',
-    '../everything'
-], function(controllerModule, APP, Everything){
-    controllerModule.controller('appController', function(){
+    '../everything',
+    '../services/data',
+    '../services/status'
+], function (controllerModule, APP, Everything, data, status) {
+    controllerModule.controller('appController', function () {
         var defaultValue = [
             {
                 content: '写作',
@@ -45,10 +47,8 @@ define([
                 package: ['editor']
             }
         ];
-
-        var container = document.querySelector(".everything");
         APP.init();
-        //APP.toolbar.switchPanel('setting');
+
         if (!chrome.storage) {
             value = JSON.parse(localStorage.getItem('value')) || defaultValue;
             var everything = new Everything(value, APP, {

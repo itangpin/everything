@@ -38,5 +38,17 @@ router.post('/replaceall', ensureAuthenticated, function(req, res, next){
 
 })
 
+router.get('/list', ensureAuthenticated, function(req, res, next){
+    Data.findOne({'userid':req.user.id}, function(err, data){
+        if(err){
+            return next()
+        }
+        if(data){
+            res.send(data)
+        }else{
+            res.send({status: 404, message: 'NO_DATA_FOUND'})
+        }
+    })
+})
 
 module.exports = router

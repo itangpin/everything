@@ -26,10 +26,14 @@ define(['./module', '../config'], function (serviceModule, config) {
                         } else {
                             status.signInStatus = 'false'
                         }
-                        callback(status.signInStatus)
+                        if(callback){
+                            callback(status.signInStatus)
+                        }
                     })
                     .error(function () {
-                        callback(null, error)
+                        if(callback){
+                            callback(null, error)
+                        }
                     })
             }
 
