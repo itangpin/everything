@@ -3,7 +3,7 @@
  */
 
 define(['./module', './status'], function (serviceModule, status) {
-    serviceModule.factory(['$http', function ($http) {
+    serviceModule.factory('service.data', ['$http','service.status', function ($http,status) {
         var Data = {}
 
         // replace all existed data by a new JSON data
@@ -23,15 +23,20 @@ define(['./module', './status'], function (serviceModule, status) {
             if (status.env == 'web-page') {
                 var data = JSON.parse(localStorage.getItem('value'))
                 if (data) {
-                    callback (data)
-                    return
-                }else {
-                    callback (null)
-                    return
+                    callback(data)
+                } else {
+                    callback(null)
                 }
             }
-            if(status.env = 'chrome-app') {
-
+            if (status.env == 'chrome-app') {
+                chrome.storage.local.get('value', function (data) {
+                    if (data) {
+                        var value = data.value
+                        callback(value)
+                    } else {
+                        callback(null)
+                    }
+                })
             }
         }
 

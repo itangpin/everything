@@ -4,6 +4,7 @@
 
 define([
     './option',
-    './app'
+    './app',
+    './list'
     ], function () {
 })
