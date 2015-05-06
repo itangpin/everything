@@ -13,9 +13,10 @@ define([
     'angular'
 ],function (Node,History,Package,EventMgr,Saver,Editor,Highlighter,angular) {
 
-    var Everything = function (data, app, option) {
+    var Everything = function (data, controller, option) {
         this.data = data;
-        this.app = app;
+        // angular controller
+        this.controller= controller;
         this.index = 0;
         this.packages = [];
         if (!option.container) {
@@ -92,7 +93,8 @@ define([
     };
 
     Everything.prototype.onValueChange = function () {
-        this.saver.save();
+        //this.saver.save();
+        //this.app
     };
 
     Everything.prototype.createContainer = function () {
