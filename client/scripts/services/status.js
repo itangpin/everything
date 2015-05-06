@@ -7,7 +7,7 @@ define(['./module', '../config'], function (serviceModule, config) {
             var status = {}
             // in chrome app or just a webpage
             status.env = (function () {
-                if (chrome.storage) {
+                if (chrome && chrome.storage) {
                     return 'chrome-app'
                 } else {
                     return 'web-page'
