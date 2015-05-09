@@ -211,16 +211,10 @@ define(['util'],function(util){
             }
         }
 
-        //if( type == 'keyup' ||
-        //    type == 'paste'||
-        //    type == 'cut' ) {
-        //    // update value
-        //    this.onValueChange();
-        //}
-
         // content change
         if(event.type == 'input'){
-            this.onValueChange();
+            //this.onValueChange();
+            this.onContentValueChange()
         }
 
 
@@ -287,7 +281,10 @@ define(['util'],function(util){
         });
     };
     Node.prototype.onContentValueChange = function(){
-
+        this.value.content = this.contentElement.innerHTML
+        if(this.parent){
+            this.parent.onChildValueChange(this)
+        }
     }
     /**
      * Handler for child node value change event

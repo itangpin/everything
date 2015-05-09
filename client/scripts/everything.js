@@ -94,7 +94,7 @@ define([
 
     Everything.prototype.onValueChange = function () {
         //this.saver.save();
-        //this.app
+        this.controller.onEvent('valueChange')
     };
 
     Everything.prototype.createContainer = function () {

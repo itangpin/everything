@@ -15,40 +15,45 @@ define([
     controllerModule.controller('listController',
         ['service.status', 'service.data', function (status, Data) {
 
-
-            var defaultValue = [
-                {
-                    content: '写作',
-                    children: []
-                },
-                'Version 0.5.1',
-                {
-                    content: "功能用法",
-                    children: [
-                        '创建新的一行(Ctrl+Enter)',
-                        '向右缩进(Tab)',
-                        {
-                            content: '删除一行',
-                            children: [
-                                'delete键',
-                                '在空行上按退格键'
-                            ]
-                        },
-                        {
-                            content: "文本编辑器",
-                            package: ['editor']
-                        }
-                    ],
-                    expand: false
+            var ctrl = this
+            ctrl.onEvent = function (type) {
+                if(type=='valueChange'){
+                    Data.saveChanges(ctrl.everything)
                 }
-            ]
+            }
 
             var initList = function (data) {
+                var defaultValue = [
+                    {
+                        content: '写作',
+                        children: []
+                    },
+                    'Version 0.5.1',
+                    {
+                        content: "功能用法",
+                        children: [
+                            '创建新的一行(Ctrl+Enter)',
+                            '向右缩进(Tab)',
+                            {
+                                content: '删除一行',
+                                children: [
+                                    'delete键',
+                                    '在空行上按退格键'
+                                ]
+                            },
+                            {
+                                content: "文本编辑器",
+                                package: ['editor']
+                            }
+                        ],
+                        expand: false
+                    }
+                ]
                 var container = document.querySelector(".everything")
-                var everything = new Everything(data, APP, {
+                ctrl.list = new Everything(data, ctrl, {
                     container: container,
                     theme: 'light'
-                });
+                })
             }
 
             status.updateSignInStatus(function (status, err) {

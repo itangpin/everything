@@ -40,6 +40,11 @@ define(['./module', '../config'], function (serviceModule, config) {
             // default status
             status.signInStatus = 'pending'
 
+            // check user status every 3s
+            window.setInterval(function(){
+                status.updateSignInStatus(null)
+            },3000)
+
             return status
         }])
 })

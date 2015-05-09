@@ -3,7 +3,7 @@
  */
 
 define(['./module', './status'], function (serviceModule, status) {
-    serviceModule.factory('service.data', ['$http','service.status', function ($http,status) {
+    serviceModule.factory('service.data', ['$http', 'service.status', function ($http, status) {
         var Data = {}
 
         // replace all existed data by a new JSON data
@@ -37,6 +37,12 @@ define(['./module', './status'], function (serviceModule, status) {
                         callback(null)
                     }
                 })
+            }
+        }
+
+        Data.saveChanges = function (everything) {
+            if(status.signInStatus == 'true'){
+
             }
         }
 
