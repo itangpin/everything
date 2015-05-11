@@ -59,7 +59,7 @@ define([
             status.updateSignInStatus(function (status, err) {
                 if (err) return
                 if (status == 'true') {
-                    Data.getListData().success(function (data) {
+                    Data.getListDataFromServer().success(function (data) {
                         Data.updateLocal(data)
                         initList(data)
                     })
