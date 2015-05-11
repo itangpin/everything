@@ -4,12 +4,8 @@
 
 define([
     './module',
-    '../services/status',
-    '../services/data',
     '../everything',
     '../app'], function (controllerModule,
-                         status,
-                         Data,
                          Everything,
                          APP) {
     controllerModule.controller('listController',
@@ -18,39 +14,25 @@ define([
             var ctrl = this
             ctrl.onEvent = function (type) {
                 if(type=='valueChange'){
-                    Data.saveChanges(ctrl.everything)
+                    Data.saveChanges(ctrl.list)
                 }
             }
-
+            ctrl.launchEditorFromNode = function(node){
+                APP.launchEditorFromNode(node)
+            }
             var initList = function (data) {
                 var defaultValue = [
                     {
                         content: '写作',
                         children: []
                     },
-                    'Version 0.5.1',
                     {
-                        content: "功能用法",
-                        children: [
-                            '创建新的一行(Ctrl+Enter)',
-                            '向右缩进(Tab)',
-                            {
-                                content: '删除一行',
-                                children: [
-                                    'delete键',
-                                    '在空行上按退格键'
-                                ]
-                            },
-                            {
-                                content: "文本编辑器",
-                                package: ['editor']
-                            }
-                        ],
-                        expand: false
+                        content: '代办',
+                        children: []
                     }
                 ]
                 var container = document.querySelector(".everything")
-                ctrl.list = new Everything(data, ctrl, {
+                ctrl.list = new Everything(data || defaultValue, ctrl, {
                     container: container,
                     theme: 'light'
                 })
@@ -60,13 +42,15 @@ define([
                 if (err) return
                 if (status == 'true') {
                     Data.getListDataFromServer().success(function (data) {
-                        Data.updateLocal(data)
-                        initList(data)
+                        Data.updateListDataToLocal(data.data)
+                        initList(data.data)
+                    }).error(function(data){
+                        initList(null)
                     })
                 } else if (status == 'false') {
                     Data.getListDataFromLocal(function (data) {
                         if (data == null) {
-                            initList(defaultValue)
+                            initList(null)
                         } else {
                             initList(data)
                         }

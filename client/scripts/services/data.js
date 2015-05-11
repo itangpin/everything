@@ -9,10 +9,11 @@ define(['./module', './status'], function (serviceModule, status) {
         // replace all existed data by a new JSON data
         Data.saveByReplace = function (data) {
 
+            return $http.post(status.urlPrefix + '/api/data/replaceall', {data:data})
         }
 
         Data.getListDataFromServer = function () {
-            return $http.get(status.urlPrefix + '/api/data')
+            return $http.get(status.urlPrefix + '/api/data/list')
         }
 
         Data.updateListDataToLocal = function (value) {
@@ -42,7 +43,11 @@ define(['./module', './status'], function (serviceModule, status) {
 
         Data.saveChanges = function (everything) {
             if(status.signInStatus == 'true'){
+                Data.saveByReplace(everything.getRootValue()).success(function(){
 
+                })
+            }else{
+                Data.updateListDataToLocal(everything.getRootValue())
             }
         }
 

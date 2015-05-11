@@ -559,8 +559,10 @@ define(['util'],function(util){
     Node.prototype._createChild = function(value){
         var childNode = new Node(value, this.app, this);
         childNode.adjustDom({type:'append',el:this.childrenElement});
-        //childNode.index = this.childs.length;
-        this._addChild(childNode);
+        this.childs.push(childNode)
+        childNode.index = this.childs.length;
+        this.childrenMap[childNode.id] = childNode;
+        //this._addChild(childNode);
         childNode.focus(childNode.contentElement);
         //this.onValueChange(this.parent);
     };

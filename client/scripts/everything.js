@@ -234,7 +234,7 @@ define([
             //if (app.addBtnWrapper) {
             //    app.frame.removeChild(addBtnWrapper);
             //}
-            self.app.launchEditorFromNode(self.rootNode);
+            self.controller.launchEditorFromNode(self.rootNode);
         });
     };
 

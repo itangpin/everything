@@ -46,6 +46,7 @@ router.get('/list', ensureAuthenticated, function(req, res, next){
         if(data){
             res.send(data)
         }else{
+            res.status(404)
             res.send({status: 404, message: 'NO_DATA_FOUND'})
         }
     })
