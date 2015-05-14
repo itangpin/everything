@@ -560,11 +560,9 @@ define(['util'],function(util){
         var childNode = new Node(value, this.app, this);
         childNode.adjustDom({type:'append',el:this.childrenElement});
         this.childs.push(childNode)
-        childNode.index = this.childs.length;
+        childNode.index = this.childs.length-1;
         this.childrenMap[childNode.id] = childNode;
-        //this._addChild(childNode);
         childNode.focus(childNode.contentElement);
-        //this.onValueChange(this.parent);
     };
     /**
      * Append a child Node at the tail of the Node
