@@ -43,6 +43,7 @@ define(['./module', './status'], function (serviceModule, status) {
 
         Data.saveChanges = function (everything) {
             if(status.signInStatus == 'true'){
+                Data.updateListDataToLocal(everything.getRootValue())
                 Data.saveByReplace(everything.getRootValue()).success(function(){
 
                 })
